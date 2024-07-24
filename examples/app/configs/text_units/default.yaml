@@ -1,0 +1,5 @@
+_target_: langchain_graphrag.indexing.text_unit_extractor.TextUnitExtractor
+text_splitter: 
+  _target_: langchain_text_splitters.TokenTextSplitter
+  chunk_size: 512
+  chunk_overlap: 64

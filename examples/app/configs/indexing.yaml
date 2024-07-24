@@ -1,0 +1,12 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - paths: default
+  - hydra: default
+  - data: default
+  - text_units: default
+  - entity_extractor: default  
+  - indexer: default
+  
+task_name: indexing
