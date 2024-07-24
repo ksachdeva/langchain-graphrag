@@ -1,0 +1,56 @@
+{
+    "name": "langchain-graphrag",
+    "dockerFile": "Dockerfile",
+    "customizations": {
+        "settings": {
+            "python.linting.enabled": true,
+            "python.linting.pylintEnabled": true,
+            "python.linting.mypyEnabled": true,
+            "editor.tabSize": 4,
+            "terminal.integrated.defaultProfile.linux": "zsh",
+            "terminal.integrated.profiles.linux": {
+                "bash": {
+                    "path": "bash",
+                    "icon": "terminal-bash"
+                },
+                "zsh": {
+                    "path": "zsh"
+                },
+                "fish": {
+                    "path": "fish"
+                },
+                "tmux": {
+                    "path": "tmux",
+                    "icon": "terminal-tmux"
+                },
+                "pwsh": {
+                    "path": "pwsh",
+                    "icon": "terminal-powershell"
+                }
+            }
+        },
+        "extensions": [
+            "ms-python.python",
+            "ms-python.black-formatter",
+            "ms-python.vscode-pylance",
+            "visualstudioexptteam.vscodeintellicode"
+        ]
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installOhMyZshConfig": false,
+            "configureZshAsDefaultShell": true
+        },
+        // Python
+        "ghcr.io/devcontainers/features/python:1": {
+            "version": "3.12"
+        },
+        // Enable Docker (via Docker-in-Docker)
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        // Modern shell utils
+        "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:1": {}
+    },
+    "mounts": [
+        "source=devcontainer-zshhistory,target=/commandhistory,type=volume"
+    ]
+}

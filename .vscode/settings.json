@@ -1,0 +1,22 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.mypy-type-checker",
+        "ms-python.black-formatter",
+        "ms-vscode-remote.remote-containers"
+    ],
+    "[python]": {
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/__pycache__": true
+    },
+}
