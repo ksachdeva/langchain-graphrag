@@ -1,0 +1,18 @@
+# @package _global_
+
+defaults:
+  - /llms/openai_chat@indexer.er_extractor.llm  
+  - /llms/openai_chat@indexer.er_description_summarizer.llm  
+  - override /indexer: default
+
+indexer:
+  text_unit_extractor:
+    text_splitter:      
+      chunk_size: 1200
+      chunk_overlap: 100      
+  er_extractor:
+    llm:
+      model: gpt-4o-mini
+  er_description_summarizer:
+    llm:
+      model: gpt-4o-mini
