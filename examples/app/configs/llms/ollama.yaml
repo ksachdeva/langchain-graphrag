@@ -1,6 +1,5 @@
 _target_: langchain_community.llms.ollama.Ollama
-model: gemma2:9b-instruct-q8_0
-base_url: http://host.docker.internal:11434
+base_url: ${oc.env:OLLAMA_HOST}
 cache:
   _target_: langchain_community.cache.SQLiteCache
   database_path: ${paths.cache_dir}/ollama_cache.db

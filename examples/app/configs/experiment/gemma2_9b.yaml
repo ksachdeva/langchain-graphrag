@@ -8,10 +8,10 @@ defaults:
 indexer:
   er_extractor:
     llm:
-      model: gemma2:27b-instruct-q6_K
+      model: gemma2:9b-instruct-q8_0
 
   er_description_summarizer:
     llm:
-      model: gemma2:27b-instruct-q6_K      
+      model: gemma2:9b-instruct-q8_0      
       
   
