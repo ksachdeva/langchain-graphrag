@@ -9,5 +9,6 @@ defaults:
   - entity_extractor: default  
   - entity_summarizer: default
   - indexer: default
+  - experiment: null
   
 task_name: indexing

@@ -1,0 +1,12 @@
+# @package _global_
+
+defaults:
+  - /llms/ollama@indexer.er_extractor.llm  
+  - /llms/ollama@indexer.er_description_summarizer.llm  
+  - override /indexer: default
+
+indexer:
+  er_extractor:
+    llm:
+      model: gemma2:27b-instruct-q6_K
+  

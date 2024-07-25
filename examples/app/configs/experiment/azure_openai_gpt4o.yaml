@@ -1,0 +1,14 @@
+# @package _global_
+
+defaults:
+  - /llms/azure_openai_chat@indexer.er_extractor.llm  
+  - /llms/azure_openai_chat@indexer.er_description_summarizer.llm  
+  - override /indexer: default
+
+indexer:
+  er_extractor:
+    llm:
+      model: gpt-4o
+  er_description_summarizer:
+    llm:
+      model: gpt-4o

@@ -1,6 +1,3 @@
-defaults:
-  - /llms/ollama@llm
-
 _target_: langchain_graphrag.indexing.entity_summarization.EntityRelationshipDescriptionSummarizer
 prompt_builder:
   _target_: langchain_graphrag.indexing.entity_summarization.DefaultSummarizeDescriptionPromptBuilder
