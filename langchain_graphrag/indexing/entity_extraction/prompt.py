@@ -2,6 +2,8 @@ from typing import Protocol
 from pathlib import Path
 
 from langchain_core.prompts import PromptTemplate
+from langchain_graphrag.protocols import PromptBuilder
+
 
 DEFAULT_TUPLE_DELIMITER = "<|>"
 DEFAULT_RECORD_DELIMITER = "##"
@@ -9,12 +11,7 @@ DEFAULT_COMPLETION_DELIMITER = "<|COMPLETE|>"
 DEFAULT_ENTITY_TYPES = ["organization", "person", "geo", "event"]
 
 
-class EntityExtractionPromptBuilder(Protocol):
-    def build(self) -> PromptTemplate:
-        pass
-
-
-class DefaultEntityExtractionPromptBuilder(EntityExtractionPromptBuilder):
+class DefaultEntityExtractionPromptBuilder(PromptBuilder):
     def __init__(
         self,
         prompt_path: Path,

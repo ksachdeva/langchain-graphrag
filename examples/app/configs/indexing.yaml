@@ -7,6 +7,7 @@ defaults:
   - data: default
   - text_units: default
   - entity_extractor: default  
+  - entity_summarizer: default
   - indexer: default
   
 task_name: indexing

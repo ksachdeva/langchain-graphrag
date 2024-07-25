@@ -52,14 +52,11 @@ class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
 
         if entity_name in graph.nodes():
             node = graph.nodes[entity_name]
-
-            node["description"] = "\n".join(
-                list(
-                    {
-                        *_unpack_descriptions(node),
-                        entity_description,
-                    }
-                )
+            node["description"] = list(
+                {
+                    *_unpack_descriptions(node),
+                    entity_description,
+                }
             )
 
             node["entity_type"] = (
@@ -69,7 +66,7 @@ class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
             graph.add_node(
                 entity_name,
                 type=entity_type,
-                description=entity_description,
+                description=[entity_description],
             )
 
     def _process_relationship(self, record_attributes: list[str], graph: nx.Graph):
@@ -90,28 +87,26 @@ class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
             graph.add_node(
                 source,
                 type="",
-                description="",
+                description=[""],
             )
         if target not in graph.nodes():
             graph.add_node(
                 target,
                 type="",
-                description="",
+                description=[""],
             )
         if graph.has_edge(source, target):
             edge_data = graph.get_edge_data(source, target)
             if edge_data is not None:
                 weight += edge_data["weight"]
-                edge_description = "\n".join(
-                    list(
-                        {
-                            *_unpack_descriptions(edge_data),
-                            edge_description,
-                        }
-                    )
+                edge_description = list(
+                    {
+                        *_unpack_descriptions(edge_data),
+                        edge_description,
+                    }
                 )
 
-        graph.add_edge(source, target, weight=weight, description=edge_description)
+        graph.add_edge(source, target, weight=weight, description=[edge_description])
 
     def _process_record(self, graph: nx.Graph, record: str):
         record = re.sub(r"^\(|\)$", "", record.strip())

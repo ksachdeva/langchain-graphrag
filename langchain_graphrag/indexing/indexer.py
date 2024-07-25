@@ -1,12 +1,14 @@
 from pathlib import Path
 
 import pandas as pd
+import networkx as nx
 from tqdm import tqdm
 
 from langchain_core.document_loaders.base import BaseLoader
 
 from .text_unit_extractor import TextUnitExtractor
 from .entity_extraction import EntityRelationshipExtractor
+from .entity_summarization import EntityRelationshipDescriptionSummarizer
 
 FILE_NAME_BASE_TEXT_UNITS = "create_base_text_units.parquet"
 
@@ -17,14 +19,16 @@ class Indexer:
         output_dir: Path | str,
         data_loader: BaseLoader,
         text_unit_extractor: TextUnitExtractor,
-        entity_relationship_extractor: EntityRelationshipExtractor,
+        er_extractor: EntityRelationshipExtractor,
+        er_description_summarizer: EntityRelationshipDescriptionSummarizer,
     ):
         self._output_dir = (
             output_dir if isinstance(output_dir, Path) else Path(output_dir)
         )
         self._data_loader = data_loader
         self._text_unit_extractor = text_unit_extractor
-        self._entity_relationship_extractor = entity_relationship_extractor
+        self._er_extractor = er_extractor
+        self._er_description_summarizer = er_description_summarizer
 
     def _create_text_units(self) -> pd.DataFrame:
         self._output_dir.mkdir(parents=True, exist_ok=True)
@@ -41,13 +45,10 @@ class Indexer:
         df.to_parquet(text_units_df_path)
         return df
 
-    def _create_entity_relationships(self, text_units_df: pd.DataFrame):
-        graph = self._entity_relationship_extractor.invoke(text_units_df)
-        print(graph)
-        return graph
-
     def run(self):
-        # Step 1
+        # Step 1 - Text Unit extraction
         text_units_df = self._create_text_units()
-        # Step 2
-        entity_df = self._create_entity_relationships(text_units_df)
+        # Step 2 - ER extraction & Graph creation
+        er_graph = self._er_extractor.invoke(text_units_df)
+        # Step 3 - Summarize descriptions in Graph
+        er_graph_summarized = self._er_description_summarizer.invoke(er_graph)
