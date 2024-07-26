@@ -1,2 +1,5 @@
 typer
 python-dotenv
+unstructured
+langchain-community
+langchain-openai
