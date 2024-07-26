@@ -7,9 +7,10 @@ from .summarizer import EntityRelationshipDescriptionSummarizer
 
 
 def test_summarizer():
-    llm = FakeListLLM(responses=["fake summary 1", "fake summary 2", "fake summary 3"])
+    llm = FakeListLLM(responses=["fake summary 1",
+                      "fake summary 2", "fake summary 3"])
     prompt_builder = DefaultSummarizeDescriptionPromptBuilder(
-        prompt_path="/workspaces/langchain-graphrag/tmp/prompts/summarize_descriptions.txt"
+        prompt_path="/workspaces/langchain-graphrag/examples/prompts/summarize_descriptions.txt"
     )
     summarizer = EntityRelationshipDescriptionSummarizer(prompt_builder, llm)
 
