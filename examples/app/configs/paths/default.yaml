@@ -1,8 +1,8 @@
 root_dir: tmp
 cache_dir: ${paths.root_dir}/cache 
-data_dir: ${paths.root_dir}/input-data/
-artifacts_dir: ${paths.root_dir}/input-data/artifacts
+data_dir: ${paths.root_dir}/input-data
 prompt_dir: ${paths.root_dir}/prompts
-log_dir: ${paths.root_dir}/logs/
+log_dir: ${paths.root_dir}/logs
 output_dir: ${hydra:runtime.output_dir}
 work_dir: ${hydra:runtime.cwd}
+artifacts_dir: ${hydra:runtime.output_dir}/artifacts
