@@ -3,6 +3,7 @@ defaults:
   - /text_units/default@text_unit_extractor
   - /entity_extractor/default@er_extractor
   - /entity_summarizer/default@er_description_summarizer
+  - /graph_clustering/default@community_detector
 
 _target_: langchain_graphrag.indexing.indexer.Indexer
 output_dir: ${paths.artifacts_dir}
