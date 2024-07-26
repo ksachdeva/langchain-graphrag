@@ -15,7 +15,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
-                "indexer.er_extractor.llm.model=gemma2:27b-instruct-q6_K"
+                "experiment=azure_openai_gpt4o"
             ]
         }
     ]
