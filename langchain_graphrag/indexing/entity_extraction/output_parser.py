@@ -25,6 +25,9 @@ def _clean_str(input: Any) -> str:
 
 def _unpack_descriptions(data: Mapping) -> list[str]:
     value = data.get("description", None)
+    # ignore if value is not str
+    if not isinstance(value, str):
+        return []
     return [] if value is None else value.split("\n")
 
 
