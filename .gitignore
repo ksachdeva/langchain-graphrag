@@ -162,6 +162,7 @@ cython_debug/
 #.idea/
 
 tmp
+temp
 outputs
 
 .env

@@ -1,7 +1,7 @@
 root_dir: tmp
+data_dir: examples/input-data
+prompt_dir: examples/prompts
 cache_dir: ${paths.root_dir}/cache 
-data_dir: ${paths.root_dir}/input-data
-prompt_dir: ${paths.root_dir}/prompts
 log_dir: ${paths.root_dir}/logs
 output_dir: ${hydra:runtime.output_dir}
 work_dir: ${hydra:runtime.cwd}

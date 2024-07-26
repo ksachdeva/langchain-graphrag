@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "hydra_app",
+            "name": "sophisticated-app",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/examples/app/main.py",
+            "program": "${workspaceFolder}/examples/sophisticated-app/app/main.py",
             "justMyCode": false,
             "console": "integratedTerminal",
             "env": {
