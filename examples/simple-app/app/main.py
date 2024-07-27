@@ -29,6 +29,9 @@ from langchain_graphrag.indexing.text_unit_extractor import TextUnitExtractor
 from langchain_graphrag.indexing.graph_clustering.community_detector import (
     HierarchicalLeidenCommunityDetector,
 )
+from langchain_graphrag.indexing.graph_embedding.node2vec import (
+    Node2VectorGraphEmbeddingGenerator,
+)
 
 app = Typer()
 
@@ -139,6 +142,9 @@ def indexer(
     # Community Detector
     community_detector = HierarchicalLeidenCommunityDetector()
 
+    # Embedding Generator
+    graph_embedding_generator = Node2VectorGraphEmbeddingGenerator()
+
     ######### End of creation of various objects/dependencies #############
 
     indexer = Indexer(
@@ -148,6 +154,7 @@ def indexer(
         er_extractor=entity_extractor,
         er_description_summarizer=entity_summarizer,
         community_detector=community_detector,
+        graph_embedding_generator=graph_embedding_generator,
     )
 
     indexer.run()

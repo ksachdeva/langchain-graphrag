@@ -9,8 +9,7 @@ from graspologic.partition import hierarchical_leiden
 from graspologic.partition import HierarchicalCluster, HierarchicalClusters
 
 from langchain_graphrag.utils.uuid import gen_uuid
-
-from .utils import stable_largest_connected_component
+from langchain_graphrag.utils.stable_lcc import stable_largest_connected_component
 
 CommunityLevel = NewType("CommunityLevel", int)
 CommunityId = NewType("CommunityId", str)
