@@ -56,8 +56,8 @@ class Indexer:
 
     def _embed_graph(
         self, graphs: list[tuple[CommunityLevel, nx.Graph]]
-    ) -> dict[CommunityLevel, np.ndarray]:
-        result: dict[CommunityLevel, np.ndarray] = {}
+    ) -> dict[CommunityLevel, dict[str, np.ndarray]]:
+        result: dict[CommunityLevel, dict[str, np.ndarray]] = {}
         for level, graph in graphs:
             result[level] = self._graph_embedding_generator.run(graph)
         return result
