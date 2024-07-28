@@ -6,3 +6,4 @@ log_dir: ${paths.root_dir}/logs
 output_dir: ${hydra:runtime.output_dir}
 work_dir: ${hydra:runtime.cwd}
 artifacts_dir: ${hydra:runtime.output_dir}/artifacts
+sqllite_embedding_cache_dir: sqlite:///tmp/cache

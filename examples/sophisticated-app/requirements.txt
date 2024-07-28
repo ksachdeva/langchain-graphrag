@@ -2,5 +2,6 @@ hydra-core
 hydra-colorlog
 python-dotenv
 unstructured
+langchain
 langchain-community
 langchain-openai

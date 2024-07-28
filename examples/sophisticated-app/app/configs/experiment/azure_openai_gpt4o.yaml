@@ -3,7 +3,11 @@
 defaults:
   - /llms/azure_openai_chat@indexer.er_extractor.llm  
   - /llms/azure_openai_chat@indexer.er_description_summarizer.llm  
+  - /embedding_models/azure_openai_embedding@embedding_model
   - override /indexer: default
+
+embedding_model:
+  model: text-embedding-3-small
 
 indexer:
   text_unit_extractor:
@@ -17,3 +21,4 @@ indexer:
   er_description_summarizer:
     llm:
       model: gpt-4o
+  

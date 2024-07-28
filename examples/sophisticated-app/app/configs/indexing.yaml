@@ -8,6 +8,7 @@ defaults:
   - text_units: default
   - entity_extractor: default  
   - entity_summarizer: default
+  - entity_embedding: default
   - indexer: default
   - experiment: null
   

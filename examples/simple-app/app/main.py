@@ -12,14 +12,19 @@ from typer import Typer
 # before the imports below
 load_dotenv()
 
+from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import BaseLLM
 from langchain_text_splitters import TokenTextSplitter
 
 from langchain_community.cache import SQLiteCache
+from langchain_community.storage import SQLStore
 from langchain_community.document_loaders.directory import DirectoryLoader
 
 from langchain_openai import ChatOpenAI, AzureChatOpenAI
 from langchain_community.llms.ollama import Ollama
+
+from langchain.embeddings.cache import CacheBackedEmbeddings
+from langchain_openai import OpenAIEmbeddings, AzureOpenAIEmbeddings
 
 import langchain_graphrag.indexing.entity_extraction as er
 import langchain_graphrag.indexing.entity_summarization as es
@@ -31,6 +36,10 @@ from langchain_graphrag.indexing.graph_clustering.community_detector import (
 )
 from langchain_graphrag.indexing.graph_embedding.node2vec import (
     Node2VectorGraphEmbeddingGenerator,
+)
+
+from langchain_graphrag.indexing.entity_embedding.embedding_generator import (
+    EntityEmbeddingGenerator,
 )
 
 app = Typer()
@@ -46,6 +55,15 @@ class LLMModel(StrEnum):
     gpt4o: str = "gpt-4o"
     gpt4omini: str = "gpt-4o-mini"
     gemma2_9b_instruct_q8_0: str = "gemma2:9b-instruct-q8_0"
+
+
+class EmbeddingModelType(StrEnum):
+    openai: str = "openai"
+    azure_openai: str = "azure_openai"
+
+
+class EmbeddingModel(StrEnum):
+    text_embedding_3_small: str = "text-embedding-3-small"
 
 
 def make_llm_instance(
@@ -78,14 +96,53 @@ def make_llm_instance(
         )
 
 
+def make_embedding_instance(
+    embedding_type: EmbeddingModelType,
+    embedding_model: EmbeddingModel,
+    cache_dir: Path,
+) -> Embeddings:
+    if embedding_type == EmbeddingModelType.openai:
+        underlying_embedding = OpenAIEmbeddings(
+            model=embedding_model,
+            api_key=os.getenv("LANGCHAIN_GRAPHRAG_OPENAI_EMBED_API_KEY"),
+        )
+    elif embedding_type == EmbeddingModelType.azure_openai:
+        underlying_embedding = AzureOpenAIEmbeddings(
+            mode=embedding_model,
+            openai_api_version="2024-02-15-preview",
+            openai_api_key=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_API_KEY"),
+            azure_endpoint=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_ENDPOINT"),
+            azure_deployment=os.getenv(
+                "LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_DEPLOYMENT"
+            ),
+        )
+
+    embedding_db_path = "sqlite:///" + str(cache_dir.joinpath("embedding.db"))
+    store = SQLStore(namespace=embedding_model, db_url=embedding_db_path)
+    store.create_schema()
+
+    cached_embedding_model = CacheBackedEmbeddings.from_bytes_store(
+        underlying_embeddings=underlying_embedding,
+        document_embedding_cache=store,
+    )
+
+    return cached_embedding_model
+
+
 @app.command()
 def indexer(
     input_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     prompts_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
-    llm_cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
+    cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     llm_type: LLMType = typer.Option(LLMType.openai, case_sensitive=False),
     llm_model: LLMModel = typer.Option(LLMModel.gpt4omini, case_sensitive=False),
+    embedding_type: EmbeddingModelType = typer.Option(
+        EmbeddingModelType.openai, case_sensitive=False
+    ),
+    embedding_model: EmbeddingModel = typer.Option(
+        EmbeddingModel.text_embedding_3_small, case_sensitive=False
+    ),
     chunk_size: int = typer.Option(1200),
     chunk_overlap: int = typer.Option(100),
 ):
@@ -110,7 +167,7 @@ def indexer(
     er_prompt_builder = er.DefaultEntityExtractionPromptBuilder(er_extraction_prompt)
 
     # LLM
-    er_llm = make_llm_instance(llm_type, llm_model, llm_cache_dir)
+    er_llm = make_llm_instance(llm_type, llm_model, cache_dir)
     # Output Parser
     er_op = er.EntityExtractionOutputParser()
     # Graph Merger
@@ -131,7 +188,7 @@ def indexer(
     )
 
     # LLM
-    es_llm = make_llm_instance(llm_type, llm_model, llm_cache_dir)
+    es_llm = make_llm_instance(llm_type, llm_model, cache_dir)
 
     # Entity Summarizer
     entity_summarizer = es.EntityRelationshipDescriptionSummarizer(
@@ -142,8 +199,17 @@ def indexer(
     # Community Detector
     community_detector = HierarchicalLeidenCommunityDetector()
 
-    # Embedding Generator
+    # Graph Embedding Generator
     graph_embedding_generator = Node2VectorGraphEmbeddingGenerator()
+
+    # Entity Embedding Generator
+    entity_embedding_generator = EntityEmbeddingGenerator(
+        embedding_model=make_embedding_instance(
+            embedding_type=embedding_type,
+            embedding_model=embedding_model,
+            cache_dir=cache_dir,
+        )
+    )
 
     ######### End of creation of various objects/dependencies #############
 
@@ -155,6 +221,7 @@ def indexer(
         er_description_summarizer=entity_summarizer,
         community_detector=community_detector,
         graph_embedding_generator=graph_embedding_generator,
+        entity_embedding_generator=entity_embedding_generator,
     )
 
     indexer.run()
