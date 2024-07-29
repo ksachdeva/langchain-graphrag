@@ -44,7 +44,9 @@ def indexer(cfg):
 
     indexer = hydra.utils.instantiate(
         cfg.indexer,
-        entity_embedding_generator=entity_embedding_generator,
+        final_entities_generator={
+            "entity_embedding_generator": entity_embedding_generator
+        },
     )
     indexer.run()
 

@@ -11,10 +11,10 @@ from .text_unit_extractor import TextUnitExtractor
 from .entity_extraction import EntityRelationshipExtractor
 from .entity_summarization import EntityRelationshipDescriptionSummarizer
 from .graph_clustering import HierarchicalLeidenCommunityDetector
-from .graph_embedding import Node2VectorGraphEmbeddingGenerator
-from .entity_embedding import EntityEmbeddingGenerator
+
 
 from .graph_clustering import CommunityLevel
+from .create_final_entities import FinalEntitiesGenerator
 
 FILE_NAME_BASE_TEXT_UNITS = "create_base_text_units.parquet"
 
@@ -28,8 +28,7 @@ class Indexer:
         er_extractor: EntityRelationshipExtractor,
         er_description_summarizer: EntityRelationshipDescriptionSummarizer,
         community_detector: HierarchicalLeidenCommunityDetector,
-        graph_embedding_generator: Node2VectorGraphEmbeddingGenerator,
-        entity_embedding_generator: EntityEmbeddingGenerator,
+        final_entities_generator: FinalEntitiesGenerator,
     ):
         self._output_dir = (
             output_dir if isinstance(output_dir, Path) else Path(output_dir)
@@ -39,8 +38,7 @@ class Indexer:
         self._er_extractor = er_extractor
         self._er_description_summarizer = er_description_summarizer
         self._community_detector = community_detector
-        self._graph_embedding_generator = graph_embedding_generator
-        self._entity_embedding_generator = entity_embedding_generator
+        self._final_entities_generator = final_entities_generator
 
     def _create_text_units(self) -> pd.DataFrame:
         self._output_dir.mkdir(parents=True, exist_ok=True)
@@ -83,8 +81,8 @@ class Indexer:
         # Step 4 - Detect communities in Graph
         clustered_graphs = self._community_detector.run(er_graph_summarized)
 
-        # Step 5 [depends on 4] - Generate embeddings for each community (clustered graph)
-        graph_embeddings = self._embed_graph(clustered_graphs)
-
-        # Step 6 [depends on 4] - Generate embeddings for each entity in each community
-        entity_embeddings = self._embed_entities(clustered_graphs)
+        # Step 5 - Final Entities generation (depends on Step 3)
+        df = self._final_entities_generator.run(er_graph_summarized)
+        print(df)
+        print(df.columns)
+        print(df.iloc[0])

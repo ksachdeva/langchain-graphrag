@@ -42,6 +42,8 @@ from langchain_graphrag.indexing.entity_embedding.embedding_generator import (
     EntityEmbeddingGenerator,
 )
 
+from langchain_graphrag.indexing.indexer import FinalEntitiesGenerator
+
 app = Typer()
 
 
@@ -211,6 +213,12 @@ def indexer(
         )
     )
 
+    # Final Entities Generator
+    final_entities_generator = FinalEntitiesGenerator(
+        entity_embedding_generator=entity_embedding_generator,
+        graph_embedding_generator=graph_embedding_generator,
+    )
+
     ######### End of creation of various objects/dependencies #############
 
     indexer = Indexer(
@@ -220,8 +228,7 @@ def indexer(
         er_extractor=entity_extractor,
         er_description_summarizer=entity_summarizer,
         community_detector=community_detector,
-        graph_embedding_generator=graph_embedding_generator,
-        entity_embedding_generator=entity_embedding_generator,
+        final_entities_generator=final_entities_generator,
     )
 
     indexer.run()
