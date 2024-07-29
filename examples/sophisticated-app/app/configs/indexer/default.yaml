@@ -4,8 +4,10 @@ defaults:
   - /entity_extractor/default@er_extractor
   - /entity_summarizer/default@er_description_summarizer
   - /graph_clustering/default@community_detector
-  - /entity_generator/default@final_entities_generator  
+  - /entities_table_generator/default@final_entities_generator  
+  - /communities_table_generator/default@final_communities_generator  
   - /graph_embedding/default@final_entities_generator.graph_embedding_generator  
+
 
 _target_: langchain_graphrag.indexing.indexer.Indexer
 output_dir: ${paths.artifacts_dir}

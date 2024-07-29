@@ -15,6 +15,7 @@ from .graph_clustering import HierarchicalLeidenCommunityDetector
 
 from .graph_clustering import CommunityLevel
 from .create_final_entities import FinalEntitiesGenerator
+from .create_final_communities import FinalCommunitiesGenerator
 
 FILE_NAME_BASE_TEXT_UNITS = "create_base_text_units.parquet"
 
@@ -29,6 +30,7 @@ class Indexer:
         er_description_summarizer: EntityRelationshipDescriptionSummarizer,
         community_detector: HierarchicalLeidenCommunityDetector,
         final_entities_generator: FinalEntitiesGenerator,
+        final_communities_generator: FinalCommunitiesGenerator,
     ):
         self._output_dir = (
             output_dir if isinstance(output_dir, Path) else Path(output_dir)
@@ -39,6 +41,7 @@ class Indexer:
         self._er_description_summarizer = er_description_summarizer
         self._community_detector = community_detector
         self._final_entities_generator = final_entities_generator
+        self._final_communities_generator = final_communities_generator
 
     def _create_text_units(self) -> pd.DataFrame:
         self._output_dir.mkdir(parents=True, exist_ok=True)
@@ -82,7 +85,7 @@ class Indexer:
         clustered_graphs = self._community_detector.run(er_graph_summarized)
 
         # Step 5 - Final Entities generation (depends on Step 3)
-        df = self._final_entities_generator.run(er_graph_summarized)
-        print(df)
-        print(df.columns)
-        print(df.iloc[0])
+        df_final_entities = self._final_entities_generator.run(er_graph_summarized)
+
+        # Step 6 - Final Communities generation (depends on Step 4)
+        df_final_communities = self._final_communities_generator.run(clustered_graphs)

@@ -13,4 +13,9 @@
         "**/.DS_Store": true,
         "**/__pycache__": true
     },
+    "python.testing.pytestArgs": [
+        "langchain_graphrag"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
 }
