@@ -14,6 +14,8 @@ load_dotenv()
 
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import BaseLLM
+from langchain_core.output_parsers.string import StrOutputParser
+
 from langchain_text_splitters import TokenTextSplitter
 
 from langchain_community.cache import SQLiteCache
@@ -194,8 +196,7 @@ def indexer(
 
     # Entity Summarizer
     entity_summarizer = es.EntityRelationshipDescriptionSummarizer(
-        prompt_builder=es_prompt_builder,
-        llm=es_llm,
+        prompt_builder=es_prompt_builder, llm=es_llm, output_parser=StrOutputParser()
     )
 
     # Community Detector

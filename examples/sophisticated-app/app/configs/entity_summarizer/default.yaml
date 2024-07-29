@@ -2,4 +2,5 @@ _target_: langchain_graphrag.indexing.entity_summarization.EntityRelationshipDes
 prompt_builder:
   _target_: langchain_graphrag.indexing.entity_summarization.DefaultSummarizeDescriptionPromptBuilder
   prompt_path: ${paths.prompt_dir}/summarize_descriptions.txt
-
+output_parser:
+  _target_: langchain_core.output_parsers.string.StrOutputParser

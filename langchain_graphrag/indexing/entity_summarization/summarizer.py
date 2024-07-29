@@ -15,12 +15,10 @@ class EntityRelationshipDescriptionSummarizer:
         self,
         prompt_builder: PromptBuilder,
         llm: BaseLLM,
-        output_parser: Optional[BaseOutputParser] = None,
+        output_parser: BaseOutputParser,
     ):
         prompt = prompt_builder.build()
-        self._summarize_chain = prompt | llm
-        if output_parser:
-            self._summarize_chain = self._summarize_chain | output_parser
+        self._summarize_chain = prompt | llm | output_parser
 
     def invoke(self, graph: nx.Graph) -> nx.Graph:
         for node_name, node in tqdm(
