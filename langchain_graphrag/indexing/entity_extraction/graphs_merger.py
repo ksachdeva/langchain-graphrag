@@ -1,5 +1,6 @@
 from typing import Any
 
+import itertools
 from enum import StrEnum
 
 import networkx as nx
@@ -26,6 +27,11 @@ def merge_attributes(
             target_node[attrib] = int(target_attrib) + int(source_attrib)
         else:
             target_node[attrib].extend(source_attrib)
+            # REVISIT: Not sure why sometimes we end up
+            # having list of list
+            # make sure to flatten it
+            target_node[attrib] = itertools.chain(*target_node[attrib])
+            # now make sure to remove duplicates
             target_node[attrib] = sorted(set(target_node[attrib]))
 
 
