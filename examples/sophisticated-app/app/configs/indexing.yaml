@@ -4,13 +4,8 @@ defaults:
   - _self_
   - paths: default
   - hydra: default
-  - data: default
-  - text_units: default
-  - entity_extractor: default  
-  - entity_summarizer: default
-  - entity_embedding: default
-  - relationship_embedding: default
-  - indexer: default
-  - experiment: null
+  - indexing/entity_embedding: default  
+  - indexing/relationship_embedding: default  
+  - indexing/experiment: null
   
 task_name: indexing

@@ -15,7 +15,7 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
-                "experiment=azure_openai_gpt4o"
+                "indexing/experiment=azure_openai_gpt4o"
             ]
         },
         {

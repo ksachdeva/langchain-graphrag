@@ -3,7 +3,7 @@
 defaults:
   - /llms/openai_chat@indexer.er_extractor.llm  
   - /llms/openai_chat@indexer.er_description_summarizer.llm  
-  - override /indexer: default
+  - override /indexing/indexer: default
 
 indexer:
   text_unit_extractor:

@@ -38,17 +38,17 @@ def indexer(cfg):
     )
 
     entity_embedding_generator = hydra.utils.instantiate(
-        cfg.entity_embedding,
+        cfg.indexing.entity_embedding,
         embedding_model=cached_embedding_model,
     )
 
     relationship_embedding_generator = hydra.utils.instantiate(
-        cfg.relationship_embedding,
+        cfg.indexing.relationship_embedding,
         embedding_model=cached_embedding_model,
     )
 
     indexer = hydra.utils.instantiate(
-        cfg.indexer,
+        cfg.indexing.indexer,
         entities_table_generator={
             "entity_embedding_generator": entity_embedding_generator
         },

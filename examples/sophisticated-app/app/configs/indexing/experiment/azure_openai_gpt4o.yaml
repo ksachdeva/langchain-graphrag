@@ -1,10 +1,10 @@
 # @package _global_
 
 defaults:
-  - /llms/azure_openai_chat@indexer.er_extractor.llm  
-  - /llms/azure_openai_chat@indexer.er_description_summarizer.llm  
+  - /llms/azure_openai_chat@indexing.indexer.er_extractor.llm  
+  - /llms/azure_openai_chat@indexing.indexer.er_description_summarizer.llm  
   - /embedding_models/azure_openai_embedding@embedding_model
-  - override /indexer: default
+  - /indexing/indexer: default
 
 embedding_model:
   model: text-embedding-3-small
