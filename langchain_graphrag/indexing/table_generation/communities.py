@@ -5,10 +5,10 @@ import networkx as nx
 
 from pandas._typing import Suffixes
 
-from .graph_clustering import CommunityLevel
+from langchain_graphrag.indexing.graph_clustering import CommunityLevel
 
 
-class FinalCommunitiesGenerator:
+class CommunitiesTableGenerator:
 
     def _unpack_nodes(self, level: CommunityLevel, graph: nx.Graph) -> pd.DataFrame:
         records = [

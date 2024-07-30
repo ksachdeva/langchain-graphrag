@@ -2,10 +2,12 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 
-from .relationship_embedding import RelationshipEmbeddingGenerator
+from langchain_graphrag.indexing.relationship_embedding import (
+    RelationshipEmbeddingGenerator,
+)
 
 
-class FinalRelationshipsGenerator:
+class RelationshipsTableGenerator:
     def __init__(
         self,
         relationship_embedding_generator: RelationshipEmbeddingGenerator,

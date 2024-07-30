@@ -1,1 +1,1 @@
-_target_: langchain_graphrag.indexing.FinalCommunitiesGenerator
+_target_: langchain_graphrag.indexing.table_generation.CommunitiesTableGenerator

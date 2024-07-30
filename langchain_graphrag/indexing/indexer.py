@@ -10,14 +10,14 @@ from langchain_core.document_loaders.base import BaseLoader
 from .text_unit_extractor import TextUnitExtractor
 from .entity_extraction import EntityRelationshipExtractor
 from .entity_summarization import EntityRelationshipDescriptionSummarizer
+
+from .graph_clustering import CommunityLevel
 from .graph_clustering import HierarchicalLeidenCommunityDetector
 
 
-from .graph_clustering import CommunityLevel
-
-from .create_final_entities import FinalEntitiesGenerator
-from .create_final_communities import FinalCommunitiesGenerator
-from .create_final_relationships import FinalRelationshipsGenerator
+from .table_generation import EntitiesTableGenerator
+from .table_generation import CommunitiesTableGenerator
+from .table_generation import RelationshipsTableGenerator
 
 FILE_NAME_BASE_TEXT_UNITS = "create_base_text_units.parquet"
 
@@ -31,9 +31,9 @@ class Indexer:
         er_extractor: EntityRelationshipExtractor,
         er_description_summarizer: EntityRelationshipDescriptionSummarizer,
         community_detector: HierarchicalLeidenCommunityDetector,
-        final_entities_generator: FinalEntitiesGenerator,
-        final_relationships_generator: FinalRelationshipsGenerator,
-        final_communities_generator: FinalCommunitiesGenerator,
+        entities_table_generator: EntitiesTableGenerator,
+        relationships_table_generator: RelationshipsTableGenerator,
+        communities_table_generator: CommunitiesTableGenerator,
     ):
         self._output_dir = (
             output_dir if isinstance(output_dir, Path) else Path(output_dir)
@@ -43,9 +43,9 @@ class Indexer:
         self._er_extractor = er_extractor
         self._er_description_summarizer = er_description_summarizer
         self._community_detector = community_detector
-        self._final_entities_generator = final_entities_generator
-        self._final_relationships_generator = final_relationships_generator
-        self._final_communities_generator = final_communities_generator
+        self._entities_table_generator = entities_table_generator
+        self._relationships_table_generator = relationships_table_generator
+        self._communities_table_generator = communities_table_generator
 
     def _create_text_units(self) -> pd.DataFrame:
         self._output_dir.mkdir(parents=True, exist_ok=True)
@@ -89,11 +89,11 @@ class Indexer:
         clustered_graphs = self._community_detector.run(er_graph_summarized)
 
         # Step 5 - Final Entities generation (depends on Step 3)
-        df_final_entities = self._final_entities_generator.run(er_graph_summarized)
+        df_final_entities = self._entities_table_generator.run(er_graph_summarized)
 
         # Step 6 - Final Entities generation (depends on Step 3)
-        df_final_relationships = self._final_relationships_generator.run(
+        df_final_relationships = self._relationships_table_generator.run(
             er_graph_summarized
         )
         # Step 7 - Final Communities generation (depends on Step 4)
-        df_final_communities = self._final_communities_generator.run(clustered_graphs)
+        df_final_communities = self._communities_table_generator.run(clustered_graphs)

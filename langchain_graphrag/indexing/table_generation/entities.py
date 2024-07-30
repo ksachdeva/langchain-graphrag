@@ -2,11 +2,13 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 
-from .entity_embedding import EntityEmbeddingGenerator
-from .graph_embedding import Node2VectorGraphEmbeddingGenerator
+from langchain_graphrag.indexing.entity_embedding import EntityEmbeddingGenerator
+from langchain_graphrag.indexing.graph_embedding import (
+    Node2VectorGraphEmbeddingGenerator,
+)
 
 
-class FinalEntitiesGenerator:
+class EntitiesTableGenerator:
     def __init__(
         self,
         entity_embedding_generator: EntityEmbeddingGenerator,

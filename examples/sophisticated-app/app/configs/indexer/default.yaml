@@ -4,10 +4,10 @@ defaults:
   - /entity_extractor/default@er_extractor
   - /entity_summarizer/default@er_description_summarizer
   - /graph_clustering/default@community_detector
-  - /entities_table_generator/default@final_entities_generator  
-  - /relationships_table_generator/default@final_relationships_generator  
-  - /communities_table_generator/default@final_communities_generator  
-  - /graph_embedding/default@final_entities_generator.graph_embedding_generator  
+  - /entities_table_generator/default@entities_table_generator  
+  - /relationships_table_generator/default@relationships_table_generator  
+  - /communities_table_generator/default@communities_table_generator  
+  - /graph_embedding/default@entities_table_generator.graph_embedding_generator  
 
 
 _target_: langchain_graphrag.indexing.indexer.Indexer

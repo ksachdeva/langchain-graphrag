@@ -1,1 +1,1 @@
-_target_: langchain_graphrag.indexing.FinalRelationshipsGenerator
+_target_: langchain_graphrag.indexing.table_generation.RelationshipsTableGenerator

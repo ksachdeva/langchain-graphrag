@@ -48,9 +48,9 @@ from langchain_graphrag.indexing.relationship_embedding.embedding_generator impo
     RelationshipEmbeddingGenerator,
 )
 
-from langchain_graphrag.indexing.indexer import FinalEntitiesGenerator
-from langchain_graphrag.indexing.indexer import FinalCommunitiesGenerator
-from langchain_graphrag.indexing.indexer import FinalRelationshipsGenerator
+from langchain_graphrag.indexing.table_generation import EntitiesTableGenerator
+from langchain_graphrag.indexing.table_generation import CommunitiesTableGenerator
+from langchain_graphrag.indexing.table_generation import RelationshipsTableGenerator
 
 app = Typer()
 
@@ -230,18 +230,18 @@ def indexer(
     )
 
     # Final Entities Generator
-    final_entities_generator = FinalEntitiesGenerator(
+    entities_table_generator = EntitiesTableGenerator(
         entity_embedding_generator=entity_embedding_generator,
         graph_embedding_generator=graph_embedding_generator,
     )
 
     # Final Relationships Generator
-    final_relationships_generator = FinalRelationshipsGenerator(
+    relationships_table_generator = RelationshipsTableGenerator(
         relationship_embedding_generator=relationship_embedding_generator
     )
 
     # Final Communities Generator
-    final_communities_generator = FinalCommunitiesGenerator()
+    communities_table_generator = CommunitiesTableGenerator()
 
     ######### End of creation of various objects/dependencies #############
 
@@ -252,9 +252,9 @@ def indexer(
         er_extractor=entity_extractor,
         er_description_summarizer=entity_summarizer,
         community_detector=community_detector,
-        final_entities_generator=final_entities_generator,
-        final_relationships_generator=final_relationships_generator,
-        final_communities_generator=final_communities_generator,
+        entities_table_generator=entities_table_generator,
+        relationships_table_generator=relationships_table_generator,
+        communities_table_generator=communities_table_generator,
     )
 
     indexer.run()

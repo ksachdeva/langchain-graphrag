@@ -1,1 +1,1 @@
-_target_: langchain_graphrag.indexing.FinalEntitiesGenerator
+_target_: langchain_graphrag.indexing.table_generation.EntitiesTableGenerator

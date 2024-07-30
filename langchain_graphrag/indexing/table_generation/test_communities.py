@@ -3,7 +3,7 @@ from pathlib import Path
 
 import networkx as nx
 
-from .create_final_communities import FinalCommunitiesGenerator
+from .communities import CommunitiesTableGenerator
 
 # CLUSTERED_GRAPH_TEST_DIR = Path(os.environ["CLUSTERED_GRAPH_TEST_DIR"])
 CLUSTERED_GRAPH_TEST_DIR = Path(
