@@ -6,7 +6,7 @@ import networkx as nx
 
 
 class AttributesToMerge(StrEnum):
-    source_id = "source_id"
+    text_unit_ids = "text_unit_ids"
     description = "description"
     weight = "weight"
 
@@ -37,7 +37,10 @@ def merge_nodes(*, target_graph: nx.Graph, sub_graph: nx.Graph):
             merge_attributes(
                 target_node=target_graph.nodes[node],
                 source_node=sub_graph.nodes[node],
-                attribs=[AttributesToMerge.source_id, AttributesToMerge.description],
+                attribs=[
+                    AttributesToMerge.text_unit_ids,
+                    AttributesToMerge.description,
+                ],
             )
 
 
@@ -50,7 +53,7 @@ def merge_edges(*, target_graph: nx.Graph, sub_graph: nx.Graph):
                 target_node=target_graph.edges[(source, target)],
                 source_node=edge_data,
                 attribs=[
-                    AttributesToMerge.source_id,
+                    AttributesToMerge.text_unit_ids,
                     AttributesToMerge.description,
                     AttributesToMerge.weight,
                 ],

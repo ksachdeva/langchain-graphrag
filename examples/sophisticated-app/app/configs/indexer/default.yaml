@@ -5,6 +5,7 @@ defaults:
   - /entity_summarizer/default@er_description_summarizer
   - /graph_clustering/default@community_detector
   - /entities_table_generator/default@final_entities_generator  
+  - /relationships_table_generator/default@final_relationships_generator  
   - /communities_table_generator/default@final_communities_generator  
   - /graph_embedding/default@final_entities_generator.graph_embedding_generator  
 

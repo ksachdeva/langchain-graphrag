@@ -51,7 +51,7 @@ class FinalCommunitiesGenerator:
         def array_agg_distinct(series: pd.Series) -> list[pd.Series]:
             return [e for e in series.unique()]
 
-        is_list = isinstance(combined_clusters.iloc[0]["source_id_1"], list)
+        is_list = isinstance(combined_clusters.iloc[0]["text_unit_ids_1"], list)
 
         def array_agg_distinct_check_list(series: pd.Series) -> list[pd.Series]:
             mod_series = series.apply(lambda x: ",".join(x)) if is_list else series
@@ -59,12 +59,12 @@ class FinalCommunitiesGenerator:
 
         aggregations = {
             "id_2": array_agg_distinct,
-            "source_id_1": array_agg_distinct_check_list,
+            "text_unit_ids_1": array_agg_distinct_check_list,
         }
 
         output = cast(pd.DataFrame, grouped.agg(aggregations))
         output.rename(columns={"id_2": "relationship_ids"}, inplace=True)
-        output.rename(columns={"source_id_1": "text_unit_ids"}, inplace=True)
+        output.rename(columns={"text_unit_ids_1": "text_unit_ids"}, inplace=True)
 
         return output.reset_index()
 

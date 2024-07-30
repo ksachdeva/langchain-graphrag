@@ -9,6 +9,7 @@ defaults:
   - entity_extractor: default  
   - entity_summarizer: default
   - entity_embedding: default
+  - relationship_embedding: default
   - indexer: default
   - experiment: null
   

@@ -2,7 +2,7 @@ import numpy as np
 import networkx as nx
 import graspologic as gl
 
-from langchain_graphrag.utils.stable_lcc import stable_largest_connected_component
+from langchain_graphrag.graph_utils.stable_lcc import stable_largest_connected_component
 
 
 class Node2VectorGraphEmbeddingGenerator:

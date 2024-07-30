@@ -1,2 +1,3 @@
 from .create_final_entities import FinalEntitiesGenerator
 from .create_final_communities import FinalCommunitiesGenerator
+from .create_final_relationships import FinalRelationshipsGenerator

@@ -44,7 +44,13 @@ from langchain_graphrag.indexing.entity_embedding.embedding_generator import (
     EntityEmbeddingGenerator,
 )
 
+from langchain_graphrag.indexing.relationship_embedding.embedding_generator import (
+    RelationshipEmbeddingGenerator,
+)
+
 from langchain_graphrag.indexing.indexer import FinalEntitiesGenerator
+from langchain_graphrag.indexing.indexer import FinalCommunitiesGenerator
+from langchain_graphrag.indexing.indexer import FinalRelationshipsGenerator
 
 app = Typer()
 
@@ -83,7 +89,7 @@ def make_llm_instance(
         )
     elif llm_type == LLMType.azure_openai:
         return AzureChatOpenAI(
-            mode=llm_model,
+            model=llm_model,
             openai_api_version="2024-05-01-preview",
             openai_api_key=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_API_KEY"),
             azure_endpoint=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_ENDPOINT"),
@@ -139,10 +145,10 @@ def indexer(
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     prompts_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
-    llm_type: LLMType = typer.Option(LLMType.openai, case_sensitive=False),
-    llm_model: LLMModel = typer.Option(LLMModel.gpt4omini, case_sensitive=False),
+    llm_type: LLMType = typer.Option(LLMType.azure_openai, case_sensitive=False),
+    llm_model: LLMModel = typer.Option(LLMModel.gpt4o, case_sensitive=False),
     embedding_type: EmbeddingModelType = typer.Option(
-        EmbeddingModelType.openai, case_sensitive=False
+        EmbeddingModelType.azure_openai, case_sensitive=False
     ),
     embedding_model: EmbeddingModel = typer.Option(
         EmbeddingModel.text_embedding_3_small, case_sensitive=False
@@ -214,11 +220,28 @@ def indexer(
         )
     )
 
+    # Relationship Embedding Generator
+    relationship_embedding_generator = RelationshipEmbeddingGenerator(
+        embedding_model=make_embedding_instance(
+            embedding_type=embedding_type,
+            embedding_model=embedding_model,
+            cache_dir=cache_dir,
+        )
+    )
+
     # Final Entities Generator
     final_entities_generator = FinalEntitiesGenerator(
         entity_embedding_generator=entity_embedding_generator,
         graph_embedding_generator=graph_embedding_generator,
     )
+
+    # Final Relationships Generator
+    final_relationships_generator = FinalRelationshipsGenerator(
+        relationship_embedding_generator=relationship_embedding_generator
+    )
+
+    # Final Communities Generator
+    final_communities_generator = FinalCommunitiesGenerator()
 
     ######### End of creation of various objects/dependencies #############
 
@@ -230,6 +253,8 @@ def indexer(
         er_description_summarizer=entity_summarizer,
         community_detector=community_detector,
         final_entities_generator=final_entities_generator,
+        final_relationships_generator=final_relationships_generator,
+        final_communities_generator=final_communities_generator,
     )
 
     indexer.run()
