@@ -118,7 +118,7 @@ def make_embedding_instance(
         )
     elif embedding_type == EmbeddingModelType.azure_openai:
         underlying_embedding = AzureOpenAIEmbeddings(
-            mode=embedding_model,
+            model=embedding_model,
             openai_api_version="2024-02-15-preview",
             openai_api_key=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_API_KEY"),
             azure_endpoint=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_ENDPOINT"),
