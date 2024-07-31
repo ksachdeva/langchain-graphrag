@@ -45,5 +45,5 @@ Hydra allows you to override config from command line.
 Here is an example of how you could override the few parameters
 
 ```bash
-python examples/sophisticated-app/app/main.py experiment=gemma2_27b indexer.er_extractor.llm.base_url=http://rog-extreme:11434 indexer.er_extractor.llm.model=gemma2:27b-instruct-q8_0
+python examples/sophisticated-app/app/main.py indexing/experiment=gemma2_27b indexer.er_extractor.llm.base_url=http://<ip_or_host>:11434 indexer.er_extractor.llm.model=gemma2:27b-instruct-q8_0
 ```

@@ -5,3 +5,4 @@ unstructured
 langchain
 langchain-community
 langchain-openai
+langchain-ollama

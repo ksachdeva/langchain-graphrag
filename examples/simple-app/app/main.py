@@ -26,6 +26,7 @@ from langchain_openai import ChatOpenAI, AzureChatOpenAI
 from langchain_community.llms.ollama import Ollama
 
 from langchain.embeddings.cache import CacheBackedEmbeddings
+from langchain_ollama import OllamaEmbeddings
 from langchain_openai import OpenAIEmbeddings, AzureOpenAIEmbeddings
 
 import langchain_graphrag.indexing.entity_extraction as er
@@ -65,15 +66,18 @@ class LLMModel(StrEnum):
     gpt4o: str = "gpt-4o"
     gpt4omini: str = "gpt-4o-mini"
     gemma2_9b_instruct_q8_0: str = "gemma2:9b-instruct-q8_0"
+    gemma2_27b_instruct_q6_K: str = "gemma2:27b-instruct-q6_K"
 
 
 class EmbeddingModelType(StrEnum):
     openai: str = "openai"
     azure_openai: str = "azure_openai"
+    ollama: str = "ollama"
 
 
 class EmbeddingModel(StrEnum):
     text_embedding_3_small: str = "text-embedding-3-small"
+    nomic_embed_text: str = "nomic_embed_text"
 
 
 def make_llm_instance(
@@ -126,6 +130,8 @@ def make_embedding_instance(
                 "LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_DEPLOYMENT"
             ),
         )
+    elif embedding_type == EmbeddingModelType.ollama:
+        underlying_embedding = OllamaEmbeddings(model=embedding_model)
 
     embedding_db_path = "sqlite:///" + str(cache_dir.joinpath("embedding.db"))
     store = SQLStore(namespace=embedding_model, db_url=embedding_db_path)

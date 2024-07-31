@@ -3,11 +3,12 @@
 defaults:
   - /llms/ollama@indexing.indexer.er_extractor.llm  
   - /llms/ollama@indexing.indexer.er_description_summarizer.llm  
-  - /embedding_models/azure_openai@embedding_model
+  - /embedding_models/ollama@embedding_model
   - /indexing/indexer: default
 
 embedding_model:
-  model: text-embedding-3-small
+  model: nomic-embed-text
+
 
 indexing:
   indexer:
