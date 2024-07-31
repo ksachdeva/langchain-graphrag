@@ -24,11 +24,8 @@ def _clean_str(input: Any) -> str:
 
 
 def _unpack_descriptions(data: Mapping) -> list[str]:
-    value = data.get("description", None)
-    # ignore if value is not str
-    if not isinstance(value, str):
-        return []
-    return [] if value is None else value.split("\n")
+    value = data.get("description", [])
+    return value
 
 
 class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
@@ -102,14 +99,16 @@ class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
             edge_data = graph.get_edge_data(source, target)
             if edge_data is not None:
                 weight += edge_data["weight"]
-                edge_description = list(
+                edge_descriptions = list(
                     {
                         *_unpack_descriptions(edge_data),
                         edge_description,
                     }
                 )
+        else:
+            edge_descriptions = [edge_description]
 
-        graph.add_edge(source, target, weight=weight, description=[edge_description])
+        graph.add_edge(source, target, weight=weight, description=edge_descriptions)
 
     def _process_record(self, graph: nx.Graph, record: str):
         record = re.sub(r"^\(|\)$", "", record.strip())
