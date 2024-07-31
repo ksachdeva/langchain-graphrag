@@ -9,16 +9,16 @@ defaults:
 embedding_model:
   model: text-embedding-3-small
 
-indexer:
-  text_unit_extractor:
-    text_splitter:      
-      chunk_size: 1200
-      chunk_overlap: 100
+indexing:
+  indexer:
+    text_unit_extractor:
+      text_splitter:      
+        chunk_size: 1200
+        chunk_overlap: 100
 
-  er_extractor:
-    llm:
-      model: gpt-4o
-  er_description_summarizer:
-    llm:
-      model: gpt-4o
-  
+    er_extractor:
+      llm:
+        model: gpt-4o
+    er_description_summarizer:
+      llm:
+        model: gpt-4o   

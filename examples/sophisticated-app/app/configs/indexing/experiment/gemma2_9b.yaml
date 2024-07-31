@@ -1,17 +1,22 @@
 # @package _global_
 
 defaults:
-  - /llms/ollama@indexer.er_extractor.llm  
-  - /llms/ollama@indexer.er_description_summarizer.llm  
-  - override /indexing/indexer: default
+  - /llms/ollama@indexing.indexer.er_extractor.llm  
+  - /llms/ollama@indexing.indexer.er_description_summarizer.llm    
+  - /embedding_models/azure_openai_embedding@embedding_model
+  - /indexing/indexer: default
 
-indexer:
-  er_extractor:
-    llm:
-      model: gemma2:9b-instruct-q8_0
+embedding_model:
+  model: text-embedding-3-small
 
-  er_description_summarizer:
-    llm:
-      model: gemma2:9b-instruct-q8_0      
-      
-  
+indexing:
+  indexer:
+    er_extractor:
+      llm:
+        model: gemma2:9b-instruct-q8_0
+
+    er_description_summarizer:
+      llm:
+        model: gemma2:9b-instruct-q8_0      
+        
+    

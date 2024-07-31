@@ -1,18 +1,23 @@
 # @package _global_
 
 defaults:
-  - /llms/openai_chat@indexer.er_extractor.llm  
-  - /llms/openai_chat@indexer.er_description_summarizer.llm  
-  - override /indexing/indexer: default
+  - /llms/openai_chat@indexing.indexer.er_extractor.llm  
+  - /llms/openai_chat@indexing.indexer.er_description_summarizer.llm  
+  - /embedding_models/azure_openai_embedding@embedding_model
+  - /indexing/indexer: default
 
-indexer:
-  text_unit_extractor:
-    text_splitter:      
-      chunk_size: 1200
-      chunk_overlap: 100      
-  er_extractor:
-    llm:
-      model: gpt-4o-mini
-  er_description_summarizer:
-    llm:
-      model: gpt-4o-mini
+embedding_model:
+  model: text-embedding-3-small
+
+indexing:
+  indexer:
+    text_unit_extractor:
+      text_splitter:      
+        chunk_size: 1200
+        chunk_overlap: 100      
+    er_extractor:
+      llm:
+        model: gpt-4o-mini
+    er_description_summarizer:
+      llm:
+        model: gpt-4o-mini
