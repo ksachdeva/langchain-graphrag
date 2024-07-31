@@ -55,6 +55,7 @@ def indexer(cfg):
         relationships_table_generator={
             "relationship_embedding_generator": relationship_embedding_generator
         },
+        text_units_table_generator={"embedding_model": cached_embedding_model},
     )
     indexer.run()
 

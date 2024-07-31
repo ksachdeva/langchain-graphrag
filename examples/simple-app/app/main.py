@@ -52,6 +52,7 @@ from langchain_graphrag.indexing.relationship_embedding.embedding_generator impo
 from langchain_graphrag.indexing.table_generation import EntitiesTableGenerator
 from langchain_graphrag.indexing.table_generation import CommunitiesTableGenerator
 from langchain_graphrag.indexing.table_generation import RelationshipsTableGenerator
+from langchain_graphrag.indexing.table_generation import TextUnitsTableGenerator
 
 app = Typer()
 
@@ -88,24 +89,24 @@ def make_llm_instance(
     if llm_type == LLMType.openai:
         return ChatOpenAI(
             model=llm_model,
-            openai_api_key=os.getenv("LANGCHAIN_GRAPHRAG_OPENAI_CHAT_API_KEY"),
-            cache=SQLiteCache(cache_dir / "openai_cache.db"),
+            api_key=os.getenv("LANGCHAIN_GRAPHRAG_OPENAI_CHAT_API_KEY"),
+            cache=SQLiteCache(str(cache_dir / "openai_cache.db")),
         )
     elif llm_type == LLMType.azure_openai:
         return AzureChatOpenAI(
             model=llm_model,
-            openai_api_version="2024-05-01-preview",
-            openai_api_key=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_API_KEY"),
+            api_version="2024-05-01-preview",
+            api_key=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_API_KEY"),
             azure_endpoint=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_ENDPOINT"),
             azure_deployment=os.getenv(
                 "LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_DEPLOYMENT"
             ),
-            cache=SQLiteCache(cache_dir / "azure_openai_cache.db"),
+            cache=SQLiteCache(str(cache_dir / "azure_openai_cache.db")),
         )
     elif llm_type == LLMType.ollama:
         return OllamaLLM(
             model=llm_model,
-            cache=SQLiteCache(cache_dir / "ollama.db"),
+            cache=SQLiteCache(str(cache_dir / "ollama.db")),
         )
 
 
@@ -114,6 +115,9 @@ def make_embedding_instance(
     embedding_model: EmbeddingModel,
     cache_dir: Path,
 ) -> Embeddings:
+
+    underlying_embedding: Embeddings
+
     if embedding_type == EmbeddingModelType.openai:
         underlying_embedding = OpenAIEmbeddings(
             model=embedding_model,
@@ -122,8 +126,8 @@ def make_embedding_instance(
     elif embedding_type == EmbeddingModelType.azure_openai:
         underlying_embedding = AzureOpenAIEmbeddings(
             model=embedding_model,
-            openai_api_version="2024-02-15-preview",
-            openai_api_key=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_API_KEY"),
+            api_version="2024-02-15-preview",
+            api_key=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_API_KEY"),
             azure_endpoint=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_ENDPOINT"),
             azure_deployment=os.getenv(
                 "LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_DEPLOYMENT"
@@ -166,7 +170,7 @@ def indexer(
 
     # Dataloader that loads all the text files from
     # the supplied directory
-    data_loader = DirectoryLoader(input_dir, glob="*.txt")
+    data_loader = DirectoryLoader(str(input_dir), glob="*.txt")
 
     # TextSplitter required by TextUnitExtractor
     text_splitter = TokenTextSplitter(
@@ -248,6 +252,14 @@ def indexer(
     # Final Communities Generator
     communities_table_generator = CommunitiesTableGenerator()
 
+    text_units_table_generator = TextUnitsTableGenerator(
+        embedding_model=make_embedding_instance(
+            embedding_type=embedding_type,
+            embedding_model=embedding_model,
+            cache_dir=cache_dir,
+        )
+    )
+
     ######### End of creation of various objects/dependencies #############
 
     indexer = Indexer(
@@ -260,6 +272,7 @@ def indexer(
         entities_table_generator=entities_table_generator,
         relationships_table_generator=relationships_table_generator,
         communities_table_generator=communities_table_generator,
+        text_units_table_generator=text_units_table_generator,
     )
 
     indexer.run()

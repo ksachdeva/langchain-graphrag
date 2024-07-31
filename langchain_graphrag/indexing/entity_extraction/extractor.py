@@ -31,22 +31,20 @@ class EntityRelationshipExtractor:
     def invoke(self, input_data: pd.DataFrame) -> nx.Graph:
 
         def _run_chain(series: pd.Series) -> nx.Graph:
-            document_id, chunk_id, chunk_text = (
+            document_id, text_id, text = (
                 series["document_id"],
-                series["chunk_id"],
-                series["chunk"],
+                series["id"],
+                series["text"],
             )
-            chunk_graph = self._extraction_chain.invoke(
-                input=dict(input_text=chunk_text)
-            )
+            chunk_graph = self._extraction_chain.invoke(input=dict(input_text=text))
 
             # add the chunk_id to the nodes
             for node_names in chunk_graph.nodes():
-                chunk_graph.nodes[node_names]["text_unit_ids"] = [chunk_id]
+                chunk_graph.nodes[node_names]["text_unit_ids"] = [text_id]
 
             # add the chunk_id to the edges as well
             for edge_names in chunk_graph.edges():
-                chunk_graph.edges[edge_names]["text_unit_ids"] = [chunk_id]
+                chunk_graph.edges[edge_names]["text_unit_ids"] = [text_id]
 
             return chunk_graph
 

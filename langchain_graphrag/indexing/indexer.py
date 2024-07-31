@@ -1,25 +1,17 @@
 from pathlib import Path
 
-import numpy as np
-import pandas as pd
-import networkx as nx
-from tqdm import tqdm
-
 from langchain_core.document_loaders.base import BaseLoader
 
 from .text_unit_extractor import TextUnitExtractor
 from .entity_extraction import EntityRelationshipExtractor
 from .entity_summarization import EntityRelationshipDescriptionSummarizer
 
-from .graph_clustering import CommunityLevel
 from .graph_clustering import HierarchicalLeidenCommunityDetector
-
 
 from .table_generation import EntitiesTableGenerator
 from .table_generation import CommunitiesTableGenerator
 from .table_generation import RelationshipsTableGenerator
-
-FILE_NAME_BASE_TEXT_UNITS = "create_base_text_units.parquet"
+from .table_generation import TextUnitsTableGenerator
 
 
 class Indexer:
@@ -34,6 +26,7 @@ class Indexer:
         entities_table_generator: EntitiesTableGenerator,
         relationships_table_generator: RelationshipsTableGenerator,
         communities_table_generator: CommunitiesTableGenerator,
+        text_units_table_generator: TextUnitsTableGenerator,
     ):
         self._output_dir = (
             output_dir if isinstance(output_dir, Path) else Path(output_dir)
@@ -46,43 +39,17 @@ class Indexer:
         self._entities_table_generator = entities_table_generator
         self._relationships_table_generator = relationships_table_generator
         self._communities_table_generator = communities_table_generator
-
-    def _create_text_units(self) -> pd.DataFrame:
-        self._output_dir.mkdir(parents=True, exist_ok=True)
-        text_units_df_path = self._output_dir / FILE_NAME_BASE_TEXT_UNITS
-        if text_units_df_path.exists():
-            return pd.read_parquet(text_units_df_path)
-
-        all_text_units = []
-        for d in tqdm(self._data_loader.load()):
-            text_units = self._text_unit_extractor.run(d)
-            all_text_units.extend(text_units)
-
-        df = pd.DataFrame.from_dict(all_text_units)
-        df.to_parquet(text_units_df_path)
-        return df
-
-    def _embed_graph(
-        self, graphs: list[tuple[CommunityLevel, nx.Graph]]
-    ) -> dict[CommunityLevel, dict[str, np.ndarray]]:
-        result: dict[CommunityLevel, dict[str, np.ndarray]] = {}
-        for level, graph in tqdm(graphs, desc="Embedding Graphs..."):
-            result[level] = self._graph_embedding_generator.run(graph)
-        return result
-
-    def _embed_entities(
-        self, graphs: list[tuple[CommunityLevel, nx.Graph]]
-    ) -> dict[CommunityLevel, dict[str, tuple[str, np.ndarray]]]:
-        result: dict[CommunityLevel, dict[str, tuple[str, np.ndarray]]] = {}
-        for level, graph in tqdm(graphs, desc="Embedding Entities..."):
-            result[level] = self._entity_embedding_generator.run(graph)
-        return result
+        self._text_units_table_generator = text_units_table_generator
 
     def run(self):
+
+        # Step 0 - For now only 1 document is supported
+        document = self._data_loader.load()[0]
+
         # Step 1 - Text Unit extraction
-        text_units_df = self._create_text_units()
+        df_base_text_units = self._text_unit_extractor.run(document)
         # Step 2 - ER extraction & Graph creation
-        er_graph = self._er_extractor.invoke(text_units_df)
+        er_graph = self._er_extractor.invoke(df_base_text_units)
         # Step 3 - Summarize descriptions in Graph
         er_graph_summarized = self._er_description_summarizer.invoke(er_graph)
         # Step 4 - Detect communities in Graph
@@ -95,5 +62,13 @@ class Indexer:
         df_final_relationships = self._relationships_table_generator.run(
             er_graph_summarized
         )
-        # Step 7 - Final Communities generation (depends on Step 4)
+
+        # Step 7 - Final Text Units generation
+        df_final_text_units = self._text_units_table_generator.run(
+            df_base_text_units,
+            df_final_entities,
+            df_final_relationships,
+        )
+
+        # Step 8 - Final Communities generation (depends on Step 4)
         df_final_communities = self._communities_table_generator.run(clustered_graphs)

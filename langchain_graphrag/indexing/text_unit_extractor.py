@@ -5,6 +5,7 @@ from typing import TypedDict
 
 import uuid
 
+import pandas as pd
 from tqdm import tqdm
 
 from langchain_core.documents import Document
@@ -12,16 +13,16 @@ from langchain_text_splitters import TextSplitter
 
 
 class TextUnit(TypedDict):
+    id: str
     document_id: str
-    chunk_id: str
-    chunk: str
+    text: str
 
 
 class TextUnitExtractor:
     def __init__(self, text_splitter: TextSplitter):
         self._text_splitter = text_splitter
 
-    def run(self, document: Document) -> Sequence[TextUnit]:
+    def run(self, document: Document) -> pd.DataFrame:
         text_units = self._text_splitter.split_text(document.page_content)
 
         document_id = document_id if document.id else str(uuid.uuid4())
@@ -29,7 +30,7 @@ class TextUnitExtractor:
         response: Sequence[TextUnit] = []
         for t in tqdm(text_units):
             response.append(
-                TextUnit(document_id=document_id, chunk_id=str(uuid.uuid4()), chunk=t)
+                TextUnit(document_id=document_id, id=str(uuid.uuid4()), text=t)
             )
 
-        return response
+        return pd.DataFrame.from_records(response)
