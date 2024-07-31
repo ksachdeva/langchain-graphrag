@@ -22,8 +22,8 @@ from langchain_community.cache import SQLiteCache
 from langchain_community.storage import SQLStore
 from langchain_community.document_loaders.directory import DirectoryLoader
 
+from langchain_ollama import OllamaLLM
 from langchain_openai import ChatOpenAI, AzureChatOpenAI
-from langchain_community.llms.ollama import Ollama
 
 from langchain.embeddings.cache import CacheBackedEmbeddings
 from langchain_ollama import OllamaEmbeddings
@@ -103,9 +103,8 @@ def make_llm_instance(
             cache=SQLiteCache(cache_dir / "azure_openai_cache.db"),
         )
     elif llm_type == LLMType.ollama:
-        return Ollama(
+        return OllamaLLM(
             model=llm_model,
-            base_url=os.getenv("OLLAMA_HOST"),
             cache=SQLiteCache(cache_dir / "ollama.db"),
         )
 
