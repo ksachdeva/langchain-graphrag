@@ -3,11 +3,8 @@ from pathlib import Path
 from langchain_core.document_loaders.base import BaseLoader
 
 from .text_unit_extractor import TextUnitExtractor
-from .graph_generation.entity_relationship_extraction import EntityRelationshipExtractor
-from .graph_generation.entity_relationship_summarization import (
-    EntityRelationshipDescriptionSummarizer,
-)
 
+from .graph_generation import GraphGenerator
 from .graph_clustering import HierarchicalLeidenCommunityDetector
 
 from .table_generation import EntitiesTableGenerator
@@ -22,8 +19,7 @@ class Indexer:
         output_dir: Path | str,
         data_loader: BaseLoader,
         text_unit_extractor: TextUnitExtractor,
-        er_extractor: EntityRelationshipExtractor,
-        er_description_summarizer: EntityRelationshipDescriptionSummarizer,
+        graph_generator: GraphGenerator,
         community_detector: HierarchicalLeidenCommunityDetector,
         entities_table_generator: EntitiesTableGenerator,
         relationships_table_generator: RelationshipsTableGenerator,
@@ -35,8 +31,7 @@ class Indexer:
         )
         self._data_loader = data_loader
         self._text_unit_extractor = text_unit_extractor
-        self._er_extractor = er_extractor
-        self._er_description_summarizer = er_description_summarizer
+        self._graph_generator = graph_generator
         self._community_detector = community_detector
         self._entities_table_generator = entities_table_generator
         self._relationships_table_generator = relationships_table_generator
@@ -50,20 +45,18 @@ class Indexer:
 
         # Step 1 - Text Unit extraction
         df_base_text_units = self._text_unit_extractor.run(document)
-        # Step 2 - ER extraction & Graph creation
-        er_graph = self._er_extractor.invoke(df_base_text_units)
-        # Step 3 - Summarize descriptions in Graph
-        er_graph_summarized = self._er_description_summarizer.invoke(er_graph)
+
+        # Step 2 - Generate graph
+        graph = self._graph_generator.run(df_base_text_units)
+
         # Step 4 - Detect communities in Graph
-        clustered_graphs = self._community_detector.run(er_graph_summarized)
+        clustered_graphs = self._community_detector.run(graph)
 
         # Step 5 - Final Entities generation (depends on Step 3)
-        df_final_entities = self._entities_table_generator.run(er_graph_summarized)
+        df_final_entities = self._entities_table_generator.run(graph)
 
         # Step 6 - Final Entities generation (depends on Step 3)
-        df_final_relationships = self._relationships_table_generator.run(
-            er_graph_summarized
-        )
+        df_final_relationships = self._relationships_table_generator.run(graph)
 
         # Step 7 - Final Text Units generation
         df_final_text_units = self._text_units_table_generator.run(

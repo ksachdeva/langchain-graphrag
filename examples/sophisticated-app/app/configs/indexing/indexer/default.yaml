@@ -3,8 +3,7 @@
 defaults:
   - /indexing/data/default@data_loader
   - /indexing/text_units/default@text_unit_extractor
-  - /indexing/graph_generation/er_extractor@er_extractor
-  - /indexing/graph_generation/er_description_summarizer@er_description_summarizer
+  - /indexing/graph_generation/generator@graph_generator  
   - /indexing/graph_clustering/default@community_detector
   - /indexing/table_generation/entities@entities_table_generator  
   - /indexing/table_generation/relationships@relationships_table_generator  

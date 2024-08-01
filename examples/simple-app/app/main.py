@@ -29,8 +29,11 @@ from langchain.embeddings.cache import CacheBackedEmbeddings
 from langchain_ollama import OllamaEmbeddings
 from langchain_openai import OpenAIEmbeddings, AzureOpenAIEmbeddings
 
+
 import langchain_graphrag.indexing.graph_generation.entity_relationship_extraction as er
 import langchain_graphrag.indexing.graph_generation.entity_relationship_summarization as es
+
+from langchain_graphrag.indexing.graph_generation.generator import GraphGenerator
 
 from langchain_graphrag.indexing.indexer import Indexer
 from langchain_graphrag.indexing.text_unit_extractor import TextUnitExtractor
@@ -212,6 +215,12 @@ def indexer(
         prompt_builder=es_prompt_builder, llm=es_llm, output_parser=StrOutputParser()
     )
 
+    # Graph Generator
+    graph_generator = GraphGenerator(
+        er_extractor=entity_extractor,
+        er_description_summarizer=entity_summarizer,
+    )
+
     # Community Detector
     community_detector = HierarchicalLeidenCommunityDetector()
 
@@ -264,8 +273,7 @@ def indexer(
         output_dir=output_dir,
         data_loader=data_loader,
         text_unit_extractor=text_unit_extractor,
-        er_extractor=entity_extractor,
-        er_description_summarizer=entity_summarizer,
+        graph_generator=graph_generator,
         community_detector=community_detector,
         entities_table_generator=entities_table_generator,
         relationships_table_generator=relationships_table_generator,
