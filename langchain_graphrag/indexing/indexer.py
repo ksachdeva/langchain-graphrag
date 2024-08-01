@@ -3,8 +3,10 @@ from pathlib import Path
 from langchain_core.document_loaders.base import BaseLoader
 
 from .text_unit_extractor import TextUnitExtractor
-from .entity_extraction import EntityRelationshipExtractor
-from .entity_summarization import EntityRelationshipDescriptionSummarizer
+from .graph_generation.entity_relationship_extraction import EntityRelationshipExtractor
+from .graph_generation.entity_relationship_summarization import (
+    EntityRelationshipDescriptionSummarizer,
+)
 
 from .graph_clustering import HierarchicalLeidenCommunityDetector
 

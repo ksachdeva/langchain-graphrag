@@ -1,1 +1,0 @@
-from .embedding_generator import EntityEmbeddingGenerator

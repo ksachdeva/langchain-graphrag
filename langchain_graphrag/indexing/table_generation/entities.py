@@ -2,8 +2,10 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 
-from langchain_graphrag.indexing.entity_embedding import EntityEmbeddingGenerator
-from langchain_graphrag.indexing.graph_embedding import (
+from langchain_graphrag.indexing.embedding_generation import (
+    EntityEmbeddingGenerator,
+)
+from langchain_graphrag.indexing.embedding_generation.graph import (
     Node2VectorGraphEmbeddingGenerator,
 )
 

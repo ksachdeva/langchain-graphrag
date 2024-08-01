@@ -1,6 +1,6 @@
 import networkx as nx
 
-from langchain_graphrag.indexing.entity_extraction.graphs_merger import (
+from .graphs_merger import (
     merge_nodes,
     merge_edges,
 )

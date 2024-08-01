@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 
-from langchain_graphrag.indexing.relationship_embedding import (
+from langchain_graphrag.indexing.embedding_generation import (
     RelationshipEmbeddingGenerator,
 )
 

@@ -3,9 +3,8 @@
 defaults:
   - _self_
   - paths: default
-  - hydra: default
-  - indexing/entity_embedding: default  
-  - indexing/relationship_embedding: default  
+  - hydra: default  
+  - indexing/indexer/default@indexer
   - indexing/experiment: null
   
 task_name: indexing

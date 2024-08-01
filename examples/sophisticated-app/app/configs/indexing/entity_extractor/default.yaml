@@ -1,8 +1,0 @@
-_target_: langchain_graphrag.indexing.entity_extraction.EntityRelationshipExtractor
-prompt_builder:
-  _target_: langchain_graphrag.indexing.entity_extraction.DefaultEntityExtractionPromptBuilder
-  prompt_path: ${paths.prompt_dir}/entity_extraction.txt
-output_parser:
-  _target_: langchain_graphrag.indexing.entity_extraction.EntityExtractionOutputParser
-graphs_merger:
-  _target_: langchain_graphrag.indexing.entity_extraction.GraphsMerger

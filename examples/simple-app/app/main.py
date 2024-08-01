@@ -29,25 +29,23 @@ from langchain.embeddings.cache import CacheBackedEmbeddings
 from langchain_ollama import OllamaEmbeddings
 from langchain_openai import OpenAIEmbeddings, AzureOpenAIEmbeddings
 
-import langchain_graphrag.indexing.entity_extraction as er
-import langchain_graphrag.indexing.entity_summarization as es
+import langchain_graphrag.indexing.graph_generation.entity_relationship_extraction as er
+import langchain_graphrag.indexing.graph_generation.entity_relationship_summarization as es
 
 from langchain_graphrag.indexing.indexer import Indexer
 from langchain_graphrag.indexing.text_unit_extractor import TextUnitExtractor
 from langchain_graphrag.indexing.graph_clustering.community_detector import (
     HierarchicalLeidenCommunityDetector,
 )
-from langchain_graphrag.indexing.graph_embedding.node2vec import (
+from langchain_graphrag.indexing.embedding_generation.graph import (
     Node2VectorGraphEmbeddingGenerator,
 )
 
-from langchain_graphrag.indexing.entity_embedding.embedding_generator import (
+from langchain_graphrag.indexing.embedding_generation import (
     EntityEmbeddingGenerator,
-)
-
-from langchain_graphrag.indexing.relationship_embedding.embedding_generator import (
     RelationshipEmbeddingGenerator,
 )
+
 
 from langchain_graphrag.indexing.table_generation import EntitiesTableGenerator
 from langchain_graphrag.indexing.table_generation import CommunitiesTableGenerator

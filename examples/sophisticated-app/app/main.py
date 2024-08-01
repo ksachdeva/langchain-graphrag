@@ -8,7 +8,7 @@ from langchain_community.storage import SQLStore
 from langchain.embeddings.cache import CacheBackedEmbeddings
 
 
-@hydra.main(version_base="1.3", config_path="./configs", config_name="indexing.yaml")
+@hydra.main(version_base="1.3", config_path="./configs", config_name="app.yaml")
 def indexer(cfg):
 
     # some how seeing httpx INFO LEVEL for requests
@@ -22,7 +22,7 @@ def indexer(cfg):
 
     print(OmegaConf.to_yaml(cfg))
 
-    underlying_embedding_model = hydra.utils.instantiate(cfg.embedding_model)
+    underlying_embedding_model = hydra.utils.instantiate(cfg.extra.embedding_model)
 
     # hack: to create the table for embedding store
     embedding_db_path = cfg.paths.sqllite_embedding_cache_dir + "/embedding.db"
@@ -38,17 +38,17 @@ def indexer(cfg):
     )
 
     entity_embedding_generator = hydra.utils.instantiate(
-        cfg.indexing.entity_embedding,
+        cfg.extra.entity_embedding_generator,
         embedding_model=cached_embedding_model,
     )
 
     relationship_embedding_generator = hydra.utils.instantiate(
-        cfg.indexing.relationship_embedding,
+        cfg.extra.relationship_embedding_generator,
         embedding_model=cached_embedding_model,
     )
 
     indexer = hydra.utils.instantiate(
-        cfg.indexing.indexer,
+        cfg.indexer,
         entities_table_generator={
             "entity_embedding_generator": entity_embedding_generator
         },
