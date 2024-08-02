@@ -166,6 +166,8 @@ def indexer(
     chunk_size: int = typer.Option(1200),
     chunk_overlap: int = typer.Option(100),
 ):
+    output_dir.mkdir(parents=True, exist_ok=True)
+    cache_dir.mkdir(parents=True, exist_ok=True)
 
     ######### Start of creation of various objects/dependencies #############
 
