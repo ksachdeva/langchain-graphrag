@@ -168,3 +168,4 @@ outputs
 .env
 test-data
 scratch
+.DS_Store
