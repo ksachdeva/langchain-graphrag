@@ -10,28 +10,73 @@
 #   universal: false
 
 -e file:.
+aiohappyeyeballs==2.3.4
+    # via aiohttp
+aiohttp==3.10.0
+    # via langchain
+    # via langchain-community
+aiosignal==1.3.1
+    # via aiohttp
 annotated-types==0.7.0
     # via pydantic
+antlr4-python3-runtime==4.9.3
+    # via hydra-core
+    # via omegaconf
+anyio==4.4.0
+    # via httpx
+    # via openai
 anytree==2.12.1
     # via graspologic
+attrs==23.2.0
+    # via aiohttp
 autograd==1.6.2
     # via hyppo
+backoff==2.2.1
+    # via unstructured
 beartype==0.18.5
     # via graspologic
+beautifulsoup4==4.12.3
+    # via unstructured
 certifi==2024.7.4
+    # via httpcore
+    # via httpx
     # via requests
+    # via unstructured-client
+chardet==5.2.0
+    # via unstructured
 charset-normalizer==3.3.2
     # via requests
+    # via unstructured-client
+click==8.1.7
+    # via nltk
+    # via typer
+colorlog==6.8.2
+    # via hydra-colorlog
 contourpy==1.2.1
     # via matplotlib
 cramjam==2.8.3
     # via fastparquet
 cycler==0.12.1
     # via matplotlib
+dataclasses-json==0.6.7
+    # via langchain-community
+    # via unstructured
+    # via unstructured-client
+deepdiff==7.0.1
+    # via unstructured-client
+distro==1.9.0
+    # via openai
+emoji==2.12.1
+    # via unstructured
 fastparquet==2024.5.0
     # via langchain-graphrag
+filetype==1.2.0
+    # via unstructured
 fonttools==4.53.1
     # via matplotlib
+frozenlist==1.4.1
+    # via aiohttp
+    # via aiosignal
 fsspec==2024.6.1
     # via fastparquet
 future==1.0.0
@@ -42,36 +87,89 @@ graspologic==3.4.1
     # via langchain-graphrag
 graspologic-native==1.2.1
     # via graspologic
+greenlet==3.0.3
+    # via sqlalchemy
+h11==0.14.0
+    # via httpcore
+httpcore==1.0.5
+    # via httpx
+httpx==0.27.0
+    # via ollama
+    # via openai
+    # via unstructured-client
+hydra-colorlog==1.2.0
+hydra-core==1.3.2
+    # via hydra-colorlog
 hyppo==0.4.0
     # via graspologic
 idna==3.7
+    # via anyio
+    # via httpx
     # via requests
+    # via unstructured-client
+    # via yarl
 joblib==1.4.2
     # via graspologic
+    # via nltk
     # via pynndescent
     # via scikit-learn
 jsonpatch==1.33
     # via langchain-core
+jsonpath-python==1.0.6
+    # via unstructured-client
 jsonpointer==3.0.0
     # via jsonpatch
 kiwisolver==1.4.5
     # via matplotlib
+langchain==0.2.12
+    # via langchain-community
+langchain-community==0.2.11
 langchain-core==0.2.28
+    # via langchain
+    # via langchain-community
     # via langchain-graphrag
+    # via langchain-ollama
+    # via langchain-openai
     # via langchain-text-splitters
+langchain-ollama==0.1.1
+langchain-openai==0.1.20
 langchain-text-splitters==0.2.2
+    # via langchain
     # via langchain-graphrag
+langdetect==1.0.9
+    # via unstructured
 langsmith==0.1.96
+    # via langchain
+    # via langchain-community
     # via langchain-core
 llvmlite==0.43.0
     # via numba
     # via pynndescent
+lxml==5.2.2
+    # via unstructured
+markdown-it-py==3.0.0
+    # via rich
+marshmallow==3.21.3
+    # via dataclasses-json
+    # via unstructured-client
 matplotlib==3.9.1
     # via graspologic
     # via seaborn
+mdurl==0.1.2
+    # via markdown-it-py
+multidict==6.0.5
+    # via aiohttp
+    # via yarl
+mypy-extensions==1.0.0
+    # via typing-inspect
+    # via unstructured-client
+nest-asyncio==1.6.0
+    # via unstructured-client
 networkx==3.3
     # via graspologic
     # via langchain-graphrag
+nltk==3.8.1
+    # via unstructured
 numba==0.60.0
     # via hyppo
     # via pynndescent
@@ -83,6 +181,8 @@ numpy==1.26.4
     # via gensim
     # via graspologic
     # via hyppo
+    # via langchain
+    # via langchain-community
     # via matplotlib
     # via numba
     # via pandas
@@ -94,13 +194,25 @@ numpy==1.26.4
     # via seaborn
     # via statsmodels
     # via umap-learn
+    # via unstructured
+ollama==0.3.1
+    # via langchain-ollama
+omegaconf==2.3.0
+    # via hydra-core
+openai==1.38.0
+    # via langchain-openai
+ordered-set==4.1.0
+    # via deepdiff
 orjson==3.10.6
     # via langsmith
 packaging==24.1
     # via fastparquet
+    # via hydra-core
     # via langchain-core
+    # via marshmallow
     # via matplotlib
     # via statsmodels
+    # via unstructured-client
 pandas==2.2.2
     # via fastparquet
     # via langchain-graphrag
@@ -112,26 +224,58 @@ pillow==10.4.0
     # via matplotlib
 pot==0.9.4
     # via graspologic
+psutil==6.0.0
+    # via unstructured
 pyarrow==17.0.0
     # via langchain-graphrag
 pydantic==2.8.2
+    # via langchain
     # via langchain-core
     # via langsmith
+    # via openai
 pydantic-core==2.20.1
     # via pydantic
+pygments==2.18.0
+    # via rich
 pynndescent==0.5.13
     # via umap-learn
 pyparsing==3.1.2
     # via matplotlib
+pypdf==4.3.1
+    # via unstructured-client
 python-dateutil==2.9.0.post0
     # via matplotlib
     # via pandas
+    # via unstructured-client
+python-dotenv==1.0.1
+python-iso639==2024.4.27
+    # via unstructured
+python-magic==0.4.27
+    # via unstructured
 pytz==2024.1
     # via pandas
 pyyaml==6.0.1
+    # via langchain
+    # via langchain-community
     # via langchain-core
+    # via omegaconf
+rapidfuzz==3.9.5
+    # via unstructured
+regex==2024.7.24
+    # via nltk
+    # via tiktoken
 requests==2.32.3
+    # via langchain
+    # via langchain-community
     # via langsmith
+    # via requests-toolbelt
+    # via tiktoken
+    # via unstructured
+    # via unstructured-client
+requests-toolbelt==1.0.0
+    # via unstructured-client
+rich==13.7.1
+    # via typer
 scikit-learn==1.5.1
     # via graspologic
     # via hyppo
@@ -148,30 +292,70 @@ scipy==1.12.0
     # via umap-learn
 seaborn==0.13.2
     # via graspologic
+shellingham==1.5.4
+    # via typer
 six==1.16.0
     # via anytree
+    # via langdetect
     # via patsy
     # via python-dateutil
+    # via unstructured-client
 smart-open==7.0.4
     # via gensim
+sniffio==1.3.1
+    # via anyio
+    # via httpx
+    # via openai
+soupsieve==2.5
+    # via beautifulsoup4
+sqlalchemy==2.0.31
+    # via langchain
+    # via langchain-community
 statsmodels==0.14.2
     # via graspologic
+tabulate==0.9.0
+    # via unstructured
 tenacity==8.5.0
+    # via langchain
+    # via langchain-community
     # via langchain-core
 threadpoolctl==3.5.0
     # via scikit-learn
+tiktoken==0.7.0
+    # via langchain-openai
 tqdm==4.66.4
+    # via nltk
+    # via openai
     # via umap-learn
+    # via unstructured
+typer==0.12.3
 typing-extensions==4.12.2
+    # via emoji
     # via graspologic
     # via langchain-core
+    # via openai
     # via pydantic
     # via pydantic-core
+    # via sqlalchemy
+    # via typer
+    # via typing-inspect
+    # via unstructured
+    # via unstructured-client
+typing-inspect==0.9.0
+    # via dataclasses-json
+    # via unstructured-client
 tzdata==2024.1
     # via pandas
 umap-learn==0.5.6
     # via graspologic
+unstructured==0.15.0
+unstructured-client==0.25.1
+    # via unstructured
 urllib3==2.2.2
     # via requests
+    # via unstructured-client
 wrapt==1.16.0
     # via smart-open
+    # via unstructured
+yarl==1.9.4
+    # via aiohttp

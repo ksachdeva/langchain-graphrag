@@ -21,13 +21,17 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
-dev-dependencies = [
-    "black>=24.8.0",
-    "pytest>=8.3.2",
-]
+dev-dependencies = ["black>=24.8.0", "pytest>=8.3.2"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/langchain_graphrag"]
+
+[tool.rye.workspace]
+members = [
+    "langchain_graphrag",
+    "examples/simple-app",
+    "examples/sophisticated-app",
+]

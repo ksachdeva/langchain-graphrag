@@ -21,5 +21,5 @@ python examples/simple-app/app/main.py --help
 
 ```bash
 # assuming you are at the root of the repo
-python examples/simple-app/app/main.py indexer --input-dir examples/input-data --output-dir temp --prompts-dir examples/prompts --llm-cache-dir temp/cache
+python examples/simple-app/app/main.py indexer --input-dir examples/input-data --output-dir temp --prompts-dir examples/prompts --cache-dir temp/cache
 ```

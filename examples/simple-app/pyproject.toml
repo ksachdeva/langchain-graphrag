@@ -1,0 +1,20 @@
+[project]
+dependencies = [
+    "typer",
+    "python-dotenv",
+    "unstructured",
+    "langchain-community",
+    "langchain-openai",
+    "langchain-ollama",
+]
+name = "simple-app"
+version = "0.0.1"
+description = "A simple app using langchain-graphrag"
+authors = [{ name = "Kapil Sachdeva", email = "notan@email.com" }]
+readme = "README.md"
+requires-python = ">= 3.12"
+
+[tool.rye]
+virtual = true
+managed = true
+dev-dependencies = ["black>=24.8.0"]
