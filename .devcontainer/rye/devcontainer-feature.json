@@ -1,0 +1,15 @@
+{
+    "id": "rye",
+    "version": "0.1",
+    "name": "Rye",
+    "description": "A Hassle-Free Python Experience",
+    "dependsOn": {
+        "ghcr.io/devcontainers/features/common-utils": {}
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/python"
+    ],
+    "containerEnv": {
+        "RYE_NO_AUTO_INSTALL": "1"
+    }
+}

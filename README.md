@@ -22,9 +22,15 @@ The primary reasons for re-implementing:
     - is bit difficult to understand because of reliance on `datashaper` package
     - does not support models other than OpenAI or AzureOpenAI
 
-## Will it be released as pip installable package?
+## Install
 
-Perhaps!
+Note - this is work in progress. 
+
+I published the package so as to reserve the name. Clone the repo and install the package locally.
+
+```bash
+pip install langchain-graphrag
+```
 
 ## Projects 
 
@@ -35,6 +41,26 @@ There are 3 projects in the repo:
 This is the core library that implements the GraphRAG paper. It is built on top of the `langchain` library.
 
 The concepts described in GraphRAG paper are implemented in a modular fashion with easy extensibility and replacement in mind. 
+
+To use the development version (Recommended as it is under active development):
+
+#### Clone the repo
+
+```bash
+git clone https://github.com/ksachdeva/langchain-graphrag.git
+```
+#### Open in VSCode devcontainer (Recommended)
+
+Devcontainer will install all the dependencies
+
+#### If not using devcontainer
+
+Make sure you have `rye` installed. See https://rye.astral.sh/
+
+```bash
+# sync all the dependencies
+rye sync
+```
 
 ### `examples/simple-app`
 

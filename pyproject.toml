@@ -1,0 +1,30 @@
+[project]
+name = "langchain-graphrag"
+version = "0.0.1"
+description = "Implementation of GraphRAG (https://arxiv.org/pdf/2404.16130)"
+authors = [{ name = "Kapil Sachdeva", email = "notan@email.com" }]
+dependencies = [
+    "pandas>=2.2.2",
+    "pyarrow>=17.0.0",
+    "fastparquet>=2024.5.0",
+    "networkx>=3.3",
+    "langchain-core>=0.2.27",
+    "langchain-text-splitters>=0.2.2",
+    "graspologic>=3.4.1",
+]
+readme = "README.md"
+requires-python = ">= 3.12"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = ["black>=24.8.0"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/langchain_graphrag"]

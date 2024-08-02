@@ -51,9 +51,12 @@
         // Enable Docker (via Docker-in-Docker)
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         // Modern shell utils
-        "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:1": {}
+        "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:1": {},
+        // rye
+        "./rye": {}
     },
     "mounts": [
         "source=devcontainer-zshhistory,target=/commandhistory,type=volume"
-    ]
+    ],
+    "postCreateCommand": "bash scripts/post-create.sh"
 }

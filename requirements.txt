@@ -1,7 +1,0 @@
-pandas
-pyarrow
-fastparquet
-networkx
-langchain-core
-langchain-text-splitters
-graspologic==3.4.1
