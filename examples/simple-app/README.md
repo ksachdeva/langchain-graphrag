@@ -6,13 +6,9 @@ The `cli` uses `typer` to create a command line interface.
 
 ## Install
 
-```bash
-pip install -r requirements.txt
-```
+Normally `rye sync` at the root of the repo will install all the dependenceis
 
 ## Run
-
-Make sure the `langchain_graphrag` in your PYTHONPATH
 
 ```bash
 # assuming you are at the root of the repo

@@ -5,9 +5,10 @@ configurations for e.g. different tokenizers, llms, community detection algorith
 
 ## Install
 
-```bash
-pip install -r requirements.txt
-```
+If you are in devcontainer, nothing to do!
+
+If not then
+`rye sync` at the root of the repo will install all the dependenceis
 
 ## Run
 
