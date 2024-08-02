@@ -49,6 +49,8 @@ hyppo==0.4.0
     # via graspologic
 idna==3.7
     # via requests
+iniconfig==2.0.0
+    # via pytest
 joblib==1.4.2
     # via graspologic
     # via pynndescent
@@ -106,6 +108,7 @@ packaging==24.1
     # via fastparquet
     # via langchain-core
     # via matplotlib
+    # via pytest
     # via statsmodels
 pandas==2.2.2
     # via fastparquet
@@ -120,6 +123,8 @@ pillow==10.4.0
     # via matplotlib
 platformdirs==4.2.2
     # via black
+pluggy==1.5.0
+    # via pytest
 pot==0.9.4
     # via graspologic
 pyarrow==17.0.0
@@ -133,6 +138,7 @@ pynndescent==0.5.13
     # via umap-learn
 pyparsing==3.1.2
     # via matplotlib
+pytest==8.3.2
 python-dateutil==2.9.0.post0
     # via matplotlib
     # via pandas

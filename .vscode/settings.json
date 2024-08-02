@@ -14,7 +14,7 @@
         "**/__pycache__": true
     },
     "python.testing.pytestArgs": [
-        "langchain_graphrag"
+        "tests"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,

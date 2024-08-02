@@ -1,9 +1,10 @@
 import networkx as nx
 
 from langchain_core.language_models import FakeListLLM
+from langchain_core.output_parsers import StrOutputParser
 
-from .prompt import DefaultSummarizeDescriptionPromptBuilder
-from .summarizer import EntityRelationshipDescriptionSummarizer
+from langchain_graphrag.indexing.graph_generation.entity_relationship_summarization.prompt import DefaultSummarizeDescriptionPromptBuilder
+from langchain_graphrag.indexing.graph_generation.entity_relationship_summarization.summarizer import EntityRelationshipDescriptionSummarizer
 
 
 def test_summarizer():
@@ -12,7 +13,7 @@ def test_summarizer():
     prompt_builder = DefaultSummarizeDescriptionPromptBuilder(
         prompt_path="/workspaces/langchain-graphrag/examples/prompts/summarize_descriptions.txt"
     )
-    summarizer = EntityRelationshipDescriptionSummarizer(prompt_builder, llm)
+    summarizer = EntityRelationshipDescriptionSummarizer(prompt_builder, llm, StrOutputParser())
 
     graph1 = nx.Graph()
     graph1.add_node("node1", source_id=["1"], description=[" "])
