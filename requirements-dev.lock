@@ -37,7 +37,6 @@ beartype==0.18.5
     # via graspologic
 beautifulsoup4==4.12.3
     # via unstructured
-black==24.8.0
 certifi==2024.7.4
     # via httpcore
     # via httpx
@@ -49,7 +48,6 @@ charset-normalizer==3.3.2
     # via requests
     # via unstructured-client
 click==8.1.7
-    # via black
     # via nltk
     # via typer
 colorlog==6.8.2
@@ -165,7 +163,6 @@ multidict==6.0.5
     # via aiohttp
     # via yarl
 mypy-extensions==1.0.0
-    # via black
     # via typing-inspect
     # via unstructured-client
 nest-asyncio==1.6.0
@@ -211,7 +208,6 @@ ordered-set==4.1.0
 orjson==3.10.6
     # via langsmith
 packaging==24.1
-    # via black
     # via fastparquet
     # via hydra-core
     # via langchain-core
@@ -225,14 +221,10 @@ pandas==2.2.2
     # via langchain-graphrag
     # via seaborn
     # via statsmodels
-pathspec==0.12.1
-    # via black
 patsy==0.5.6
     # via statsmodels
 pillow==10.4.0
     # via matplotlib
-platformdirs==4.2.2
-    # via black
 pluggy==1.5.0
     # via pytest
 pot==0.9.4

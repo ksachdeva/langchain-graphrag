@@ -10,4 +10,6 @@ curl -sSf https://rye.astral.sh/get | RYE_HOME=$RYE_HOME RYE_INSTALL_OPTION="--y
 
 echo 'source "$HOME/.rye/env"' >> /home/vscode/.zshrc
 
+chown -R vscode $RYE_HOME
+
 echo "Done!"

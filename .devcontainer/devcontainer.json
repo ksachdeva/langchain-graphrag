@@ -31,7 +31,7 @@
         },
         "extensions": [
             "ms-python.python",
-            "ms-python.black-formatter",
+            "charliermarsh.ruff",
             "ms-python.vscode-pylance",
             "ms-toolsai.jupyter",
             "visualstudioexptteam.vscodeintellicode"
