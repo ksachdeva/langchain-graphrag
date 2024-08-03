@@ -39,7 +39,6 @@ class Indexer:
         self._text_units_table_generator = text_units_table_generator
 
     def run(self):
-
         # Step 0 - For now only 1 document is supported
         document = self._data_loader.load()[0]
 

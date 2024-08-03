@@ -22,7 +22,6 @@ def apply_level(
     communities: Communities,
     level: CommunityLevel,
 ) -> nx.Graph:
-
     graph = deepcopy(source_graph)
 
     # TODO: Revist - do we really need this

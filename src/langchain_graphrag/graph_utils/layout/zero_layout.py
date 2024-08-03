@@ -40,7 +40,6 @@ def get_zero_positions(
 
 
 class ZeroLayout:
-
     def run(self, graph: nx.Graph) -> GraphLayout:
         node_clusters = []
         node_sizes = []

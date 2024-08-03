@@ -5,7 +5,6 @@ from .node_position import GraphLayout
 
 
 class PositionedGraphBuilder:
-
     def run(self, graph: nx.Graph, layout: GraphLayout) -> GraphLayout:
         positioned_graph = deepcopy(graph)
         for node_position in layout:

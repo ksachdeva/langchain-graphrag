@@ -33,7 +33,6 @@ class RelationshipsTableGenerator:
         return pd.DataFrame.from_records(records)
 
     def run(self, graph: nx.Graph) -> pd.DataFrame:
-
         # Step 1
         # Generate embeddings for the description of edges
         description_embeddings = self._relationship_embedding_generator.run(graph)

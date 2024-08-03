@@ -1,4 +1,4 @@
-""" A module to extract text units from the document """
+"""A module to extract text units from the document"""
 
 from typing import Sequence
 from typing import TypedDict

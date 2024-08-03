@@ -10,7 +10,6 @@ from langchain.embeddings.cache import CacheBackedEmbeddings
 
 @hydra.main(version_base="1.3", config_path="./configs", config_name="app.yaml")
 def indexer(cfg):
-
     # some how seeing httpx INFO LEVEL for requests
     # disabling it here for now.
     # TODO: should be able to do it via hydra config

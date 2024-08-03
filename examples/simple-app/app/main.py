@@ -116,7 +116,6 @@ def make_embedding_instance(
     embedding_model: EmbeddingModel,
     cache_dir: Path,
 ) -> Embeddings:
-
     underlying_embedding: Embeddings
 
     if embedding_type == EmbeddingModelType.openai:

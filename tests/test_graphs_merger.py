@@ -23,9 +23,15 @@ def test_node_merge():
     )
 
     graph2 = nx.Graph()
-    graph2.add_node("node1", text_unit_ids=["4"], description=["description1 from graph2"])
-    graph2.add_node("node2", text_unit_ids=["5"], description=["description2 from graph2"])
-    graph2.add_node("node4", text_unit_ids=["6"], description=["description4 from graph2"])
+    graph2.add_node(
+        "node1", text_unit_ids=["4"], description=["description1 from graph2"]
+    )
+    graph2.add_node(
+        "node2", text_unit_ids=["5"], description=["description2 from graph2"]
+    )
+    graph2.add_node(
+        "node4", text_unit_ids=["6"], description=["description4 from graph2"]
+    )
 
     graph2.add_edge(
         "node1",

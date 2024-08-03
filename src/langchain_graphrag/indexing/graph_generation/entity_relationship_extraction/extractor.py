@@ -29,7 +29,6 @@ class EntityRelationshipExtractor:
         self._seed = seed
 
     def invoke(self, input_data: pd.DataFrame) -> nx.Graph:
-
         def _run_chain(series: pd.Series) -> nx.Graph:
             document_id, text_id, text = (
                 series["document_id"],

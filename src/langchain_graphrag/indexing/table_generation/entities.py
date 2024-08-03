@@ -37,7 +37,6 @@ class EntitiesTableGenerator:
         return pd.DataFrame.from_records(records)
 
     def run(self, graph: nx.Graph) -> pd.DataFrame:
-
         # Step 1
         # Generate graph embeddings
         graph_embeddings = self._graph_embedding_generator.run(graph)

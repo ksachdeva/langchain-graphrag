@@ -1,4 +1,4 @@
-""" This modules takes a graph and generater embedding for name and description of various entities """
+"""This modules takes a graph and generater embedding for name and description of various entities"""
 
 import numpy as np
 import networkx as nx

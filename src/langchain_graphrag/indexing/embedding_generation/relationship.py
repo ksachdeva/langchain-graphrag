@@ -1,5 +1,5 @@
-""" This modules takes a graph and generates embedding for 
-    the relationship description between various nodes """
+"""This modules takes a graph and generates embedding for
+the relationship description between various nodes"""
 
 import numpy as np
 import networkx as nx

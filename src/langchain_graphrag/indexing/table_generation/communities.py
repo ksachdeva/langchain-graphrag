@@ -9,7 +9,6 @@ from langchain_graphrag.indexing.graph_clustering import CommunityLevel
 
 
 class CommunitiesTableGenerator:
-
     def _unpack_nodes(self, level: CommunityLevel, graph: nx.Graph) -> pd.DataFrame:
         records = [
             {"label": label, "level": level, **(node_data or {})}

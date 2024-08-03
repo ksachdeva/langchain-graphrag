@@ -39,7 +39,6 @@ def _make_temporary_frame(
 
 
 class TextUnitsTableGenerator:
-
     def __init__(self, embedding_model: Embeddings):
         self._embedding_model = embedding_model
 
