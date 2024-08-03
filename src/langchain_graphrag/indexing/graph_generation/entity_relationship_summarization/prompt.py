@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from langchain_core.prompts import PromptTemplate
+
 from langchain_graphrag.protocols import PromptBuilder
 
 
@@ -9,5 +10,4 @@ class DefaultSummarizeDescriptionPromptBuilder(PromptBuilder):
         self._prompt_path = prompt_path
 
     def build(self) -> PromptTemplate:
-        prompt_template = PromptTemplate.from_file(self._prompt_path)
-        return prompt_template
+        return PromptTemplate.from_file(self._prompt_path)

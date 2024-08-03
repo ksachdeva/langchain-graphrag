@@ -1,6 +1,5 @@
-from typing import Any
-
 from enum import StrEnum
+from typing import Any
 
 import networkx as nx
 
@@ -17,7 +16,6 @@ def merge_attributes(
     source_node: dict[str, Any],
     attribs: list[AttributesToMerge],
 ):
-    # separator = ", "
     for attrib in attribs:
         # I am expecting the attributes are not missing
         target_attrib = target_node.get(attrib)
@@ -45,7 +43,7 @@ def merge_nodes(*, target_graph: nx.Graph, sub_graph: nx.Graph):
 
 
 def merge_edges(*, target_graph: nx.Graph, sub_graph: nx.Graph):
-    for source, target, edge_data in sub_graph.edges(data=True):  # type: ignore
+    for source, target, edge_data in sub_graph.edges(data=True):
         if not target_graph.has_edge(source, target):
             target_graph.add_edge(source, target, **(edge_data or {}))
         else:

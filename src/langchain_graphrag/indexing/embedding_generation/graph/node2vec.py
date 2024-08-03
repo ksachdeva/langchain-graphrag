@@ -1,13 +1,16 @@
-import numpy as np
-import networkx as nx
+"""Graph embedding generation using node2vec."""
+
 import graspologic as gl
+import networkx as nx
+import numpy as np
 
 from langchain_graphrag.graph_utils.stable_lcc import stable_largest_connected_component
 
 
 class Node2VectorGraphEmbeddingGenerator:
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
+        *,
         use_lcc: bool = True,
         dimensions: int = 1536,
         num_walks: int = 10,

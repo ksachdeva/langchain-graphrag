@@ -1,8 +1,7 @@
 import networkx as nx
-
-from langchain_graphrag.indexing.graph_generation.entity_relationship_extraction.graphs_merger import (
-    merge_nodes,
+from langchain_graphrag.indexing.graph_generation.entity_relationship_extraction.graphs_merger import (  # noqa: E501
     merge_edges,
+    merge_nodes,
 )
 
 

@@ -1,15 +1,13 @@
 from random import Random
 
-import pandas as pd
 import networkx as nx
-
-from tqdm import tqdm
-
+import pandas as pd
 from langchain_core.language_models import BaseLLM
 from langchain_core.output_parsers.base import BaseOutputParser
+from tqdm import tqdm
 
-from langchain_graphrag.utils.uuid import gen_uuid
 from langchain_graphrag.protocols import PromptBuilder
+from langchain_graphrag.utils.uuid import gen_uuid
 
 from .graphs_merger import GraphsMerger
 
@@ -30,7 +28,7 @@ class EntityRelationshipExtractor:
 
     def invoke(self, input_data: pd.DataFrame) -> nx.Graph:
         def _run_chain(series: pd.Series) -> nx.Graph:
-            document_id, text_id, text = (
+            _, text_id, text = (
                 series["document_id"],
                 series["id"],
                 series["text"],
@@ -66,7 +64,7 @@ class EntityRelationshipExtractor:
             graph.edges[source, target]["target_degree"] = target_degree
             graph.edges[source, target]["rank"] = source_degree + target_degree
 
-        random = Random(self._seed)  # noqa S311
+        random = Random(self._seed)  # noqa: S311
 
         # add ids to nodes
         for index, node in enumerate(graph.nodes()):

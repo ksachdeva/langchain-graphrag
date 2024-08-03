@@ -1,15 +1,12 @@
-"""A module to extract text units from the document"""
-
-from typing import Sequence
-from typing import TypedDict
+"""A module to extract text units from the document."""
 
 import uuid
+from typing import Sequence, TypedDict
 
 import pandas as pd
-from tqdm import tqdm
-
 from langchain_core.documents import Document
 from langchain_text_splitters import TextSplitter
+from tqdm import tqdm
 
 
 class TextUnit(TypedDict):
@@ -25,7 +22,7 @@ class TextUnitExtractor:
     def run(self, document: Document) -> pd.DataFrame:
         text_units = self._text_splitter.split_text(document.page_content)
 
-        document_id = document_id if document.id else str(uuid.uuid4())
+        document_id = document.id if document.id else str(uuid.uuid4())
 
         response: Sequence[TextUnit] = []
         for t in tqdm(text_units):

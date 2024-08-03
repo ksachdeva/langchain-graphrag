@@ -1,8 +1,7 @@
 from typing import cast
 
-import pandas as pd
 import networkx as nx
-
+import pandas as pd
 from pandas._typing import Suffixes
 
 from langchain_graphrag.indexing.graph_clustering import CommunityLevel
@@ -48,13 +47,13 @@ class CommunitiesTableGenerator:
         )
 
         def array_agg_distinct(series: pd.Series) -> list[pd.Series]:
-            return [e for e in series.unique()]
+            return list(series.unique())
 
         is_list = isinstance(combined_clusters.iloc[0]["text_unit_ids_1"], list)
 
         def array_agg_distinct_check_list(series: pd.Series) -> list[pd.Series]:
             mod_series = series.apply(lambda x: ",".join(x)) if is_list else series
-            return [e for e in mod_series.unique()]
+            return list(mod_series.unique())
 
         aggregations = {
             "id_2": array_agg_distinct,
@@ -137,7 +136,7 @@ class CommunitiesTableGenerator:
         ].apply(lambda x: f"Community {x}")
 
         # and finally we select the columns we need
-        result = filtered_clustered_relationships[
+        return filtered_clustered_relationships[
             [
                 "id",
                 "title",
@@ -146,5 +145,3 @@ class CommunitiesTableGenerator:
                 "text_unit_ids",
             ]
         ]
-
-        return result

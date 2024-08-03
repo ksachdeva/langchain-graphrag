@@ -2,19 +2,19 @@ from pathlib import Path
 
 from langchain_core.document_loaders.base import BaseLoader
 
-from .text_unit_extractor import TextUnitExtractor
-
-from .graph_generation import GraphGenerator
 from .graph_clustering import HierarchicalLeidenCommunityDetector
-
-from .table_generation import EntitiesTableGenerator
-from .table_generation import CommunitiesTableGenerator
-from .table_generation import RelationshipsTableGenerator
-from .table_generation import TextUnitsTableGenerator
+from .graph_generation import GraphGenerator
+from .table_generation import (
+    CommunitiesTableGenerator,
+    EntitiesTableGenerator,
+    RelationshipsTableGenerator,
+    TextUnitsTableGenerator,
+)
+from .text_unit_extractor import TextUnitExtractor
 
 
 class Indexer:
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         output_dir: Path | str,
         data_loader: BaseLoader,

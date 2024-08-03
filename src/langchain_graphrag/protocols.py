@@ -1,4 +1,5 @@
 from typing import Protocol
+
 from langchain_core.prompts import PromptTemplate
 
 

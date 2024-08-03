@@ -1,4 +1,5 @@
 from copy import deepcopy
+
 import networkx as nx
 
 from .node_position import GraphLayout

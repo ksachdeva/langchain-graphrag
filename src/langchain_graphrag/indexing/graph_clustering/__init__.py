@@ -1,2 +1,5 @@
-from .community_detector import HierarchicalLeidenCommunityDetector
-from .community_detector import CommunityLevel
+"""Graph clustering module."""
+
+from .community_detector import CommunityLevel, HierarchicalLeidenCommunityDetector
+
+__all__ = ["CommunityLevel", "HierarchicalLeidenCommunityDetector"]

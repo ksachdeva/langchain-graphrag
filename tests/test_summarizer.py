@@ -1,12 +1,8 @@
 import networkx as nx
-
 from langchain_core.language_models import FakeListLLM
 from langchain_core.output_parsers import StrOutputParser
-
-from langchain_graphrag.indexing.graph_generation.entity_relationship_summarization.prompt import (
+from langchain_graphrag.indexing.graph_generation import (
     DefaultSummarizeDescriptionPromptBuilder,
-)
-from langchain_graphrag.indexing.graph_generation.entity_relationship_summarization.summarizer import (
     EntityRelationshipDescriptionSummarizer,
 )
 

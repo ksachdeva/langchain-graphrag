@@ -1,12 +1,9 @@
-"""This modules takes a graph and generates embedding for
-the relationship description between various nodes"""
+"""Embedding generation for the relationship descriptions in the graph."""
 
-import numpy as np
 import networkx as nx
-
-from tqdm import tqdm
-
+import numpy as np
 from langchain_core.embeddings import Embeddings
+from tqdm import tqdm
 
 
 class RelationshipEmbeddingGenerator:

@@ -55,7 +55,20 @@ ignore = [
     "Q002",
     "Q003",
     "W191",
+    "T201",
+    "D101",   # Missing docstring in public class
+    "D102",   # Missing docstring in public method
+    "D103",   # Missing docstring in public function
+    "D107",   # Missing docstring in `__init__`
+    "ANN201", # Missing return type annotation 
+    "ANN204", # Missing return type annotation 
+    "ANN401",
+    "PD002",  # inplace=True 
+    "C408",   # Unnecessary dict call
+    "E402",
+    "UP035",
 ]
+
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]

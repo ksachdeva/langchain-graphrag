@@ -2,9 +2,9 @@
 # are taken from https://github.com/microsoft/graphrag/
 # and are modified to fit the needs of this project
 
+import html
 from typing import Any, cast
 
-import html
 import networkx as nx
 from graspologic.utils import largest_connected_component
 
@@ -57,7 +57,6 @@ def normalize_node_names(graph: nx.Graph | nx.DiGraph) -> nx.Graph | nx.DiGraph:
 
 
 def stable_largest_connected_component(graph: nx.Graph) -> nx.Graph:
-    """Return the largest connected component of the graph, with nodes and edges sorted in a stable way."""
     graph = graph.copy()
     graph = cast(nx.Graph, largest_connected_component(graph))
     graph = normalize_node_names(graph)

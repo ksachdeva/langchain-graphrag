@@ -1,13 +1,14 @@
-from typing import NewType
-from typing import Sequence
-
+from collections.abc import Sequence
 from copy import deepcopy
+from typing import NewType
+
 import networkx as nx
+from graspologic.partition import (
+    HierarchicalCluster,
+    HierarchicalClusters,
+    hierarchical_leiden,
+)
 
-from graspologic.partition import hierarchical_leiden
-from graspologic.partition import HierarchicalCluster, HierarchicalClusters
-
-from langchain_graphrag.utils.uuid import gen_uuid
 from langchain_graphrag.graph_utils.stable_lcc import stable_largest_connected_component
 
 CommunityLevel = NewType("CommunityLevel", int)
@@ -63,6 +64,7 @@ def apply_clustering(
 class HierarchicalLeidenCommunityDetector:
     def __init__(
         self,
+        *,
         use_lcc: bool = True,
         max_cluster_size: int = 10,
         seed: int = 0xDEADBEEF,
@@ -108,6 +110,4 @@ class HierarchicalLeidenCommunityDetector:
                 communities.append((level, cluster_id, nodes))
 
         # time to apply clustering
-        graph_level_pairs = apply_clustering(graph, levels, communities)
-
-        return graph_level_pairs
+        return apply_clustering(graph, levels, communities)

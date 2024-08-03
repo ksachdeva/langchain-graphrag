@@ -1,9 +1,8 @@
-from typing import Protocol
 from pathlib import Path
 
 from langchain_core.prompts import PromptTemplate
-from langchain_graphrag.protocols import PromptBuilder
 
+from langchain_graphrag.protocols import PromptBuilder
 
 DEFAULT_TUPLE_DELIMITER = "<|>"
 DEFAULT_RECORD_DELIMITER = "##"
@@ -28,10 +27,9 @@ class DefaultEntityExtractionPromptBuilder(PromptBuilder):
 
     def build(self) -> PromptTemplate:
         prompt_template = PromptTemplate.from_file(self._prompt_path)
-        prompt_partial = prompt_template.partial(
+        return prompt_template.partial(
             completion_delimiter=self._completion_delimiter,
             tuple_delimiter=self._tuple_delimiter,
             record_delimiter=self._record_delimiter,
             entity_types=self._entity_types,
         )
-        return prompt_partial

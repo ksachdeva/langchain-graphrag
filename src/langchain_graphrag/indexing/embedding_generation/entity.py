@@ -1,11 +1,9 @@
-"""This modules takes a graph and generater embedding for name and description of various entities"""
+"""Embedding generation for the entity descriptions in the graph."""
 
-import numpy as np
 import networkx as nx
-
-from tqdm import tqdm
-
+import numpy as np
 from langchain_core.embeddings import Embeddings
+from tqdm import tqdm
 
 
 class EntityEmbeddingGenerator:

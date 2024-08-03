@@ -1,10 +1,11 @@
+# ruff: noqa: B008
+
 import os
 from enum import StrEnum
 from pathlib import Path
 
-from dotenv import load_dotenv
-
 import typer
+from dotenv import load_dotenv
 from typer import Typer
 
 # going to do load_dotenv() here
@@ -12,48 +13,42 @@ from typer import Typer
 # before the imports below
 load_dotenv()
 
+import langchain_graphrag.indexing.graph_generation.entity_relationship_extraction as er
+import langchain_graphrag.indexing.graph_generation.entity_relationship_summarization as es  # noqa: E501
+from langchain.embeddings.cache import CacheBackedEmbeddings
+from langchain_community.cache import SQLiteCache
+from langchain_community.document_loaders.directory import DirectoryLoader
+from langchain_community.storage import SQLStore
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import BaseLLM
 from langchain_core.output_parsers.string import StrOutputParser
-
-from langchain_text_splitters import TokenTextSplitter
-
-from langchain_community.cache import SQLiteCache
-from langchain_community.storage import SQLStore
-from langchain_community.document_loaders.directory import DirectoryLoader
-
-from langchain_ollama import OllamaLLM
-from langchain_openai import ChatOpenAI, AzureChatOpenAI
-
-from langchain.embeddings.cache import CacheBackedEmbeddings
-from langchain_ollama import OllamaEmbeddings
-from langchain_openai import OpenAIEmbeddings, AzureOpenAIEmbeddings
-
-
-import langchain_graphrag.indexing.graph_generation.entity_relationship_extraction as er
-import langchain_graphrag.indexing.graph_generation.entity_relationship_summarization as es
-
-from langchain_graphrag.indexing.graph_generation.generator import GraphGenerator
-
-from langchain_graphrag.indexing.indexer import Indexer
-from langchain_graphrag.indexing.text_unit_extractor import TextUnitExtractor
-from langchain_graphrag.indexing.graph_clustering.community_detector import (
-    HierarchicalLeidenCommunityDetector,
-)
-from langchain_graphrag.indexing.embedding_generation.graph import (
-    Node2VectorGraphEmbeddingGenerator,
-)
-
 from langchain_graphrag.indexing.embedding_generation import (
     EntityEmbeddingGenerator,
     RelationshipEmbeddingGenerator,
 )
-
-
-from langchain_graphrag.indexing.table_generation import EntitiesTableGenerator
-from langchain_graphrag.indexing.table_generation import CommunitiesTableGenerator
-from langchain_graphrag.indexing.table_generation import RelationshipsTableGenerator
-from langchain_graphrag.indexing.table_generation import TextUnitsTableGenerator
+from langchain_graphrag.indexing.embedding_generation.graph import (
+    Node2VectorGraphEmbeddingGenerator,
+)
+from langchain_graphrag.indexing.graph_clustering.community_detector import (
+    HierarchicalLeidenCommunityDetector,
+)
+from langchain_graphrag.indexing.graph_generation.generator import GraphGenerator
+from langchain_graphrag.indexing.indexer import Indexer
+from langchain_graphrag.indexing.table_generation import (
+    CommunitiesTableGenerator,
+    EntitiesTableGenerator,
+    RelationshipsTableGenerator,
+    TextUnitsTableGenerator,
+)
+from langchain_graphrag.indexing.text_unit_extractor import TextUnitExtractor
+from langchain_ollama import OllamaEmbeddings, OllamaLLM
+from langchain_openai import (
+    AzureChatOpenAI,
+    AzureOpenAIEmbeddings,
+    ChatOpenAI,
+    OpenAIEmbeddings,
+)
+from langchain_text_splitters import TokenTextSplitter
 
 app = Typer()
 
@@ -68,7 +63,7 @@ class LLMModel(StrEnum):
     gpt4o: str = "gpt-4o"
     gpt4omini: str = "gpt-4o-mini"
     gemma2_9b_instruct_q8_0: str = "gemma2:9b-instruct-q8_0"
-    gemma2_27b_instruct_q6_K: str = "gemma2:27b-instruct-q6_K"
+    gemma2_27b_instruct_q6_K: str = "gemma2:27b-instruct-q6_K"  # noqa: N815
 
 
 class EmbeddingModelType(StrEnum):
@@ -93,7 +88,8 @@ def make_llm_instance(
             api_key=os.getenv("LANGCHAIN_GRAPHRAG_OPENAI_CHAT_API_KEY"),
             cache=SQLiteCache(str(cache_dir / "openai_cache.db")),
         )
-    elif llm_type == LLMType.azure_openai:
+
+    if llm_type == LLMType.azure_openai:
         return AzureChatOpenAI(
             model=llm_model,
             api_version="2024-05-01-preview",
@@ -104,11 +100,14 @@ def make_llm_instance(
             ),
             cache=SQLiteCache(str(cache_dir / "azure_openai_cache.db")),
         )
-    elif llm_type == LLMType.ollama:
+
+    if llm_type == LLMType.ollama:
         return OllamaLLM(
             model=llm_model,
             cache=SQLiteCache(str(cache_dir / "ollama.db")),
         )
+
+    raise ValueError
 
 
 def make_embedding_instance(
@@ -140,16 +139,14 @@ def make_embedding_instance(
     store = SQLStore(namespace=embedding_model, db_url=embedding_db_path)
     store.create_schema()
 
-    cached_embedding_model = CacheBackedEmbeddings.from_bytes_store(
+    return CacheBackedEmbeddings.from_bytes_store(
         underlying_embeddings=underlying_embedding,
         document_embedding_cache=store,
     )
 
-    return cached_embedding_model
-
 
 @app.command()
-def indexer(
+def indexer(  # noqa: PLR0913
     input_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     prompts_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),

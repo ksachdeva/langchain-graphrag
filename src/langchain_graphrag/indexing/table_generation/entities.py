@@ -1,6 +1,6 @@
+import networkx as nx
 import numpy as np
 import pandas as pd
-import networkx as nx
 
 from langchain_graphrag.indexing.embedding_generation import (
     EntityEmbeddingGenerator,
@@ -47,6 +47,4 @@ class EntitiesTableGenerator:
 
         # Step 3
         # Make a dataframe with embeddings & other information
-        df = self._unpack_nodes(graph, name_description_embeddings, graph_embeddings)
-
-        return df
+        return self._unpack_nodes(graph, name_description_embeddings, graph_embeddings)

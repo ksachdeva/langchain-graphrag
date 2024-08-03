@@ -1,9 +1,10 @@
 import networkx as nx
 
-from .node_position import NodePosition, GraphLayout
+from .node_position import GraphLayout, NodePosition
 
 
 def get_zero_positions(
+    *,
     node_labels: list[str],
     node_categories: list[int] | None = None,
     node_sizes: list[int] | None = None,

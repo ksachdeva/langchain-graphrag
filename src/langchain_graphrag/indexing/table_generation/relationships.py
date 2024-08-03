@@ -1,6 +1,6 @@
+import networkx as nx
 import numpy as np
 import pandas as pd
-import networkx as nx
 
 from langchain_graphrag.indexing.embedding_generation import (
     RelationshipEmbeddingGenerator,
@@ -39,6 +39,4 @@ class RelationshipsTableGenerator:
 
         # Step 2
         # Make a dataframe with embeddings & other information
-        df = self._unpack_edges(graph, description_embeddings)
-
-        return df
+        return self._unpack_edges(graph, description_embeddings)

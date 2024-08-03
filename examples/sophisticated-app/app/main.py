@@ -1,15 +1,14 @@
 import logging
-from dotenv import load_dotenv
 
-from omegaconf import DictConfig, OmegaConf
 import hydra
-
-from langchain_community.storage import SQLStore
+from dotenv import load_dotenv
 from langchain.embeddings.cache import CacheBackedEmbeddings
+from langchain_community.storage import SQLStore
+from omegaconf import OmegaConf
 
 
 @hydra.main(version_base="1.3", config_path="./configs", config_name="app.yaml")
-def indexer(cfg):
+def indexer(cfg):  # noqa: ANN001
     # some how seeing httpx INFO LEVEL for requests
     # disabling it here for now.
     # TODO: should be able to do it via hydra config
@@ -23,7 +22,7 @@ def indexer(cfg):
 
     underlying_embedding_model = hydra.utils.instantiate(cfg.extra.embedding_model)
 
-    # hack: to create the table for embedding store
+    # HACK: to create the table for embedding store
     embedding_db_path = cfg.paths.sqllite_embedding_cache_dir + "/embedding.db"
     store = SQLStore(
         namespace=underlying_embedding_model.model,

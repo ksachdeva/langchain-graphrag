@@ -1,31 +1,31 @@
-from typing import Any
-
-import re
 import html
 import numbers
-
+import re
 from collections.abc import Mapping
+from typing import Any
 
 import networkx as nx
 from langchain_core.output_parsers import BaseOutputParser
 
 from .prompt import DEFAULT_RECORD_DELIMITER, DEFAULT_TUPLE_DELIMITER
 
+ENTITY_ATTRIBUTES_LENGTH = 4
+RELATIONSHIP_ATTRIBUTES_LENGTH = 5
 
-def _clean_str(input: Any) -> str:
-    """Clean an input string by removing HTML escapes, control characters, and other unwanted characters."""
+
+def _clean_str(input_str: Any) -> str:
+    """Remove HTML escapes, control characters, and other unwanted characters."""
     # If we get non-string input, just give it back
-    if not isinstance(input, str):
+    if not isinstance(input_str, str):
         return input
 
-    result = html.unescape(input.strip())
+    result = html.unescape(input_str.strip())
     # https://stackoverflow.com/questions/4324790/removing-control-characters-from-a-string-in-python
     return re.sub(r"[\x00-\x1f\x7f-\x9f]", "", result)
 
 
 def _unpack_descriptions(data: Mapping) -> list[str]:
-    value = data.get("description", [])
-    return value
+    return data.get("description", [])
 
 
 class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
@@ -41,8 +41,10 @@ class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
         self.tuple_delimiter = tuple_delimiter
         self.record_delimiter = record_delimiter
 
-    def _process_entity(self, record_attributes: list[str], graph: nx.Graph):
-        if record_attributes[0] != '"entity"' or len(record_attributes) < 4:
+    def _process_entity(self, record_attributes: list[str], graph: nx.Graph) -> None:
+        if (record_attributes[0] != '"entity"') or (
+            len(record_attributes) < ENTITY_ATTRIBUTES_LENGTH
+        ):
             return
 
         # add this record as a node in the G
@@ -69,8 +71,15 @@ class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
                 description=[entity_description],
             )
 
-    def _process_relationship(self, record_attributes: list[str], graph: nx.Graph):
-        if record_attributes[0] != '"relationship"' or len(record_attributes) < 5:
+    def _process_relationship(
+        self,
+        record_attributes: list[str],
+        graph: nx.Graph,
+    ) -> None:
+        if (
+            record_attributes[0] != '"relationship"'
+            or len(record_attributes) < RELATIONSHIP_ATTRIBUTES_LENGTH
+        ):
             return
 
         # add this record as edge
@@ -110,7 +119,7 @@ class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
 
         graph.add_edge(source, target, weight=weight, description=edge_descriptions)
 
-    def _process_record(self, graph: nx.Graph, record: str):
+    def _process_record(self, graph: nx.Graph, record: str) -> None:
         record = re.sub(r"^\(|\)$", "", record.strip())
         record_attributes = record.split(self.tuple_delimiter)
 

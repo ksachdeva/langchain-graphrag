@@ -1,5 +1,5 @@
-import pandas as pd
 import networkx as nx
+import pandas as pd
 
 from .entity_relationship_extraction import EntityRelationshipExtractor
 from .entity_relationship_summarization import EntityRelationshipDescriptionSummarizer
@@ -16,6 +16,4 @@ class GraphGenerator:
 
     def run(self, text_units: pd.DataFrame) -> nx.Graph:
         er_graph = self._er_extractor.invoke(text_units)
-        er_graph_summarized = self._er_description_summarizer.invoke(er_graph)
-
-        return er_graph_summarized
+        return self._er_description_summarizer.invoke(er_graph)

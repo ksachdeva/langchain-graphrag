@@ -2,15 +2,13 @@ from typing import cast
 
 import numpy as np
 import pandas as pd
-from pandas._typing import Suffixes
-
-from tqdm import tqdm
-
 from langchain_core.embeddings import Embeddings
+from pandas._typing import Suffixes
+from tqdm import tqdm
 
 
 def _array_agg_distinct(series: pd.Series) -> list[pd.Series]:
-    return [e for e in series.unique()]
+    return list(series.unique())
 
 
 def _make_temporary_frame(
@@ -30,10 +28,6 @@ def _make_temporary_frame(
 
     output = cast(pd.DataFrame, grouped.agg(aggregations))
     output.rename(columns={"id": rename_id_to}, inplace=True)
-
-    # REVISIT
-    # some how it does not change the column name
-    # output.rename(columns={"text_unit_ids": "id"}, inplace=True)
 
     return output.reset_index()
 
