@@ -12,7 +12,6 @@ If not then
 
 ## Run
 
-Make sure the `langchain_graphrag` in your PYTHONPATH
 
 ### Using Azure OpenAI or OpenAI
 
@@ -20,31 +19,27 @@ Make sure the `langchain_graphrag` in your PYTHONPATH
 - Rename .env.example to .env
 
 ```bash
-# run using azure openai
-python examples/sophisticated-app/app/main.py experiment=azure_openai_gpt4o
+# run via rye
+rye run sophisticated-app indexing/experiment=azure_openai_gpt4o
+```
+
+```bash
+# or directly run it
+python examples/sophisticated-app/app/main.py indexing/experiment=azure_openai_gpt4o
 ```
 
 ### Using Ollama
 
 ```bash
-# This command will use gemma2:9b-instruct-q8_0
-python examples/sophisticated-app/app/main.py experiment=gemma2_9b
+# run via rye
+rye run sophisticated-app indexing/experiment=gemma2_9b
 ```
-
-Look in the `examples/sophisticated-app/app/configs/experiment/gemma2_9b.yaml` 
-
-If you want to use a different model here are few different ways to do it:
-
-#### Approach 1:
-
-Create a config file in the `examples/sophisticated-app/app/configs/experiment` folder.
-
-#### Approach 2:
-
-Hydra allows you to override config from command line. 
-
-Here is an example of how you could override the few parameters
 
 ```bash
-python examples/sophisticated-app/app/main.py indexing/experiment=gemma2_27b 
+# or directly run it
+python examples/sophisticated-app/app/main.py indexing/experiment=gemma2_9b
 ```
+
+Look in the `examples/sophisticated-app/app/configs/experiment/gemma2_9b.yaml`
+for more details.
+
