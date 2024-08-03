@@ -4,7 +4,7 @@ import networkx as nx
 import pandas as pd
 from pandas._typing import Suffixes
 
-from langchain_graphrag.indexing.graph_clustering import CommunityLevel
+from langchain_graphrag.types.graphs.community import CommunityLevel
 
 
 class CommunitiesTableGenerator:

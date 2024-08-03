@@ -5,9 +5,10 @@ import networkx as nx
 import numpy as np
 
 from langchain_graphrag.graph_utils.stable_lcc import stable_largest_connected_component
+from langchain_graphrag.types.graphs.embedding import GraphEmbeddingGenerator
 
 
-class Node2VectorGraphEmbeddingGenerator:
+class Node2VectorGraphEmbeddingGenerator(GraphEmbeddingGenerator):
     def __init__(  # noqa: PLR0913
         self,
         *,

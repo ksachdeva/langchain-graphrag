@@ -2,7 +2,8 @@ from pathlib import Path
 
 from langchain_core.document_loaders.base import BaseLoader
 
-from .graph_clustering import HierarchicalLeidenCommunityDetector
+from langchain_graphrag.types.graphs.community import CommunityDetector
+
 from .graph_generation import GraphGenerator
 from .table_generation import (
     CommunitiesTableGenerator,
@@ -20,7 +21,7 @@ class Indexer:
         data_loader: BaseLoader,
         text_unit_extractor: TextUnitExtractor,
         graph_generator: GraphGenerator,
-        community_detector: HierarchicalLeidenCommunityDetector,
+        community_detector: CommunityDetector,
         entities_table_generator: EntitiesTableGenerator,
         relationships_table_generator: RelationshipsTableGenerator,
         communities_table_generator: CommunitiesTableGenerator,
@@ -49,7 +50,7 @@ class Indexer:
         graph = self._graph_generator.run(df_base_text_units)
 
         # Step 4 - Detect communities in Graph
-        clustered_graphs = self._community_detector.run(graph)
+        community_detection_result = self._community_detector.run(graph)
 
         # Step 5 - Final Entities generation (depends on Step 3)
         df_final_entities = self._entities_table_generator.run(graph)
@@ -63,6 +64,3 @@ class Indexer:
             df_final_entities,
             df_final_relationships,
         )
-
-        # Step 8 - Final Communities generation (depends on Step 4)
-        df_final_communities = self._communities_table_generator.run(clustered_graphs)

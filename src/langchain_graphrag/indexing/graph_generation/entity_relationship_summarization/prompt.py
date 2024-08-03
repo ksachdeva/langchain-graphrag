@@ -2,7 +2,7 @@ from pathlib import Path
 
 from langchain_core.prompts import PromptTemplate
 
-from langchain_graphrag.protocols import PromptBuilder
+from langchain_graphrag.types.prompts import PromptBuilder
 
 
 class DefaultSummarizeDescriptionPromptBuilder(PromptBuilder):

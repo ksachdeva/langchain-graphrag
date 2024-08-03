@@ -29,7 +29,7 @@ from langchain_graphrag.indexing.embedding_generation import (
 from langchain_graphrag.indexing.embedding_generation.graph import (
     Node2VectorGraphEmbeddingGenerator,
 )
-from langchain_graphrag.indexing.graph_clustering.community_detector import (
+from langchain_graphrag.indexing.graph_clustering.leiden_community_detector import (
     HierarchicalLeidenCommunityDetector,
 )
 from langchain_graphrag.indexing.graph_generation.generator import GraphGenerator

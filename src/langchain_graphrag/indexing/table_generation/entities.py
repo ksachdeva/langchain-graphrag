@@ -5,16 +5,14 @@ import pandas as pd
 from langchain_graphrag.indexing.embedding_generation import (
     EntityEmbeddingGenerator,
 )
-from langchain_graphrag.indexing.embedding_generation.graph import (
-    Node2VectorGraphEmbeddingGenerator,
-)
+from langchain_graphrag.types.graphs.embedding import GraphEmbeddingGenerator
 
 
 class EntitiesTableGenerator:
     def __init__(
         self,
         entity_embedding_generator: EntityEmbeddingGenerator,
-        graph_embedding_generator: Node2VectorGraphEmbeddingGenerator,
+        graph_embedding_generator: GraphEmbeddingGenerator,
     ):
         self._entity_embedding_generator = entity_embedding_generator
         self._graph_embedding_generator = graph_embedding_generator

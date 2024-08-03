@@ -6,7 +6,7 @@ from langchain_core.language_models import BaseLLM
 from langchain_core.output_parsers.base import BaseOutputParser
 from tqdm import tqdm
 
-from langchain_graphrag.protocols import PromptBuilder
+from langchain_graphrag.types.prompts import PromptBuilder
 from langchain_graphrag.utils.uuid import gen_uuid
 
 from .graphs_merger import GraphsMerger
