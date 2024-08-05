@@ -43,7 +43,7 @@ class RelationshipsTableGenerator:
 
         self._relationships_vector_store.add_texts(
             texts_to_embed,
-            metadata=texts_metadata,
+            metadatas=texts_metadata,
             ids=texts_ids,
         )
 
