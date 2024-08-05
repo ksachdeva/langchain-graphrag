@@ -24,6 +24,9 @@ class Community:
 class CommunityDetectionResult:
     communities: dict[CommunityLevel, dict[CommunityId, Community]]
 
+    def communities_at_level(self, level: CommunityLevel) -> list[Community]:
+        return list(self.communities[level].values())
+
 
 class CommunityDetector(Protocol):
     def run(self, graph: nx.Graph) -> CommunityDetectionResult: ...

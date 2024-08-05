@@ -1,0 +1,7 @@
+defaults:  
+  - /indexing/report_generation/generator@report_generator  
+
+_target_: langchain_graphrag.indexing.table_generation.CommunitiesReportsTableGenerator
+report_writer:
+  _target_: langchain_graphrag.indexing.report_generation.CommunityReportWriter
+  

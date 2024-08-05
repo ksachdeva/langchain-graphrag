@@ -34,7 +34,14 @@ from langchain_graphrag.indexing.graph_clustering.leiden_community_detector impo
 )
 from langchain_graphrag.indexing.graph_generation.generator import GraphGenerator
 from langchain_graphrag.indexing.indexer import Indexer
+from langchain_graphrag.indexing.report_generation import (
+    CommunityReportGenerator,
+    CommunityReportOutputParser,
+    CommunityReportWriter,
+    DefaulReportGenerationPromptBuilder,
+)
 from langchain_graphrag.indexing.table_generation import (
+    CommunitiesReportsTableGenerator,
     CommunitiesTableGenerator,
     EntitiesTableGenerator,
     RelationshipsTableGenerator,
@@ -257,6 +264,27 @@ def indexer(  # noqa: PLR0913
     # Final Communities Generator
     communities_table_generator = CommunitiesTableGenerator()
 
+    # Community Report Generator
+
+    report_gen_llm = make_llm_instance(llm_type, llm_model, cache_dir)
+
+    report_generation_prompt = prompts_dir / "community_report.txt"
+    report_prompt_builder = DefaulReportGenerationPromptBuilder(
+        prompt_path=report_generation_prompt
+    )
+    report_generator = CommunityReportGenerator(
+        prompt_builder=report_prompt_builder,
+        llm=report_gen_llm,
+        output_parser=CommunityReportOutputParser(),
+    )
+
+    report_writer = CommunityReportWriter()
+
+    communities_report_table_generator = CommunitiesReportsTableGenerator(
+        report_generator=report_generator,
+        report_writer=report_writer,
+    )
+
     text_units_table_generator = TextUnitsTableGenerator(
         embedding_model=make_embedding_instance(
             embedding_type=embedding_type,
@@ -277,6 +305,7 @@ def indexer(  # noqa: PLR0913
         relationships_table_generator=relationships_table_generator,
         communities_table_generator=communities_table_generator,
         text_units_table_generator=text_units_table_generator,
+        communities_report_table_generator=communities_report_table_generator,
     )
 
     indexer.run()

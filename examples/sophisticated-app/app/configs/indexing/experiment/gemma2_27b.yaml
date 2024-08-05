@@ -3,6 +3,7 @@
 defaults:
   - /llms/ollama@indexer.graph_generator.er_extractor.llm  
   - /llms/ollama@indexer.graph_generator.er_description_summarizer.llm  
+  - /llms/ollama@indexer.communities_report_table_generator.report_generator.llm  
   - /embedding_models/ollama@extra.embedding_model  
   - /indexing/embedding_generation/entity@extra.entity_embedding_generator
   - /indexing/embedding_generation/relationship@extra.relationship_embedding_generator
@@ -20,6 +21,12 @@ indexer:
 
     er_description_summarizer:
       llm:
-        model: gemma2:27b-instruct-q6_K      
+        model: gemma2:27b-instruct-q6_K   
+
+
+  communities_report_table_generator:
+    report_generator:
+      llm:
+        model: gemma2:27b-instruct-q6_K     
         
     

@@ -9,6 +9,7 @@ defaults:
   - /indexing/table_generation/relationships@relationships_table_generator  
   - /indexing/table_generation/communities@communities_table_generator  
   - /indexing/table_generation/text_units@text_units_table_generator  
+  - /indexing/table_generation/reports@communities_report_table_generator  
   - /indexing/embedding_generation/graph@entities_table_generator.graph_embedding_generator  
   
 

@@ -1,0 +1,6 @@
+_target_: langchain_graphrag.indexing.report_generation.CommunityReportGenerator
+prompt_builder:
+  _target_: langchain_graphrag.indexing.report_generation.DefaulReportGenerationPromptBuilder
+  prompt_path: ${paths.prompt_dir}/community_report.txt
+output_parser:
+  _target_: langchain_graphrag.indexing.report_generation.CommunityReportOutputParser
