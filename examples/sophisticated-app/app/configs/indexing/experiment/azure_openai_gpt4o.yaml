@@ -3,10 +3,11 @@
 defaults:
   - /llms/azure_openai_chat@indexer.graph_generator.er_extractor.llm  
   - /llms/azure_openai_chat@indexer.graph_generator.er_description_summarizer.llm  
-  - /llms/azure_openai_chat@indexer.communities_report_table_generator.report_generator.llm  
-  - /embedding_models/azure_openai@extra.embedding_model  
-  - /indexing/embedding_generation/entity@extra.entity_embedding_generator
-  - /indexing/embedding_generation/relationship@extra.relationship_embedding_generator
+  - /llms/azure_openai_chat@indexer.communities_report_table_generator.report_generator.llm    
+  - /embedding_models/azure_openai@extra.embedding_model    
+  - /indexing/vector_stores/entities@extra.entities_vector_store
+  - /indexing/vector_stores/relationships@extra.relationships_vector_store
+  - /indexing/vector_stores/text_units@extra.text_units_vector_store
 
 extra:
   embedding_model:

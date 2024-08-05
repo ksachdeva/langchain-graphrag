@@ -5,8 +5,9 @@ defaults:
   - /llms/ollama@indexer.graph_generator.er_description_summarizer.llm    
   - /llms/ollama@indexer.communities_report_table_generator.report_generator.llm  
   - /embedding_models/ollama@extra.embedding_model  
-  - /indexing/embedding_generation/entity@extra.entity_embedding_generator
-  - /indexing/embedding_generation/relationship@extra.relationship_embedding_generator
+  - /indexing/vector_stores/entities@extra.entities_vector_store
+  - /indexing/vector_stores/relationships@extra.relationships_vector_store
+  - /indexing/vector_stores/text_units@extra.text_units_vector_store
 
 extra:
   embedding_model:

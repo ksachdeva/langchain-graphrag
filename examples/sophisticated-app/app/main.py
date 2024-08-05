@@ -35,25 +35,28 @@ def indexer(cfg):  # noqa: ANN001
         document_embedding_cache=store,
     )
 
-    entity_embedding_generator = hydra.utils.instantiate(
-        cfg.extra.entity_embedding_generator,
-        embedding_model=cached_embedding_model,
+    entities_vector_store = hydra.utils.instantiate(
+        cfg.extra.entities_vector_store,
+        embedding_function=cached_embedding_model,
     )
 
-    relationship_embedding_generator = hydra.utils.instantiate(
-        cfg.extra.relationship_embedding_generator,
-        embedding_model=cached_embedding_model,
+    relationships_vector_store = hydra.utils.instantiate(
+        cfg.extra.relationships_vector_store,
+        embedding_function=cached_embedding_model,
+    )
+
+    text_units_vector_store = hydra.utils.instantiate(
+        cfg.extra.text_units_vector_store,
+        embedding_function=cached_embedding_model,
     )
 
     indexer = hydra.utils.instantiate(
         cfg.indexer,
-        entities_table_generator={
-            "entity_embedding_generator": entity_embedding_generator
-        },
+        entities_table_generator={"entities_vector_store": entities_vector_store},
         relationships_table_generator={
-            "relationship_embedding_generator": relationship_embedding_generator
+            "relationships_vector_store": relationships_vector_store
         },
-        text_units_table_generator={"embedding_model": cached_embedding_model},
+        text_units_table_generator={"vector_store": text_units_vector_store},
     )
     indexer.run()
 

@@ -1,32 +1,21 @@
 import networkx as nx
-import numpy as np
 import pandas as pd
-
-from langchain_graphrag.indexing.embedding_generation import (
-    RelationshipEmbeddingGenerator,
-)
+from langchain_core.vectorstores import VectorStore
 
 
 class RelationshipsTableGenerator:
     def __init__(
         self,
-        relationship_embedding_generator: RelationshipEmbeddingGenerator,
+        relationships_vector_store: VectorStore,
     ):
-        self._relationship_embedding_generator = relationship_embedding_generator
+        self._relationships_vector_store = relationships_vector_store
 
-    def _unpack_edges(
-        self,
-        graph: nx.Graph,
-        description_embeddings: dict[str, np.ndarray],
-    ) -> pd.DataFrame:
+    def _unpack_edges(self, graph: nx.Graph) -> pd.DataFrame:
         records = [
             {
                 "source": source_id,
                 "target": target_id,
                 **(edge_data or {}),
-                "description_embeddings": description_embeddings.get(
-                    f"{source_id}-{target_id}"
-                ),
             }
             for source_id, target_id, edge_data in graph.edges(data=True)
         ]
@@ -34,9 +23,30 @@ class RelationshipsTableGenerator:
 
     def run(self, graph: nx.Graph) -> pd.DataFrame:
         # Step 1
-        # Generate embeddings for the description of edges
-        description_embeddings = self._relationship_embedding_generator.run(graph)
+        # Extract the information to embed from the graph
+        # and put in the vectorstore
+        texts_to_embed = []
+        texts_metadata = []
+        texts_ids = []
+        for source, target, edge_data in graph.edges(data=True):
+            text_description = edge_data.get("description")
+            texts_ids.append(edge_data.get("id"))
+            texts_to_embed.append(text_description)
+            texts_metadata.append(
+                dict(
+                    source=source,
+                    target=target,
+                    description=text_description,
+                    rank=edge_data.get("rank"),
+                )
+            )
+
+        self._relationships_vector_store.add_texts(
+            texts_to_embed,
+            metadata=texts_metadata,
+            ids=texts_ids,
+        )
 
         # Step 2
-        # Make a dataframe with embeddings & other information
-        return self._unpack_edges(graph, description_embeddings)
+        # Make a dataframe
+        return self._unpack_edges(graph)

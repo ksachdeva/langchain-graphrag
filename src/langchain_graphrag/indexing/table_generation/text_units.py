@@ -1,8 +1,7 @@
 from typing import cast
 
-import numpy as np
 import pandas as pd
-from langchain_core.embeddings import Embeddings
+from langchain_core.vectorstores import VectorStore
 from pandas._typing import Suffixes
 from tqdm import tqdm
 
@@ -33,8 +32,8 @@ def _make_temporary_frame(
 
 
 class TextUnitsTableGenerator:
-    def __init__(self, embedding_model: Embeddings):
-        self._embedding_model = embedding_model
+    def __init__(self, vector_store: VectorStore):
+        self._vector_store = vector_store
 
     def run(
         self,
@@ -81,20 +80,21 @@ class TextUnitsTableGenerator:
             indicator=True,
         ).drop("_merge", axis=1)
 
-        def _run_embedder(series: pd.Series) -> np.ndarray:
+        def _run_embedder(series: pd.Series) -> None:
             chunk_to_embedd = series["text"]
-            document_embeddings = self._embedding_model.embed_documents(
-                [chunk_to_embedd]
+            chunk_id = series["id"]
+            chunk_metadata = dict(document_id=series["document_id"])
+
+            self._vector_store.add_texts(
+                [chunk_to_embedd],
+                metadata=[chunk_metadata],
+                ids=[chunk_id],
             )
 
-            return np.array(document_embeddings[0])
-
         tqdm.pandas(desc="Generating chunk embedding ...")
-        chunk_embeddings: list[np.ndarray] = text_units.progress_apply(
+        text_units.progress_apply(
             _run_embedder,
             axis=1,
         )
-
-        text_units["text_embedding"] = chunk_embeddings
 
         return text_units

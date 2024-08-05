@@ -16,16 +16,13 @@ load_dotenv()
 import langchain_graphrag.indexing.graph_generation.entity_relationship_extraction as er
 import langchain_graphrag.indexing.graph_generation.entity_relationship_summarization as es  # noqa: E501
 from langchain.embeddings.cache import CacheBackedEmbeddings
+from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 from langchain_community.cache import SQLiteCache
 from langchain_community.document_loaders.directory import DirectoryLoader
 from langchain_community.storage import SQLStore
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import BaseLLM
 from langchain_core.output_parsers.string import StrOutputParser
-from langchain_graphrag.indexing.embedding_generation import (
-    EntityEmbeddingGenerator,
-    RelationshipEmbeddingGenerator,
-)
 from langchain_graphrag.indexing.embedding_generation.graph import (
     Node2VectorGraphEmbeddingGenerator,
 )
@@ -232,33 +229,48 @@ def indexer(  # noqa: PLR0913
     # Graph Embedding Generator
     graph_embedding_generator = Node2VectorGraphEmbeddingGenerator()
 
-    # Entity Embedding Generator
-    entity_embedding_generator = EntityEmbeddingGenerator(
-        embedding_model=make_embedding_instance(
+    # Entity Vector Store
+    entities_vector_store = ChromaVectorStore(
+        collection_name="entity_name_description",
+        persist_directory=str(output_dir / "vector_stores"),
+        embedding_function=make_embedding_instance(
             embedding_type=embedding_type,
             embedding_model=embedding_model,
             cache_dir=cache_dir,
-        )
+        ),
     )
 
     # Relationship Embedding Generator
-    relationship_embedding_generator = RelationshipEmbeddingGenerator(
-        embedding_model=make_embedding_instance(
+    relationships_vector_store = ChromaVectorStore(
+        collection_name="relationship_description",
+        persist_directory=str(output_dir / "vector_stores"),
+        embedding_function=make_embedding_instance(
             embedding_type=embedding_type,
             embedding_model=embedding_model,
             cache_dir=cache_dir,
-        )
+        ),
+    )
+
+    # TextUnits vector store
+    text_units_vector_store = ChromaVectorStore(
+        collection_name="text_units",
+        persist_directory=str(output_dir / "vector_stores"),
+        embedding_function=make_embedding_instance(
+            embedding_type=embedding_type,
+            embedding_model=embedding_model,
+            cache_dir=cache_dir,
+        ),
     )
 
     # Final Entities Generator
     entities_table_generator = EntitiesTableGenerator(
-        entity_embedding_generator=entity_embedding_generator,
+        entities_vector_store=entities_vector_store,
         graph_embedding_generator=graph_embedding_generator,
     )
 
     # Final Relationships Generator
     relationships_table_generator = RelationshipsTableGenerator(
-        relationship_embedding_generator=relationship_embedding_generator
+        relationships_vector_store=relationships_vector_store
     )
 
     # Final Communities Generator
@@ -286,11 +298,7 @@ def indexer(  # noqa: PLR0913
     )
 
     text_units_table_generator = TextUnitsTableGenerator(
-        embedding_model=make_embedding_instance(
-            embedding_type=embedding_type,
-            embedding_model=embedding_model,
-            cache_dir=cache_dir,
-        )
+        vector_store=text_units_vector_store,
     )
 
     ######### End of creation of various objects/dependencies #############

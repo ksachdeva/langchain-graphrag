@@ -8,6 +8,7 @@ dependencies = [
     "langchain-community",
     "langchain-openai",
     "langchain-ollama",
+    "langchain-chroma",
 ]
 name = "simple-app"
 version = "0.0.1"
