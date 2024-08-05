@@ -67,6 +67,8 @@ ignore = [
     "C408",   # Unnecessary dict call
     "E402",
     "UP035",
+    "EM101",
+    "TRY003",
 ]
 
 

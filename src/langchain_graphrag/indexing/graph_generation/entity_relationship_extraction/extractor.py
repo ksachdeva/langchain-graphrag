@@ -25,6 +25,7 @@ class EntityRelationshipExtractor:
         self._graphs_merger = graphs_merger
         self._extraction_chain = prompt | llm | output_parser
         self._seed = seed
+        self._prompt_builder = prompt_builder
 
     def invoke(self, input_data: pd.DataFrame) -> nx.Graph:
         def _run_chain(series: pd.Series) -> nx.Graph:
@@ -33,7 +34,10 @@ class EntityRelationshipExtractor:
                 series["id"],
                 series["text"],
             )
-            chunk_graph = self._extraction_chain.invoke(input=dict(input_text=text))
+
+            chain_input = self._prompt_builder.prepare_chain_input(text=text)
+
+            chunk_graph = self._extraction_chain.invoke(input=chain_input)
 
             # add the chunk_id to the nodes
             for node_names in chunk_graph.nodes():

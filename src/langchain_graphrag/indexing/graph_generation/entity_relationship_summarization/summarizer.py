@@ -15,6 +15,7 @@ class EntityRelationshipDescriptionSummarizer:
     ):
         prompt = prompt_builder.build()
         self._summarize_chain = prompt | llm | output_parser
+        self._prompt_builder = prompt_builder
 
     def invoke(self, graph: nx.Graph) -> nx.Graph:
         for node_name, node in tqdm(
@@ -24,9 +25,11 @@ class EntityRelationshipDescriptionSummarizer:
                 node["description"] = node["description"][0]
                 continue
 
-            node["description"] = self._summarize_chain.invoke(
-                input=dict(description_list=node["description"], entity_name=node_name)
+            chain_input = self._prompt_builder.prepare_chain_input(
+                entity_name=node_name, description_list=node["description"]
             )
+
+            node["description"] = self._summarize_chain.invoke(input=chain_input)
 
         for from_node, to_node, edge in tqdm(
             graph.edges(data=True), desc="Summarizing relationship descriptions"
@@ -35,11 +38,11 @@ class EntityRelationshipDescriptionSummarizer:
                 edge["description"] = edge["description"][0]
                 continue
 
-            edge["description"] = self._summarize_chain.invoke(
-                input=dict(
-                    description_list=edge["description"],
-                    entity_name=f"{from_node} -> {to_node}",
-                )
+            chain_input = self._prompt_builder.prepare_chain_input(
+                entity_name=f"{from_node} -> {to_node}",
+                description_list=edge["description"],
             )
+
+            edge["description"] = self._summarize_chain.invoke(input=chain_input)
 
         return graph

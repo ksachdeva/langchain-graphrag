@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from langchain_core.prompts import PromptTemplate
 
@@ -33,3 +34,10 @@ class DefaultEntityExtractionPromptBuilder(PromptBuilder):
             record_delimiter=self._record_delimiter,
             entity_types=self._entity_types,
         )
+
+    def prepare_chain_input(self, **kwargs: dict[str, Any]) -> dict[str, str]:
+        text = kwargs.get("text", None)
+        if text is None:
+            raise ValueError("text is required")
+
+        return dict(input_text=text)
