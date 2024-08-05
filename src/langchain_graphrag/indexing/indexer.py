@@ -61,13 +61,19 @@ class Indexer:
             graph,
         )
 
-        # Step 5 - Final Entities generation (depends on Step 2)
+        # Step 5 - Final Communities generation (depends on Step 2 & Step 3)
+        df_communities_table = self._communities_table_generator.run(
+            community_detection_result,
+            graph,
+        )
+
+        # Step 6 - Final Entities generation (depends on Step 2)
         df_final_entities = self._entities_table_generator.run(graph)
 
-        # Step 6 - Final Relationships generation (depends on Step 2)
+        # Step 7 - Final Relationships generation (depends on Step 2)
         df_final_relationships = self._relationships_table_generator.run(graph)
 
-        # Step 7 - Final Text Units generation (depends on Steps 1, 5, 6)
+        # Step 8 - Final Text Units generation (depends on Steps 1, 5, 6)
         df_final_text_units = self._text_units_table_generator.run(
             df_base_text_units,
             df_final_entities,

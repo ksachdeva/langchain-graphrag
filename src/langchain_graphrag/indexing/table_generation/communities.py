@@ -4,15 +4,35 @@ import networkx as nx
 import pandas as pd
 from pandas._typing import Suffixes
 
-from langchain_graphrag.types.graphs.community import CommunityLevel
+from langchain_graphrag.types.graphs.community import (
+    Community,
+    CommunityDetectionResult,
+    CommunityId,
+    CommunityLevel,
+)
 
 
 class CommunitiesTableGenerator:
-    def _unpack_nodes(self, level: CommunityLevel, graph: nx.Graph) -> pd.DataFrame:
-        records = [
-            {"label": label, "level": level, **(node_data or {})}
-            for label, node_data in graph.nodes(data=True)
-        ]
+    def _unpack_nodes(
+        self,
+        level: CommunityLevel,
+        communities: dict[CommunityId, Community],
+        graph: nx.Graph,
+    ) -> pd.DataFrame:
+        records = []
+
+        for community_id, community in communities.items():
+            for node in community.nodes:
+                node_data = graph.nodes[node.name]
+                records.append(
+                    {
+                        "label": node.name,
+                        "cluster": community_id,
+                        "level": level,
+                        **node_data,
+                    }
+                )
+
         return pd.DataFrame.from_records(records)
 
     def _unpack_edges(self, level: CommunityLevel, graph: nx.Graph) -> pd.DataFrame:
@@ -66,12 +86,22 @@ class CommunitiesTableGenerator:
 
         return output.reset_index()
 
-    def run(self, graphs: list[tuple[CommunityLevel, nx.Graph]]) -> pd.DataFrame:
+    def run(
+        self,
+        detection_result: CommunityDetectionResult,
+        graph: nx.Graph,
+    ) -> pd.DataFrame:
+        levels = list(detection_result.communities.keys())
+
+        # TODO: Revisit - should be able to do
+        # more efficiently
+        graph_edges = pd.concat([self._unpack_edges(level, graph) for level in levels])
+
         graph_nodes = pd.concat(
-            [self._unpack_nodes(level, graph) for level, graph in graphs]
-        )
-        graph_edges = pd.concat(
-            [self._unpack_edges(level, graph) for level, graph in graphs]
+            [
+                self._unpack_nodes(level, communities, graph)
+                for level, communities in detection_result.communities.items()
+            ]
         )
 
         # all_clusters
