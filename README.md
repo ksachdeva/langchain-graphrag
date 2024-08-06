@@ -22,9 +22,11 @@ The primary reasons for re-implementing:
     - is bit difficult to understand because of reliance on `datashaper` package
     - does not support models other than OpenAI or AzureOpenAI
 
-## Install
+## Install (Not Recommended yet!)
 
-Note - this is work in progress. 
+Note - this is work in progress so installing the package is not recommended yet.
+It would be better to clone the repo and try out current state of the code. 
+See below for more details.
 
 I published the package so as to reserve the name. Clone the repo and install the package locally.
 
@@ -68,14 +70,32 @@ This is a simple `typer` based CLI app.
 
 In terms of configuration it is limited by the number of command line options exposed.
 
+```bash
+# To generate the index
+# default set azure_openai/gpt4-o/text-embedding-3-small
+# you can change the model and other parameters from command line 
+rye run simple-app-indexer --help
+```
+
 See `examples/simple-app/README.md` for more details.
 
 ### `examples/sophisticated-app`
 
-This is a `hydra` based app. 
+This is a `hydra` (https://hydra.cc/) based app. 
 
 I chose `hydra` so that I can easily experiment with different configurations for e.g. different tokenizers, llms, community detection algorithms etc.
 
 There is not much code in the app itself as the entire orchestration is done with the help of hydra configuration. 
+
+```bash
+# To generate the index
+# possible experiment values (see examples/sophisticated-app/app/configs/experiment):
+# azure_openai_gpt4o
+# openai_gpt4mini
+# gemma2_9b (via ollama)
+# gemma2_27b (via ollama)
+
+rye run sophisticated-app-indexer indexing/experiment=openai_gpt4mini
+```
 
 See `examples/sophisticated-app/README.md` for more details.

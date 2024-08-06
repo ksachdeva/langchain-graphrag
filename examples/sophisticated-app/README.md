@@ -32,7 +32,8 @@ python examples/sophisticated-app/app/main.py indexing/experiment=azure_openai_g
 
 ```bash
 # run via rye
-rye run sophisticated-app indexing/experiment=gemma2_9b
+# make sure to run this from the root of the repository
+rye run sophisticated-app-indexer indexing/experiment=gemma2_9b
 ```
 
 ```bash

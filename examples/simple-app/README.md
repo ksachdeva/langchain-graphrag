@@ -22,5 +22,6 @@ python examples/simple-app/app/main.py indexer --input-dir examples/input-data -
 Or, you can run it via `rye`. The below command can take additional args of simple-app
 
 ```bash
-rye run simple-app
+# make sure to run this from the root of the repository
+rye run simple-app-indexer
 ```
