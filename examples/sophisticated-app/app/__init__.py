@@ -1,1 +1,0 @@
-"Sophisticated app."

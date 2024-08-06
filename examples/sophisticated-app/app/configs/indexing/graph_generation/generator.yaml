@@ -1,5 +1,0 @@
-defaults:
-  - er_extractor@er_extractor
-  - er_description_summarizer@er_description_summarizer
-
-_target_: langchain_graphrag.indexing.graph_generation.GraphGenerator

@@ -1,8 +1,0 @@
-_target_: langchain_openai.AzureChatOpenAI
-openai_api_version: 2024-05-01-preview
-openai_api_key: ${oc.env:LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_API_KEY}
-azure_endpoint: ${oc.env:LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_ENDPOINT}
-azure_deployment: ${oc.env:LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_DEPLOYMENT}
-cache:
-  _target_: langchain_community.cache.SQLiteCache
-  database_path: ${paths.cache_dir}/azure_openai_cache.db

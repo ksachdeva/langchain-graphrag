@@ -1,2 +1,0 @@
-_target_: langchain_openai.OpenAIEmbeddings
-openai_api_key: ${oc.env:LANGCHAIN_GRAPHRAG_OPENAI_EMBED_API_KEY}

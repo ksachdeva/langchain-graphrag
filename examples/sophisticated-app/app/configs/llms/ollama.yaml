@@ -1,4 +1,0 @@
-_target_: langchain_ollama.OllamaLLM
-cache:
-  _target_: langchain_community.cache.SQLiteCache
-  database_path: ${paths.cache_dir}/ollama_cache.db

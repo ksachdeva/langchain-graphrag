@@ -1,5 +1,0 @@
-_target_: langchain_openai.AzureOpenAIEmbeddings
-openai_api_version: 2024-02-15-preview
-openai_api_key: ${oc.env:LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_API_KEY}
-azure_endpoint: ${oc.env:LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_ENDPOINT}
-azure_deployment: ${oc.env:LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_DEPLOYMENT}

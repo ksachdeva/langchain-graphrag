@@ -30,13 +30,8 @@ allow-direct-references = true
 packages = ["src/langchain_graphrag"]
 
 [tool.rye.workspace]
-members = [
-    "langchain_graphrag",
-    "examples/simple-app",
-    "examples/sophisticated-app",
-]
+members = ["langchain_graphrag", "examples/simple-app"]
 
 [tool.rye.scripts]
 simple-app-indexer = "python examples/simple-app/app/main.py indexer index --input-dir examples/input-data --output-dir tmp --prompts-dir examples/prompts --cache-dir tmp/cache"
 simple-app-global-search = "python examples/simple-app/app/main.py query global-search --output-dir tmp --cache-dir tmp/cache"
-sophisticated-app-indexer = "python examples/sophisticated-app/app/main.py task_name=indexing"

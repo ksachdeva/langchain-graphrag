@@ -5,20 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "sophisticated-app-indexing",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/examples/sophisticated-app/app/main.py",
-            "justMyCode": false,
-            "console": "integratedTerminal",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}"
-            },
-            "args": [
-                "indexing/experiment=azure_openai_gpt4o"
-            ]
-        },
-        {
             "name": "simple-app-indexing",
             "type": "debugpy",
             "request": "launch",
@@ -30,6 +16,7 @@
             },
             "args": [
                 "indexer",
+                "index",
                 "--input-dir",
                 "${workspaceFolder}/examples/input-data",
                 "--output-dir",
@@ -51,11 +38,10 @@
                 "PYTHONPATH": "${workspaceFolder}"
             },
             "args": [
-                "global-query",
+                "query",
+                "global-search",
                 "--output-dir",
                 "${workspaceFolder}/tmp",
-                "--prompts-dir",
-                "${workspaceFolder}/examples/prompts",
                 "--cache-dir",
                 "${workspaceFolder}/tmp/cache",
                 "--query",

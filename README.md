@@ -36,7 +36,7 @@ pip install langchain-graphrag
 
 ## Projects 
 
-There are 3 projects in the repo:
+There are 2 projects in the repo:
 
 ### `langchain_graphrag` 
 
@@ -70,6 +70,10 @@ This is a simple `typer` based CLI app.
 
 In terms of configuration it is limited by the number of command line options exposed.
 
+That said, the way core library is written you can easily replace any component by
+your own implementation i.e. your choice of LLM, embedding models etc. Even some of
+the classes as long as they implement the required interface.
+
 ```bash
 # To generate the index
 # default set azure_openai/gpt4-o/text-embedding-3-small
@@ -77,25 +81,11 @@ In terms of configuration it is limited by the number of command line options ex
 rye run simple-app-indexer --help
 ```
 
-See `examples/simple-app/README.md` for more details.
-
-### `examples/sophisticated-app`
-
-This is a `hydra` (https://hydra.cc/) based app. 
-
-I chose `hydra` so that I can easily experiment with different configurations for e.g. different tokenizers, llms, community detection algorithms etc.
-
-There is not much code in the app itself as the entire orchestration is done with the help of hydra configuration. 
-
 ```bash
-# To generate the index
-# possible experiment values (see examples/sophisticated-app/app/configs/experiment):
-# azure_openai_gpt4o
-# openai_gpt4mini
-# gemma2_9b (via ollama)
-# gemma2_27b (via ollama)
-
-rye run sophisticated-app-indexer indexing/experiment=openai_gpt4mini
+# To do global query
+# default set azure_openai/gpt4-o/text-embedding-3-small
+# you can change the model and other parameters from command line 
+rye run simple-app-global-search --query "What are the top themes in this story?"
 ```
 
-See `examples/sophisticated-app/README.md` for more details.
+See `examples/simple-app/README.md` for more details.

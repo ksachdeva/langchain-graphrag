@@ -1,3 +1,0 @@
-_target_: langchain_chroma.vectorstores.Chroma
-collection_name: text_units
-persist_directory: ${paths.vector_store_dir}

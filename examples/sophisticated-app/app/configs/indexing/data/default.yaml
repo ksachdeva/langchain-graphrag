@@ -1,3 +1,0 @@
-_target_: langchain_community.document_loaders.directory.DirectoryLoader
-path: ${paths.data_dir}
-glob: "*.txt"
