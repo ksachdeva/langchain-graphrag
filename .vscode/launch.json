@@ -33,11 +33,33 @@
                 "--input-dir",
                 "${workspaceFolder}/examples/input-data",
                 "--output-dir",
-                "${workspaceFolder}/temp",
+                "${workspaceFolder}/tmp",
                 "--prompts-dir",
                 "${workspaceFolder}/examples/prompts",
                 "--cache-dir",
                 "${workspaceFolder}/tmp/cache"
+            ]
+        },
+        {
+            "name": "simple-app-global-query",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/examples/simple-app/app/main.py",
+            "justMyCode": false,
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "global-query",
+                "--output-dir",
+                "${workspaceFolder}/tmp",
+                "--prompts-dir",
+                "${workspaceFolder}/examples/prompts",
+                "--cache-dir",
+                "${workspaceFolder}/tmp/cache",
+                "--query",
+                "What are the top themes in this story?"
             ]
         }
     ]

@@ -12,6 +12,10 @@ from langchain_graphrag.types.graphs.community import (
 )
 
 
+def _get_entities(community: Community, graph: nx.Graph) -> list[str]:
+    return [graph.nodes[n.name]["id"] for n in community.nodes]
+
+
 class CommunitiesReportsTableGenerator:
     def __init__(
         self,
@@ -21,10 +25,6 @@ class CommunitiesReportsTableGenerator:
         self._report_generator = report_generator
         self._report_writer = report_writer
 
-    def _generate_report(self, community: Community, graph: nx.Graph) -> str:
-        report = self._report_generator.invoke(community=community, graph=graph)
-        return self._report_writer.write(report)
-
     def run(
         self,
         detection_result: CommunityDetectionResult,
@@ -32,6 +32,7 @@ class CommunitiesReportsTableGenerator:
     ) -> pd.DataFrame:
         reports = []
 
+        # TODO: Parallelize all this
         for level in detection_result.communities:
             communities = detection_result.communities_at_level(level)
             c_pbar = tqdm(communities)
@@ -39,13 +40,21 @@ class CommunitiesReportsTableGenerator:
                 c_pbar.set_description_str(
                     f"Generating report for level={level} commnuity_id={c.id}"
                 )
-                report_str = self._generate_report(c, graph)
+
+                report = self._report_generator.invoke(community=c, graph=graph)
+                report_str = self._report_writer.write(report)
+                entities = _get_entities(c, graph)
 
                 reports.append(
                     dict(
                         level=level,
                         community_id=c.id,
-                        report=report_str,
+                        entities=entities,
+                        title=report.title,
+                        summary=report.summary,
+                        rating=report.rating,
+                        rating_explanation=report.rating_explanation,
+                        content=report_str,
                     )
                 )
 

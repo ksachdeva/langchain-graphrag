@@ -31,6 +31,8 @@ anytree==2.12.1
     # via graspologic
 asgiref==3.8.1
     # via opentelemetry-instrumentation-asgi
+asttokens==2.4.1
+    # via stack-data
 attrs==23.2.0
     # via aiohttp
 autograd==1.6.2
@@ -71,6 +73,8 @@ coloredlogs==15.0.1
     # via onnxruntime
 colorlog==6.8.2
     # via hydra-colorlog
+comm==0.2.2
+    # via ipykernel
 contourpy==1.2.1
     # via matplotlib
 cramjam==2.8.3
@@ -81,6 +85,10 @@ dataclasses-json==0.6.7
     # via langchain-community
     # via unstructured
     # via unstructured-client
+debugpy==1.8.5
+    # via ipykernel
+decorator==5.1.1
+    # via ipython
 deepdiff==7.0.1
     # via unstructured-client
 deprecated==1.2.14
@@ -91,6 +99,8 @@ distro==1.9.0
     # via openai
 emoji==2.12.1
     # via unstructured
+executing==2.0.1
+    # via stack-data
 fastapi==0.112.0
     # via chromadb
     # via langchain-chroma
@@ -160,6 +170,11 @@ importlib-resources==6.4.0
     # via chromadb
 iniconfig==2.0.0
     # via pytest
+ipykernel==6.29.5
+ipython==8.26.0
+    # via ipykernel
+jedi==0.19.1
+    # via ipython
 joblib==1.4.2
     # via graspologic
     # via nltk
@@ -171,6 +186,11 @@ jsonpath-python==1.0.6
     # via unstructured-client
 jsonpointer==3.0.0
     # via jsonpatch
+jupyter-client==8.6.2
+    # via ipykernel
+jupyter-core==5.7.2
+    # via ipykernel
+    # via jupyter-client
 kiwisolver==1.4.5
     # via matplotlib
 kubernetes==30.1.0
@@ -211,6 +231,9 @@ marshmallow==3.21.3
 matplotlib==3.9.1
     # via graspologic
     # via seaborn
+matplotlib-inline==0.1.7
+    # via ipykernel
+    # via ipython
 mdurl==0.1.2
     # via markdown-it-py
 mmh3==4.1.0
@@ -226,6 +249,7 @@ mypy-extensions==1.0.0
     # via typing-inspect
     # via unstructured-client
 nest-asyncio==1.6.0
+    # via ipykernel
     # via unstructured-client
 networkx==3.3
     # via graspologic
@@ -316,6 +340,7 @@ packaging==24.1
     # via fastparquet
     # via huggingface-hub
     # via hydra-core
+    # via ipykernel
     # via langchain-core
     # via marshmallow
     # via matplotlib
@@ -328,22 +353,35 @@ pandas==2.2.2
     # via langchain-graphrag
     # via seaborn
     # via statsmodels
+parso==0.8.4
+    # via jedi
 patsy==0.5.6
     # via statsmodels
+pexpect==4.9.0
+    # via ipython
 pillow==10.4.0
     # via matplotlib
+platformdirs==4.2.2
+    # via jupyter-core
 pluggy==1.5.0
     # via pytest
 posthog==3.5.0
     # via chromadb
 pot==0.9.4
     # via graspologic
+prompt-toolkit==3.0.47
+    # via ipython
 protobuf==4.25.4
     # via googleapis-common-protos
     # via onnxruntime
     # via opentelemetry-proto
 psutil==6.0.0
+    # via ipykernel
     # via unstructured
+ptyprocess==0.7.0
+    # via pexpect
+pure-eval==0.2.3
+    # via stack-data
 pyarrow==17.0.0
     # via langchain-graphrag
 pyasn1==0.6.0
@@ -361,6 +399,7 @@ pydantic==2.8.2
 pydantic-core==2.20.1
     # via pydantic
 pygments==2.18.0
+    # via ipython
     # via rich
 pynndescent==0.5.13
     # via umap-learn
@@ -374,6 +413,7 @@ pyproject-hooks==1.1.0
     # via build
 pytest==8.3.2
 python-dateutil==2.9.0.post0
+    # via jupyter-client
     # via kubernetes
     # via matplotlib
     # via pandas
@@ -396,6 +436,9 @@ pyyaml==6.0.1
     # via langchain-core
     # via omegaconf
     # via uvicorn
+pyzmq==26.1.0
+    # via ipykernel
+    # via jupyter-client
 rapidfuzz==3.9.5
     # via unstructured
 regex==2024.7.24
@@ -443,6 +486,7 @@ shellingham==1.5.4
     # via typer
 six==1.16.0
     # via anytree
+    # via asttokens
     # via kubernetes
     # via langdetect
     # via patsy
@@ -460,6 +504,8 @@ soupsieve==2.5
 sqlalchemy==2.0.31
     # via langchain
     # via langchain-community
+stack-data==0.6.3
+    # via ipython
 starlette==0.37.2
     # via fastapi
 statsmodels==0.14.2
@@ -479,6 +525,9 @@ tiktoken==0.7.0
     # via langchain-openai
 tokenizers==0.19.1
     # via chromadb
+tornado==6.4.1
+    # via ipykernel
+    # via jupyter-client
 tqdm==4.66.4
     # via chromadb
     # via huggingface-hub
@@ -486,6 +535,13 @@ tqdm==4.66.4
     # via openai
     # via umap-learn
     # via unstructured
+traitlets==5.14.3
+    # via comm
+    # via ipykernel
+    # via ipython
+    # via jupyter-client
+    # via jupyter-core
+    # via matplotlib-inline
 typer==0.12.3
     # via chromadb
 typing-extensions==4.12.2
@@ -524,6 +580,8 @@ uvloop==0.19.0
     # via uvicorn
 watchfiles==0.22.0
     # via uvicorn
+wcwidth==0.2.13
+    # via prompt-toolkit
 websocket-client==1.8.0
     # via kubernetes
 websockets==12.0
