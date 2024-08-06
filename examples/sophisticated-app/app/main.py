@@ -4,11 +4,29 @@ import hydra
 from dotenv import load_dotenv
 from langchain.embeddings.cache import CacheBackedEmbeddings
 from langchain_community.storage import SQLStore
+from langchain_core.vectorstores import VectorStore
 from omegaconf import OmegaConf
 
 
+def run_indexer(
+    cfg,  # noqa: ANN001
+    entities_vector_store: VectorStore,
+    relationships_vector_store: VectorStore,
+    text_units_vector_store: VectorStore,
+):
+    indexer = hydra.utils.instantiate(
+        cfg.indexer,
+        entities_table_generator={"entities_vector_store": entities_vector_store},
+        relationships_table_generator={
+            "relationships_vector_store": relationships_vector_store
+        },
+        text_units_table_generator={"vector_store": text_units_vector_store},
+    )
+    indexer.run()
+
+
 @hydra.main(version_base="1.3", config_path="./configs", config_name="app.yaml")
-def indexer(cfg):  # noqa: ANN001
+def main(cfg):  # noqa: ANN001
     # some how seeing httpx INFO LEVEL for requests
     # disabling it here for now.
     # TODO: should be able to do it via hydra config
@@ -50,16 +68,17 @@ def indexer(cfg):  # noqa: ANN001
         embedding_function=cached_embedding_model,
     )
 
-    indexer = hydra.utils.instantiate(
-        cfg.indexer,
-        entities_table_generator={"entities_vector_store": entities_vector_store},
-        relationships_table_generator={
-            "relationships_vector_store": relationships_vector_store
-        },
-        text_units_table_generator={"vector_store": text_units_vector_store},
-    )
-    indexer.run()
+    if cfg.task_name == "indexing":
+        run_indexer(
+            cfg,
+            entities_vector_store,
+            relationships_vector_store,
+            text_units_vector_store,
+        )
+    else:
+        print("in Querying mode")
+        raise NotImplementedError("Querying mode is not implemented yet")
 
 
 if __name__ == "__main__":
-    indexer()
+    main()

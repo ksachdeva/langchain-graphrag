@@ -37,5 +37,5 @@ members = [
 ]
 
 [tool.rye.scripts]
-simple-app = "python examples/simple-app/app/main.py indexer --input-dir examples/input-data --output-dir tmp --prompts-dir examples/prompts --cache-dir tmp/cache"
-sophisticated-app = "python examples/sophisticated-app/app/main.py"
+simple-app-indexer = "python examples/simple-app/app/main.py indexer --input-dir examples/input-data --output-dir tmp --prompts-dir examples/prompts --cache-dir tmp/cache"
+sophisticated-app-indexer = "python examples/sophisticated-app/app/main.py task_name=indexing"
