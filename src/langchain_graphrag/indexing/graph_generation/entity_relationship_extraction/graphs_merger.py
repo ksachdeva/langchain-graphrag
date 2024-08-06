@@ -1,7 +1,10 @@
 from enum import StrEnum
+from random import Random
 from typing import Any
 
 import networkx as nx
+
+from langchain_graphrag.utils.uuid import gen_uuid
 
 
 class AttributesToMerge(StrEnum):
@@ -59,9 +62,41 @@ def merge_edges(*, target_graph: nx.Graph, sub_graph: nx.Graph):
 
 
 class GraphsMerger:
-    def __call__(self, graphs: list[nx.Graph]) -> nx.Graph:
+    def __init__(self, seed: int = 0xF001):
+        self._seed = seed
+
+    def __call__(
+        self,
+        graphs: list[nx.Graph],
+    ) -> nx.Graph:
         merged_graph = nx.Graph()
-        for graph in graphs:
-            merge_nodes(target_graph=merged_graph, sub_graph=graph)
-            merge_edges(target_graph=merged_graph, sub_graph=graph)
+        for g in graphs:
+            merge_nodes(target_graph=merged_graph, sub_graph=g)
+            merge_edges(target_graph=merged_graph, sub_graph=g)
+
+        # add degree as an attribute
+        for node_degree in merged_graph.degree:
+            merged_graph.nodes[str(node_degree[0])]["degree"] = int(node_degree[1])
+
+        # add source degree, target degree and rank as attributes
+        # to the edges
+        for source, target in merged_graph.edges():
+            source_degree = merged_graph.nodes[source]["degree"]
+            target_degree = merged_graph.nodes[target]["degree"]
+            merged_graph.edges[source, target]["source_degree"] = source_degree
+            merged_graph.edges[source, target]["target_degree"] = target_degree
+            merged_graph.edges[source, target]["rank"] = source_degree + target_degree
+
+        random = Random(self._seed)  # noqa: S311
+
+        # add ids to nodes
+        for index, node in enumerate(merged_graph.nodes()):
+            merged_graph.nodes[node]["human_readable_id"] = index
+            merged_graph.nodes[node]["id"] = str(gen_uuid(random))
+
+        # add ids to edges
+        for index, edge in enumerate(merged_graph.edges()):
+            merged_graph.edges[edge]["human_readable_id"] = index
+            merged_graph.edges[edge]["id"] = str(gen_uuid(random))
+
         return merged_graph
