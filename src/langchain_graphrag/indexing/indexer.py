@@ -56,26 +56,35 @@ class Indexer:
         community_detection_result = self._community_detector.run(graph)
 
         # Step 4 - Reports for detected Communities (depends on Step 2 & Step 3)
-        df_community_reports = self._communities_report_table_generator.run(
+        df_communities_reports = self._communities_report_table_generator.run(
             community_detection_result,
             graph,
         )
 
-        # Step 5 - Final Communities generation (depends on Step 2 & Step 3)
+        # Step 5 - Communities generation (depends on Step 2 & Step 3)
         df_communities_table = self._communities_table_generator.run(
             community_detection_result,
             graph,
         )
 
-        # Step 6 - Final Entities generation (depends on Step 2)
-        df_final_entities = self._entities_table_generator.run(graph)
+        # Step 6 - Entities generation (depends on Step 2)
+        df_entities = self._entities_table_generator.run(graph)
 
-        # Step 7 - Final Relationships generation (depends on Step 2)
-        df_final_relationships = self._relationships_table_generator.run(graph)
+        # Step 7 - Relationships generation (depends on Step 2)
+        df_relationships = self._relationships_table_generator.run(graph)
 
-        # Step 8 - Final Text Units generation (depends on Steps 1, 5, 6)
-        df_final_text_units = self._text_units_table_generator.run(
+        # Step 8 - Text Units generation (depends on Steps 1, 5, 6)
+        df_text_units = self._text_units_table_generator.run(
             df_base_text_units,
-            df_final_entities,
-            df_final_relationships,
+            df_entities,
+            df_relationships,
         )
+
+        # save the dataframes in the output directory
+        artifacts_dir = self._output_dir / "artifacts"
+        artifacts_dir.mkdir(parents=True, exist_ok=True)
+        df_entities.to_parquet(artifacts_dir / "entities.parquet")
+        df_relationships.to_parquet(artifacts_dir / "relationships.parquet")
+        df_text_units.to_parquet(artifacts_dir / "text_units.parquet")
+        df_communities_table.to_parquet(artifacts_dir / "communities.parquet")
+        df_communities_reports.to_parquet(artifacts_dir / "communities_reports.parquet")

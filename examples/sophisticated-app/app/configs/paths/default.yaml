@@ -5,6 +5,5 @@ cache_dir: ${paths.root_dir}/cache
 log_dir: ${paths.root_dir}/logs
 output_dir: ${hydra:runtime.output_dir}
 work_dir: ${hydra:runtime.cwd}
-artifacts_dir: ${hydra:runtime.output_dir}/artifacts
 vector_store_dir: ${hydra:runtime.output_dir}/vector_stores
 sqllite_embedding_cache_dir: sqlite:///tmp/cache

@@ -15,5 +15,5 @@ defaults:
 
 
 _target_: langchain_graphrag.indexing.indexer.Indexer
-output_dir: ${paths.artifacts_dir}
+output_dir: ${paths.output_dir}
   
