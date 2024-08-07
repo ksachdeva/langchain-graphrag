@@ -83,7 +83,16 @@ class TextUnitsTableGenerator:
         def _run_embedder(series: pd.Series) -> None:
             chunk_to_embedd = series["text"]
             chunk_id = series["id"]
-            chunk_metadata = dict(document_id=series["document_id"])
+
+            # Bug in langchain vectorstore retrival that
+            # does not populate Document.id field.
+            #
+            # Hence add relationship_id as an additional field
+            # in the metadata
+            chunk_metadata = dict(
+                document_id=series["document_id"],
+                text_unit_id=chunk_id,  # TODO: Remove once langchain is fixed
+            )
 
             self._vector_store.add_texts(
                 [chunk_to_embedd],

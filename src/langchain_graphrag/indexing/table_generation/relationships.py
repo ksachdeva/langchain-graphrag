@@ -32,12 +32,21 @@ class RelationshipsTableGenerator:
             text_description = edge_data.get("description")
             texts_ids.append(edge_data.get("id"))
             texts_to_embed.append(text_description)
+
+            # Bug in langchain vectorstore retrival that
+            # does not populate Document.id field.
+            #
+            # Hence add relationship_id as an additional field
+            # in the metadata
             texts_metadata.append(
                 dict(
                     source=source,
                     target=target,
                     description=text_description,
                     rank=edge_data.get("rank"),
+                    relationship_id=edge_data.get(
+                        "id"
+                    ),  # TODO: Remove once langchain is fixed
                 )
             )
 

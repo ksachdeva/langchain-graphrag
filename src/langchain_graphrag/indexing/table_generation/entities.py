@@ -45,11 +45,20 @@ class EntitiesTableGenerator:
             text_description = node_data.get("description")
             texts_ids.append(node_data.get("id"))
             texts_to_embed.append(f"{name}:{text_description}")
+
+            # Bug in langchain vectorstore retrival that
+            # does not populate Document.id field.
+            #
+            # Hence add entity_id as an additional field
+            # in the metadata
             texts_metadata.append(
                 dict(
                     name=name,
                     description=text_description,
                     degree=node_data.get("degree"),
+                    entity_id=node_data.get(
+                        "id"
+                    ),  # TODO: Remove once langchain is fixed
                 )
             )
 

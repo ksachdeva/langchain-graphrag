@@ -47,6 +47,27 @@
                 "--query",
                 "What are the top themes in this story?"
             ]
+        },
+        {
+            "name": "simple-app-local-query",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/examples/simple-app/app/main.py",
+            "justMyCode": false,
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "query",
+                "local-search",
+                "--output-dir",
+                "${workspaceFolder}/tmp",
+                "--cache-dir",
+                "${workspaceFolder}/tmp/cache",
+                "--query",
+                "Who is Scrooge, and what are his main relationships?"
+            ]
         }
     ]
 }
