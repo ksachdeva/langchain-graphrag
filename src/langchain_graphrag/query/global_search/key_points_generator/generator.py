@@ -1,8 +1,8 @@
 from langchain_core.language_models import BaseLLM
 from langchain_core.output_parsers.base import BaseOutputParser
 
-from langchain_graphrag.types.prompts import PromptBuilder
 from langchain_graphrag.query.global_search.community_report import CommunityReport
+from langchain_graphrag.types.prompts import PromptBuilder
 
 from .utils import KeyPointsResult
 

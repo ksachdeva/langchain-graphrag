@@ -2,8 +2,8 @@ from typing import Any
 
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 
-from langchain_graphrag.types.prompts import PromptBuilder
 from langchain_graphrag.query.global_search.community_report import CommunityReport
+from langchain_graphrag.types.prompts import PromptBuilder
 
 from .system_prompt import MAP_SYSTEM_PROMPT
 
