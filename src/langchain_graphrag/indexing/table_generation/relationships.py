@@ -13,11 +13,13 @@ class RelationshipsTableGenerator:
     def _unpack_edges(self, graph: nx.Graph) -> pd.DataFrame:
         records = [
             {
-                "source": source_id,
-                "target": target_id,
+                "source": source,
+                "target": target,
+                "source_id": graph.nodes[source].get("id"),
+                "target_id": graph.nodes[target].get("id"),
                 **(edge_data or {}),
             }
-            for source_id, target_id, edge_data in graph.edges(data=True)
+            for source, target, edge_data in graph.edges(data=True)
         ]
         return pd.DataFrame.from_records(records)
 
