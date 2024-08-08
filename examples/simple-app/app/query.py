@@ -21,6 +21,7 @@ from common import (
 )
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 from langchain_core.output_parsers.string import StrOutputParser
+from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 from langchain_graphrag.query.global_search import GlobalQuerySearch
 from langchain_graphrag.query.global_search.community_weight_calculator import (
     CommunityWeightCalculator,
@@ -34,16 +35,13 @@ from langchain_graphrag.query.global_search.key_points_generator import (
     KeyPointsGenerator,
     KeyPointsOutputParser,
 )
-
-from langchain_graphrag.query.local_search.context_selectors.entities_selector import (
-    EntitiesSelector,
-)
-from langchain_graphrag.query.local_search.search import LocalQuerySearch
 from langchain_graphrag.query.local_search.context_selectors import (
     ContextSelector,
     EntitiesSelector,
+    RelationshipsSelector,
     TextUnitsSelector,
 )
+from langchain_graphrag.query.local_search.search import LocalQuerySearch
 
 app = Typer()
 
@@ -57,6 +55,8 @@ def global_search(  # noqa: PLR0913
     query: str = typer.Option(...),
     level: int = typer.Option(2, help="Community level to search"),
 ):
+    artifacts_dir = output_dir / "artifacts"
+
     points_generator = KeyPointsGenerator(
         prompt_builder=DefaultKeyPointsGeneratorPromptBuilder(),
         llm=make_llm_instance(llm_type, llm_model, cache_dir),
@@ -70,14 +70,14 @@ def global_search(  # noqa: PLR0913
     )
 
     searcher = GlobalQuerySearch(
-        artifacts_dir=output_dir / "artifacts",
         community_level=level,
         weight_calculator=CommunityWeightCalculator(),
         key_points_generator=points_generator,
         key_points_aggregator=points_aggregator,
     )
 
-    response = searcher.invoke(query)
+    artifacts = IndexerArtifacts.load(artifacts_dir)
+    response = searcher.invoke(query, artifacts)
 
     print(response)
 
@@ -97,9 +97,12 @@ def local_search(
         EmbeddingModel.text_embedding_3_small, case_sensitive=False
     ),
 ):
+    vector_store_dir = output_dir / "vector_stores"
+    artifacts_dir = output_dir / "artifacts"
+
     entities_vector_store = ChromaVectorStore(
         collection_name="entity_name_description",
-        persist_directory=str(output_dir / "vector_stores"),
+        persist_directory=str(vector_store_dir),
         embedding_function=make_embedding_instance(
             embedding_type=embedding_type,
             embedding_model=embedding_model,
@@ -112,12 +115,13 @@ def local_search(
     context_selector = ContextSelector(
         entities_selector=entities_selector,
         text_units_selector=TextUnitsSelector(),
+        relationships_selector=RelationshipsSelector(),
     )
 
     searcher = LocalQuerySearch(
-        artifacts_dir=output_dir / "artifacts",
         community_level=level,
         context_selector=context_selector,
     )
 
-    searcher.invoke(query)
+    artifacts = IndexerArtifacts.load(artifacts_dir)
+    searcher.invoke(query, artifacts)

@@ -1,9 +1,13 @@
+import logging
+
 import networkx as nx
 import numpy as np
 import pandas as pd
 from langchain_core.vectorstores import VectorStore
 
 from langchain_graphrag.types.graphs.embedding import GraphEmbeddingGenerator
+
+logger = logging.getLogger(__name__)
 
 
 class EntitiesTableGenerator:

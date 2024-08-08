@@ -1,9 +1,8 @@
-from pathlib import Path
-
 from langchain_core.document_loaders.base import BaseLoader
 
 from langchain_graphrag.types.graphs.community import CommunityDetector
 
+from .artifacts import IndexerArtifacts
 from .graph_generation import GraphGenerator
 from .table_generation import (
     CommunitiesReportsTableGenerator,
@@ -18,7 +17,6 @@ from .text_unit_extractor import TextUnitExtractor
 class Indexer:
     def __init__(  # noqa: PLR0913
         self,
-        output_dir: Path | str,
         data_loader: BaseLoader,
         text_unit_extractor: TextUnitExtractor,
         graph_generator: GraphGenerator,
@@ -29,9 +27,6 @@ class Indexer:
         communities_report_table_generator: CommunitiesReportsTableGenerator,
         text_units_table_generator: TextUnitsTableGenerator,
     ):
-        self._output_dir = (
-            output_dir if isinstance(output_dir, Path) else Path(output_dir)
-        )
         self._data_loader = data_loader
         self._text_unit_extractor = text_unit_extractor
         self._graph_generator = graph_generator
@@ -42,7 +37,7 @@ class Indexer:
         self._communities_report_table_generator = communities_report_table_generator
         self._text_units_table_generator = text_units_table_generator
 
-    def run(self):
+    def run(self) -> IndexerArtifacts:
         # Step 0 - For now only 1 document is supported
         document = self._data_loader.load()[0]
 
@@ -80,11 +75,10 @@ class Indexer:
             df_relationships,
         )
 
-        # save the dataframes in the output directory
-        artifacts_dir = self._output_dir / "artifacts"
-        artifacts_dir.mkdir(parents=True, exist_ok=True)
-        df_entities.to_parquet(artifacts_dir / "entities.parquet")
-        df_relationships.to_parquet(artifacts_dir / "relationships.parquet")
-        df_text_units.to_parquet(artifacts_dir / "text_units.parquet")
-        df_communities_table.to_parquet(artifacts_dir / "communities.parquet")
-        df_communities_reports.to_parquet(artifacts_dir / "communities_reports.parquet")
+        return IndexerArtifacts(
+            entities=df_entities,
+            relationships=df_relationships,
+            text_units=df_text_units,
+            communities=df_communities_table,
+            communities_reports=df_communities_reports,
+        )

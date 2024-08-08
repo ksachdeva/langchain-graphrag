@@ -24,6 +24,7 @@ from common import (
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 from langchain_community.document_loaders.directory import DirectoryLoader
 from langchain_core.output_parsers.string import StrOutputParser
+from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 from langchain_graphrag.indexing.embedding_generation.graph import (
     Node2VectorGraphEmbeddingGenerator,
 )
@@ -206,7 +207,6 @@ def index(  # noqa: PLR0913
     ######### End of creation of various objects/dependencies #############
 
     indexer = Indexer(
-        output_dir=output_dir,
         data_loader=data_loader,
         text_unit_extractor=text_unit_extractor,
         graph_generator=graph_generator,
@@ -218,4 +218,19 @@ def index(  # noqa: PLR0913
         communities_report_table_generator=communities_report_table_generator,
     )
 
-    indexer.run()
+    artifacts = indexer.run()
+
+    # save the artifacts
+    artifacts_dir = output_dir / "artifacts"
+    artifacts_dir.mkdir(parents=True, exist_ok=True)
+    artifacts.save(artifacts_dir)
+
+    artifacts.report()
+
+
+@app.command()
+def report(
+    artifacts_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
+):
+    artifacts = IndexerArtifacts.load(artifacts_dir)
+    artifacts.report()

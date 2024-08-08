@@ -107,6 +107,7 @@ fsspec==2024.6.1
     # via huggingface-hub
 future==1.0.0
     # via autograd
+    # via tableprint
 gensim==4.3.3
     # via graspologic
 google-auth==2.32.0
@@ -448,6 +449,8 @@ statsmodels==0.14.2
     # via graspologic
 sympy==1.13.1
     # via onnxruntime
+tableprint==0.9.1
+    # via langchain-graphrag
 tabulate==0.9.0
     # via unstructured
 tenacity==8.5.0
@@ -506,6 +509,8 @@ uvloop==0.19.0
     # via uvicorn
 watchfiles==0.22.0
     # via uvicorn
+wcwidth==0.2.13
+    # via tableprint
 websocket-client==1.8.0
     # via kubernetes
 websockets==12.0

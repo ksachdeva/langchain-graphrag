@@ -1,8 +1,11 @@
 """Build the TextUnit context for the LocalSearch algorithm."""
 
+import logging
 from typing import TypedDict
 
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 class SelectedTextUnit(TypedDict):
@@ -70,7 +73,12 @@ class TextUnitsSelector:
         # sort it by
         # descending order of entity_score
         # and then descending order of relationship_score
-        return df_selected_text_units.sort_values(
+        df_selected_text_units = df_selected_text_units.sort_values(
             by=["entity_score", "relationship_score"],
             ascending=[False, False],
         ).reset_index(drop=True)
+
+        if logger.getEffectiveLevel() == logging.DEBUG:
+            logger.debug(
+                f"\n\t ==Selected Text units==\n {df_selected_text_units[[ 'id', 'entity_score', 'relationship_score']]}"  # noqa: E501
+            )

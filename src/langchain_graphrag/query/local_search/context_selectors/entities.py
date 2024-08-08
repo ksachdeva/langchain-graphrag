@@ -1,7 +1,11 @@
 """Select the entities to be used in the local search."""
 
+import logging
+
 import pandas as pd
 from langchain_core.vectorstores import VectorStore
+
+logger = logging.getLogger(__name__)
 
 
 class EntitiesSelector:
@@ -36,8 +40,15 @@ class EntitiesSelector:
             df_entities["id"].isin(entity_ids_with_scores["id"])
         ]
 
-        return (
+        selected_entities = (
             selected_entities.merge(entity_ids_with_scores, on="id")
             .sort_values(by="score", ascending=False)
             .reset_index(drop=True)
         )
+
+        if logger.getEffectiveLevel() == logging.DEBUG:
+            logger.debug(
+                f"\n\t ==Selected entities==\n {selected_entities[[ 'title', 'degree', 'score']]}"
+            )
+
+        return selected_entities
