@@ -11,6 +11,7 @@ app.add_typer(query_app, name="query")
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
+    logging.getLogger("httpx").setLevel(logging.WARNING)
     logging.getLogger("gensim").setLevel(logging.WARNING)
     logging.getLogger("langchain_graphrag").setLevel(logging.DEBUG)
     app()
