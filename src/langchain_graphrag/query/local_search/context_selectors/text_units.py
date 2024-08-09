@@ -82,3 +82,5 @@ class TextUnitsSelector:
             logger.debug(
                 f"\n\t ==Selected Text units==\n {df_selected_text_units[[ 'id', 'entity_score', 'relationship_score']]}"  # noqa: E501
             )
+
+        return df_selected_text_units
