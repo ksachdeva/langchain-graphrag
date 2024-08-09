@@ -1,56 +1,159 @@
 import itertools
+import logging
+from typing import NamedTuple
+
 import pandas as pd
+
+logger = logging.getLogger(__name__)
+
+
+class RelationshipsSelectionResult(NamedTuple):
+    in_network_relationships: pd.DataFrame
+    out_network_relationships: pd.DataFrame
 
 
 def _find_in_network_relationships(
     df_entities: pd.DataFrame,
     df_relationships: pd.DataFrame,
-):
-    entities_ids = df_entities["id"].tolist()
-    entities_pairs = itertools.combinations(entities_ids, 2)
+    source_column_name: str = "source_id",
+    target_column_name: str = "target_id",
+    entity_column_name: str = "id",
+) -> pd.DataFrame:
+    entities_ids = df_entities[entity_column_name].tolist()
+    entities_pairs = list(itertools.combinations(entities_ids, 2))
 
-    # print(entities_ids)
-
-    def filter_in_network_relationships(source_id: str, target_id: str) -> bool:
-        for pair in entities_pairs:
-            if (source_id == pair[0]) and (target_id == pair[1]):
-                print("Match1")
-                return True
-            if (source_id == pair[1]) and (target_id == pair[0]):
-                print("Match2")
-                return True
-
-        return False
-
-    # print(list(entities_pairs))
+    def filter_in_network_relationships(source: str, target: str) -> bool:
+        check_1 = (source, target) in entities_pairs
+        check_2 = (target, source) in entities_pairs
+        return check_1 == True or check_2 == True  # noqa: E712
 
     df_relationships["is_in_network"] = df_relationships.apply(
-        lambda x: filter_in_network_relationships(x.source_id, x.target_id),
+        lambda x: filter_in_network_relationships(
+            x[source_column_name], x[target_column_name]
+        ),
         axis=1,
     )
 
-    how_many = (df_relationships["is_in_network"] == True).sum()
+    df_relationships = df_relationships[df_relationships["is_in_network"] == True]  # noqa: E712
 
-    # print(how_many)
-    # print(entities_ids)
-    # print(df_relationships[["source_id", "target_id"]])
+    df_relationships.drop(columns=["is_in_network"], inplace=True)
 
-    # df_in_network_relationships = df_relationships[
+    # sort the relationships by rank
+    df_relationships = df_relationships.sort_values(
+        by="rank", ascending=False
+    ).reset_index(drop=True)
 
-    # ]
+    if logger.getEffectiveLevel() == logging.DEBUG:
+        how_many = len(df_relationships)
+        logger.debug(f"\nFound {how_many} in-network relationships ...")
+        logger.debug(
+            f"\n\t ==Selected In Network Relationships==\n {df_relationships[['source', 'target', 'rank']]}"  # noqa: E501
+        )
 
-    # print(df_in_network_relationships)
+    return df_relationships
+
+
+def _find_out_network_relationships(
+    df_entities: pd.DataFrame,
+    df_relationships: pd.DataFrame,
+    source_column_name: str = "source_id",
+    target_column_name: str = "target_id",
+    entity_column_name: str = "id",
+) -> pd.DataFrame:
+    entities_ids = df_entities[entity_column_name].tolist()
+
+    def filter_out_network_relationships(source: str, target: str) -> bool:
+        if source in entities_ids and target not in entities_ids:
+            return True
+        if target in entities_ids and source not in entities_ids:  # noqa: SIM103
+            return True
+
+        return False
+
+    df_relationships["is_out_network"] = df_relationships.apply(
+        lambda x: filter_out_network_relationships(
+            x[source_column_name], x[target_column_name]
+        ),
+        axis=1,
+    )
+
+    df_relationships = df_relationships[df_relationships["is_out_network"] == True]  # noqa: E712
+
+    df_relationships.drop(columns=["is_out_network"], inplace=True)
+
+    # now we need to prioritize based on which external
+    # entities have the most connection with the selected entities
+    # we will do this by counting the number of relationships
+    # each external entity has with the selected entities
+    source_external_entities = df_relationships[
+        ~df_relationships[source_column_name].isin(entities_ids)
+    ][source_column_name]
+
+    target_external_entities = df_relationships[
+        ~df_relationships[target_column_name].isin(entities_ids)
+    ][target_column_name]
+
+    df_relationships = (
+        df_relationships.merge(
+            source_external_entities.value_counts(),
+            how="left",
+            left_on=source_column_name,
+            right_on=source_column_name,
+        )
+        .fillna(0)
+        .rename(columns={"count": "source_count"})
+    )
+
+    df_relationships = (
+        df_relationships.merge(
+            target_external_entities.value_counts(),
+            how="left",
+            left_on=target_column_name,
+            right_on=target_column_name,
+        )
+        .fillna(0)
+        .rename(columns={"count": "target_count"})
+    )
+
+    df_relationships["links"] = (
+        df_relationships["source_count"] + df_relationships["target_count"]
+    )
+
+    df_relationships = df_relationships.sort_values(
+        by=["links", "rank"],
+        ascending=[False, False],
+    ).reset_index(drop=True)
+
+    if logger.getEffectiveLevel() == logging.DEBUG:
+        how_many = len(df_relationships)
+        logger.debug(f"\nFound {how_many} out-network relationships ...")
+        logger.debug(
+            f"\n\t ==Selected Out Network Relationships==\n {df_relationships[['source', 'target', 'rank', 'links']]}"  # noqa: E501
+        )
 
     return df_relationships
 
 
 class RelationshipsSelector:
+    def __init__(self, top_k_out_network: int = 5):
+        self._top_k_out_network = top_k_out_network
+
     def run(
         self,
         df_entities: pd.DataFrame,
         df_relationships: pd.DataFrame,
-    ) -> pd.DataFrame:
+    ) -> RelationshipsSelectionResult:
         in_network_relationships = _find_in_network_relationships(
             df_entities,
-            df_relationships,
+            df_relationships.copy(deep=True),
+        )
+
+        out_network_relationships = _find_out_network_relationships(
+            df_entities,
+            df_relationships.copy(deep=True),
+        )
+
+        return RelationshipsSelectionResult(
+            in_network_relationships,
+            out_network_relationships,
         )
