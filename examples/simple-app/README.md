@@ -22,6 +22,13 @@ python examples/simple-app/app/main.py indexer --input-dir examples/input-data -
 Or, you can run it via `rye`. The below command can take additional args of simple-app
 
 ```bash
+# Step 1 - Index
 # make sure to run this from the root of the repository
 rye run simple-app-indexer
+```
+
+```bash
+# Step 2 - Global Query
+# make sure to run this from the root of the repository
+rye run simple-app-global-search --query "What are the top themes in this story?"
 ```

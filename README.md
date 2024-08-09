@@ -78,6 +78,11 @@ the classes as long as they implement the required interface.
 # To generate the index
 # default set azure_openai/gpt4-o/text-embedding-3-small
 # you can change the model and other parameters from command line 
+rye run simple-app-indexer 
+```
+
+```bash
+# To see more options
 rye run simple-app-indexer --help
 ```
 
