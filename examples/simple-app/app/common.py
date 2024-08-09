@@ -46,12 +46,16 @@ def make_llm_instance(
     llm_type: LLMType,
     llm_model: LLMModel,
     cache_dir: Path,
+    temperature: float = 0.0,
+    top_p: float = 1.0,
 ) -> BaseLLM:
     if llm_type == LLMType.openai:
         return ChatOpenAI(
             model=llm_model,
             api_key=os.getenv("LANGCHAIN_GRAPHRAG_OPENAI_CHAT_API_KEY"),
             cache=SQLiteCache(str(cache_dir / "openai_cache.db")),
+            temperature=temperature,
+            top_p=top_p,
         )
 
     if llm_type == LLMType.azure_openai:
@@ -64,12 +68,16 @@ def make_llm_instance(
                 "LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_DEPLOYMENT"
             ),
             cache=SQLiteCache(str(cache_dir / "azure_openai_cache.db")),
+            temperature=temperature,
+            top_p=top_p,
         )
 
     if llm_type == LLMType.ollama:
         return OllamaLLM(
             model=llm_model,
             cache=SQLiteCache(str(cache_dir / "ollama.db")),
+            temperature=temperature,
+            top_p=top_p,
         )
 
     raise ValueError
