@@ -36,6 +36,7 @@ from langchain_graphrag.query.global_search.key_points_generator import (
     KeyPointsOutputParser,
 )
 from langchain_graphrag.query.local_search.context_selectors import (
+    CommunitiesReportsSelector,
     ContextSelector,
     EntitiesSelector,
     RelationshipsSelector,
@@ -116,6 +117,7 @@ def local_search(
         entities_selector=entities_selector,
         text_units_selector=TextUnitsSelector(),
         relationships_selector=RelationshipsSelector(),
+        communities_reports_selector=CommunitiesReportsSelector(level),
     )
 
     searcher = LocalQuerySearch(

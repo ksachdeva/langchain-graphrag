@@ -16,7 +16,7 @@ class EntitiesSelector:
     def run(self, query: str, df_entities: pd.DataFrame) -> pd.DataFrame:
         """Select the entities to be used in the local search."""
         df_entities = df_entities[
-            ["id", "title", "text_unit_ids", "description", "degree"]
+            ["id", "title", "text_unit_ids", "description", "degree", "communities"]
         ]
 
         documents_with_scores = (
