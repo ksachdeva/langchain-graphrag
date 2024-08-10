@@ -62,8 +62,11 @@ class Indexer:
             graph,
         )
 
-        # Step 6 - Entities generation (depends on Step 2)
-        df_entities = self._entities_table_generator.run(graph)
+        # Step 6 - Entities generation (depends on Step 2 & Step 3)
+        df_entities = self._entities_table_generator.run(
+            community_detection_result,
+            graph,
+        )
 
         # Step 7 - Relationships generation (depends on Step 2)
         df_relationships = self._relationships_table_generator.run(graph)

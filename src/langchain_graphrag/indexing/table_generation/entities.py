@@ -5,9 +5,26 @@ import numpy as np
 import pandas as pd
 from langchain_core.vectorstores import VectorStore
 
+from langchain_graphrag.types.graphs.community import (
+    Community,
+    CommunityDetectionResult,
+    CommunityId,
+)
 from langchain_graphrag.types.graphs.embedding import GraphEmbeddingGenerator
 
 logger = logging.getLogger(__name__)
+
+
+def _make_entity_to_communities_map(
+    detection_result: CommunityDetectionResult,
+) -> dict[str, list[CommunityId]]:
+    entity_to_communities = {}
+    for level in detection_result.communities:
+        communities = detection_result.communities_at_level(level)
+        for c in communities:
+            for node in c.nodes:
+                entity_to_communities.setdefault(node.name, []).append(c.id)
+    return entity_to_communities
 
 
 class EntitiesTableGenerator:
@@ -23,18 +40,24 @@ class EntitiesTableGenerator:
         self,
         graph: nx.Graph,
         graph_embeddings: dict[str, np.ndarray],
+        entity_to_commnunities_map: dict[str, list[CommunityId]],
     ) -> pd.DataFrame:
         records = [
             {
                 "title": label,
                 **(node_data or {}),
+                "communities": entity_to_commnunities_map.get(label),
                 "graph_embedding": graph_embeddings.get(label),
             }
             for label, node_data in graph.nodes(data=True)
         ]
         return pd.DataFrame.from_records(records)
 
-    def run(self, graph: nx.Graph) -> pd.DataFrame:
+    def run(
+        self,
+        detection_result: CommunityDetectionResult,
+        graph: nx.Graph,
+    ) -> pd.DataFrame:
         # Step 1
         # Generate graph embeddings
         graph_embeddings = self._graph_embedding_generator.run(graph)
@@ -72,6 +95,12 @@ class EntitiesTableGenerator:
             ids=texts_ids,
         )
 
+        entity_to_commnunities_map = _make_entity_to_communities_map(detection_result)
+
         # Step 3
         # Make a dataframe
-        return self._unpack_nodes(graph, graph_embeddings)
+        return self._unpack_nodes(
+            graph,
+            graph_embeddings,
+            entity_to_commnunities_map,
+        )
