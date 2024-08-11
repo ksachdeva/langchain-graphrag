@@ -51,9 +51,11 @@ class TextUnitsSelector:
             )
 
             text = df_texts_units_subset["text"].iloc[0]
+            short_id = df_texts_units_subset.index.to_numpy()[0]
 
             return SelectedTextUnit(
                 id=text_unit_id,
+                short_id=short_id,
                 entity_score=entity.score,
                 relationship_score=relationship_score,
                 text=text,

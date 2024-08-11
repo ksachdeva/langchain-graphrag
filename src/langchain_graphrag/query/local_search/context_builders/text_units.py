@@ -19,7 +19,7 @@ class TextUnitsContextBuilder:
         current_context_text += self._column_delimiter.join(header) + "\n"
 
         for text_unit in text_units.itertuples():
-            new_context = [str(text_unit.id), text_unit.text]
+            new_context = [str(text_unit.short_id), text_unit.text]
             new_context_text = self._column_delimiter.join(new_context) + "\n"
             current_context_text += new_context_text
 
