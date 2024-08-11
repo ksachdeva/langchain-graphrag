@@ -35,6 +35,13 @@ from langchain_graphrag.query.global_search.key_points_generator import (
     KeyPointsGenerator,
     KeyPointsOutputParser,
 )
+from langchain_graphrag.query.local_search.context_builders import (
+    CommunitiesReportsContextBuilder,
+    ContextBuilder,
+    EntitiesContextBuilder,
+    RelationshipsContextBuilder,
+    TextUnitsContextBuilder,
+)
 from langchain_graphrag.query.local_search.context_selectors import (
     CommunitiesReportsSelector,
     ContextSelector,
@@ -120,9 +127,16 @@ def local_search(
         communities_reports_selector=CommunitiesReportsSelector(level),
     )
 
+    context_builder = ContextBuilder(
+        entities_context_builder=EntitiesContextBuilder(),
+        realtionships_context_builder=RelationshipsContextBuilder(),
+        text_units_context_builder=TextUnitsContextBuilder(),
+        communities_reports_context_builder=CommunitiesReportsContextBuilder(),
+    )
+
     searcher = LocalQuerySearch(
-        community_level=level,
         context_selector=context_selector,
+        context_builder=context_builder,
     )
 
     artifacts = IndexerArtifacts.load(artifacts_dir)

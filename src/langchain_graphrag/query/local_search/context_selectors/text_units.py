@@ -12,6 +12,7 @@ class SelectedTextUnit(TypedDict):
     id: str
     entity_score: float
     relationship_score: int
+    text: str
 
 
 def compute_relationship_score(
@@ -41,7 +42,6 @@ class TextUnitsSelector:
 
         def _process_text_unit_id(text_unit_id: str) -> SelectedTextUnit:
             df_texts_units_subset = df_text_units[df_text_units["id"] == text_unit_id]
-            text = df_texts_units_subset["text"]
             text_relationship_ids = df_texts_units_subset["relationship_ids"].explode()
 
             relationship_score = compute_relationship_score(
@@ -49,6 +49,8 @@ class TextUnitsSelector:
                 text_relationship_ids,
                 entity.title,
             )
+
+            text = df_texts_units_subset["text"].iloc[0]
 
             return SelectedTextUnit(
                 id=text_unit_id,

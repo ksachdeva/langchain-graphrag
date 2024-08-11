@@ -15,10 +15,6 @@ class EntitiesSelector:
 
     def run(self, query: str, df_entities: pd.DataFrame) -> pd.DataFrame:
         """Select the entities to be used in the local search."""
-        df_entities = df_entities[
-            ["id", "title", "text_unit_ids", "description", "degree", "communities"]
-        ]
-
         documents_with_scores = (
             self._vector_store.similarity_search_with_relevance_scores(
                 query,
@@ -48,7 +44,7 @@ class EntitiesSelector:
 
         if logger.getEffectiveLevel() == logging.DEBUG:
             logger.debug(
-                f"\n\t ==Selected entities==\n {selected_entities[[ 'title', 'degree', 'score']]}"
+                f"\n\t ==Selected entities==\n {selected_entities[[ 'title', 'degree', 'score']]}"  # noqa: E501
             )
 
         return selected_entities

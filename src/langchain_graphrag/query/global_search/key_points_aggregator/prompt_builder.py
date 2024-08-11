@@ -54,8 +54,6 @@ class DefaultAggregatorPromptBuilder(PromptBuilder):
 
         report_data = "\n".join(kp_strs)
 
-        print(report_data)
-
         return dict(
             response_type="Multiple Paragraphs",
             report_data=report_data,
