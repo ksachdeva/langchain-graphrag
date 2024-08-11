@@ -21,5 +21,6 @@ class LocalQuerySearch:
 
         documents = self._context_builder(context_selection_result)
 
-        for d in documents:
-            print(d.page_content)
+        for index, d in enumerate(documents):
+            print(index)
+            print(d.metadata)

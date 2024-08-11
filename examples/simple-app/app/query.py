@@ -1,4 +1,5 @@
 # ruff: noqa: B008
+# ruff: noqa: E402
 
 from pathlib import Path
 
@@ -50,6 +51,7 @@ from langchain_graphrag.query.local_search.context_selectors import (
     TextUnitsSelector,
 )
 from langchain_graphrag.query.local_search.search import LocalQuerySearch
+from langchain_graphrag.utils import TiktokenCounter
 
 app = Typer()
 
@@ -127,11 +129,17 @@ def local_search(
         communities_reports_selector=CommunitiesReportsSelector(level),
     )
 
+    token_counter = TiktokenCounter()
+
     context_builder = ContextBuilder(
-        entities_context_builder=EntitiesContextBuilder(),
-        realtionships_context_builder=RelationshipsContextBuilder(),
-        text_units_context_builder=TextUnitsContextBuilder(),
-        communities_reports_context_builder=CommunitiesReportsContextBuilder(),
+        entities_context_builder=EntitiesContextBuilder(token_counter=token_counter),
+        realtionships_context_builder=RelationshipsContextBuilder(
+            token_counter=token_counter
+        ),
+        text_units_context_builder=TextUnitsContextBuilder(token_counter=token_counter),
+        communities_reports_context_builder=CommunitiesReportsContextBuilder(
+            token_counter=token_counter
+        ),
     )
 
     searcher = LocalQuerySearch(

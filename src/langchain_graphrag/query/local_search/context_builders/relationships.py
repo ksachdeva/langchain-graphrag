@@ -1,9 +1,13 @@
+import logging
 import pandas as pd
 from langchain_core.documents import Document
 
 from langchain_graphrag.query.local_search.context_selectors.relationships import (
     RelationshipsSelectionResult,
 )
+from langchain_graphrag.types.tokens import TokenCounter
+
+logger = logging.getLogger(__name__)
 
 
 class RelationshipsContextBuilder:
@@ -13,25 +17,31 @@ class RelationshipsContextBuilder:
         include_weight: bool = True,
         context_name: str = "Relationships",
         column_delimiter: str = "|",
+        max_tokens: int = 8000,
+        token_counter: TokenCounter,
     ):
         self._include_weight = include_weight
         self._context_name = context_name
         self._column_delimiter = column_delimiter
+        self._max_tokens = max_tokens
+        self._token_counter = token_counter
 
     def __call__(
         self,
         selected_relationships: RelationshipsSelectionResult,
     ) -> Document:
-        current_context_text = f"-----{self._context_name}-----" + "\n"
+        all_context_text = f"-----{self._context_name}-----" + "\n"
         header = ["id", "source", "target", "description"]
         if self._include_weight:
             header.append("weight")
 
-        current_context_text += self._column_delimiter.join(header) + "\n"
+        all_context_text += self._column_delimiter.join(header) + "\n"
+        all_token_count = self._token_counter.count_tokens(all_context_text)
 
         def _build_context_text(
             relationships: pd.DataFrame,
             context_text: str,
+            token_count: int,
         ) -> None:
             for relationship in relationships.itertuples():
                 new_context = [
@@ -44,17 +54,33 @@ class RelationshipsContextBuilder:
                     new_context.append(str(relationship.weight))
 
                 new_context_text = self._column_delimiter.join(new_context) + "\n"
+                new_token_count = self._token_counter.count_tokens(new_context_text)
+
+                if token_count + new_token_count > self._max_tokens:
+                    logger.warning(
+                        f"Stopping relationships context build at {token_count} tokens ..."
+                    )
+                    return context_text, token_count
+
                 context_text += new_context_text
+                token_count += new_token_count
 
-            return context_text
+            return context_text, token_count
 
-        current_context_text = _build_context_text(
+        all_context_text, all_token_count = _build_context_text(
             selected_relationships.in_network_relationships,
-            current_context_text,
-        )
-        current_context_text = _build_context_text(
-            selected_relationships.out_network_relationships,
-            current_context_text,
+            all_context_text,
+            all_token_count,
         )
 
-        return Document(page_content=current_context_text)
+        if all_token_count < self._max_tokens:
+            all_context_text, all_token_count = _build_context_text(
+                selected_relationships.out_network_relationships,
+                all_context_text,
+                all_token_count,
+            )
+
+        return Document(
+            page_content=all_context_text,
+            metadata={"token_count": all_token_count},
+        )

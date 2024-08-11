@@ -1,5 +1,10 @@
+import logging
+
 import pandas as pd
 from langchain_core.documents import Document
+from langchain_graphrag.types.tokens import TokenCounter
+
+logger = logging.getLogger(__name__)
 
 
 class CommunitiesReportsContextBuilder:
@@ -8,15 +13,20 @@ class CommunitiesReportsContextBuilder:
         *,
         context_name: str = "Reports",
         column_delimiter: str = "|",
+        max_tokens: int = 8000,
+        token_counter: TokenCounter,
     ):
         self._context_name = context_name
         self._column_delimiter = column_delimiter
+        self._max_tokens = max_tokens
+        self._token_counter = token_counter
 
     def __call__(self, communities_reports: pd.DataFrame) -> Document:
-        current_context_text = f"-----{self._context_name}-----" + "\n"
+        context_text = f"-----{self._context_name}-----" + "\n"
         header = ["id", "title", "content"]
 
-        current_context_text += self._column_delimiter.join(header) + "\n"
+        context_text += self._column_delimiter.join(header) + "\n"
+        token_count = self._token_counter.count_tokens(context_text)
 
         for report in communities_reports.itertuples():
             new_context = [
@@ -26,6 +36,18 @@ class CommunitiesReportsContextBuilder:
             ]
 
             new_context_text = self._column_delimiter.join(new_context) + "\n"
-            current_context_text += new_context_text
+            new_token_count = self._token_counter.count_tokens(new_context_text)
 
-        return Document(page_content=current_context_text)
+            if token_count + new_token_count > self._max_tokens:
+                logger.warning(
+                    f"Stopping communities context build at {token_count} tokens ..."
+                )
+                break
+
+            context_text += new_context_text
+            token_count += new_token_count
+
+        return Document(
+            page_content=context_text,
+            metadata={"token_count": token_count},
+        )
