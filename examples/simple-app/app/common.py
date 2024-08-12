@@ -1,7 +1,7 @@
 # ruff: noqa: B008
 
 import os
-from enum import StrEnum
+from enum import Enum
 from pathlib import Path
 
 from langchain.embeddings.cache import CacheBackedEmbeddings
@@ -18,26 +18,26 @@ from langchain_openai import (
 )
 
 
-class LLMType(StrEnum):
+class LLMType(str,Enum):
     openai: str = "openai"
     azure_openai: str = "azure_openai"
     ollama: str = "ollama"
 
 
-class LLMModel(StrEnum):
+class LLMModel(str,Enum):
     gpt4o: str = "gpt-4o"
     gpt4omini: str = "gpt-4o-mini"
     gemma2_9b_instruct_q8_0: str = "gemma2:9b-instruct-q8_0"
     gemma2_27b_instruct_q6_K: str = "gemma2:27b-instruct-q6_K"  # noqa: N815
 
 
-class EmbeddingModelType(StrEnum):
+class EmbeddingModelType(str,Enum):
     openai: str = "openai"
     azure_openai: str = "azure_openai"
     ollama: str = "ollama"
 
 
-class EmbeddingModel(StrEnum):
+class EmbeddingModel(str,Enum):
     text_embedding_3_small: str = "text-embedding-3-small"
     nomic_embed_text: str = "nomic_embed_text"
 

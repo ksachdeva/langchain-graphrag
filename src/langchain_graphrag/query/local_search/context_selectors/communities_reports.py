@@ -60,7 +60,7 @@ class CommunitiesReportsSelector:
 
         if logger.getEffectiveLevel() == logging.DEBUG:
             logger.debug(
-                f"\n\t ==Selected Reports ==\n {selected_reports[["community_id", "level", "selected_entities_count", "rating"]]}"  # noqa: E501
+                f'\n\t ==Selected Reports ==\n {selected_reports[["community_id", "level", "selected_entities_count", "rating"]]}'  # noqa: E501
             )
 
         return selected_reports
