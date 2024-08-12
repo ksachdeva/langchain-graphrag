@@ -1,4 +1,4 @@
-from enum import StrEnum
+from enum import Enum
 from random import Random
 from typing import Any
 
@@ -7,7 +7,7 @@ import networkx as nx
 from langchain_graphrag.utils.uuid import gen_uuid
 
 
-class AttributesToMerge(StrEnum):
+class AttributesToMerge(str, Enum):
     text_unit_ids = "text_unit_ids"
     description = "description"
     weight = "weight"
