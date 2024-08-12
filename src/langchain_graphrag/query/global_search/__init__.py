@@ -1,5 +1,5 @@
 """Global Query Search Module."""
 
-from .search import GlobalQuerySearch
+from .search import GlobalSearch
 
-__all__ = ["GlobalQuerySearch"]
+__all__ = ["GlobalSearch"]

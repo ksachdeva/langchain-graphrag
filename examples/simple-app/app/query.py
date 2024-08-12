@@ -23,7 +23,7 @@ from common import (
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 from langchain_core.output_parsers.string import StrOutputParser
 from langchain_graphrag.indexing.artifacts import IndexerArtifacts
-from langchain_graphrag.query.global_search import GlobalQuerySearch
+from langchain_graphrag.query.global_search import GlobalSearch
 from langchain_graphrag.query.global_search.community_weight_calculator import (
     CommunityWeightCalculator,
 )
@@ -51,7 +51,7 @@ from langchain_graphrag.query.local_search.context_selectors import (
     TextUnitsSelector,
 )
 from langchain_graphrag.query.local_search import (
-    LocalQuerySearch,
+    LocalSearch,
     LocalSearchPromptBuilder,
 )
 from langchain_graphrag.utils import TiktokenCounter
@@ -82,7 +82,7 @@ def global_search(  # noqa: PLR0913
         output_parser=StrOutputParser(),
     )
 
-    searcher = GlobalQuerySearch(
+    searcher = GlobalSearch(
         community_level=level,
         weight_calculator=CommunityWeightCalculator(),
         key_points_generator=points_generator,
@@ -145,7 +145,7 @@ def local_search(
         ),
     )
 
-    searcher = LocalQuerySearch(
+    searcher = LocalSearch(
         prompt_builder=LocalSearchPromptBuilder(),
         llm=make_llm_instance(llm_type, llm_model, cache_dir),
         output_parser=StrOutputParser(),

@@ -11,7 +11,7 @@ from .key_points_generator import (
 )
 
 
-class GlobalQuerySearch:
+class GlobalSearch:
     def __init__(
         self,
         community_level: CommunityLevel,

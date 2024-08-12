@@ -7,7 +7,7 @@ from .context_selectors import ContextSelector
 from .prompt_builder import LocalSearchPromptBuilder
 
 
-class LocalQuerySearch:
+class LocalSearch:
     def __init__(
         self,
         prompt_builder: LocalSearchPromptBuilder,
