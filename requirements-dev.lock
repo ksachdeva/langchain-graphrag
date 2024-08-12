@@ -30,6 +30,9 @@ asgiref==3.8.1
     # via opentelemetry-instrumentation-asgi
 asttokens==2.4.1
     # via stack-data
+async-timeout==4.0.3
+    # via aiohttp
+    # via langchain
 attrs==23.2.0
     # via aiohttp
 autograd==1.6.2
@@ -94,6 +97,10 @@ distro==1.9.0
     # via openai
 emoji==2.12.1
     # via unstructured
+exceptiongroup==1.2.2
+    # via anyio
+    # via ipython
+    # via pytest
 executing==2.0.1
     # via stack-data
 fastapi==0.112.0
@@ -517,6 +524,9 @@ tiktoken==0.7.0
     # via langchain-openai
 tokenizers==0.19.1
     # via chromadb
+tomli==2.0.1
+    # via build
+    # via pytest
 tornado==6.4.1
     # via ipykernel
     # via jupyter-client
@@ -539,21 +549,26 @@ typer==0.12.3
 types-networkx==3.2.1.20240811
 types-tqdm==4.66.0.20240417
 typing-extensions==4.12.2
+    # via anyio
+    # via asgiref
     # via chromadb
     # via emoji
     # via fastapi
     # via graspologic
     # via huggingface-hub
+    # via ipython
     # via langchain-core
     # via openai
     # via opentelemetry-sdk
     # via pydantic
     # via pydantic-core
+    # via pypdf
     # via sqlalchemy
     # via typer
     # via typing-inspect
     # via unstructured
     # via unstructured-client
+    # via uvicorn
 typing-inspect==0.9.0
     # via dataclasses-json
     # via unstructured-client
