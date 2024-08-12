@@ -5,6 +5,8 @@ from langchain_core.prompts import PromptTemplate
 
 from langchain_graphrag.types.prompts import PromptBuilder
 
+from .default_prompts import DEFAULT_ER_EXTRACTION_PROMPT
+
 DEFAULT_TUPLE_DELIMITER = "<|>"
 DEFAULT_RECORD_DELIMITER = "##"
 DEFAULT_COMPLETION_DELIMITER = "<|COMPLETE|>"
@@ -23,9 +25,10 @@ class EntityExtractionPromptBuilder(PromptBuilder):
         completion_delimiter: str = DEFAULT_COMPLETION_DELIMITER,
     ):
         if prompt is None and prompt_path is None:
-            raise ValueError("prompt or prompt_path is required")
+            self._prompt = DEFAULT_ER_EXTRACTION_PROMPT
+        else:
+            self._prompt = prompt
 
-        self._prompt = prompt
         self._prompt_path = prompt_path
 
         self._entity_types = entity_types

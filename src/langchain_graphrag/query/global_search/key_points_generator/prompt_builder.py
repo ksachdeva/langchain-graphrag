@@ -36,7 +36,8 @@ class KeyPointsGeneratorPromptBuilder(PromptBuilder):
             self._system_prompt = MAP_SYSTEM_PROMPT
         else:
             self._system_prompt = system_prompt
-            self._system_prompt_path = system_prompt_path
+
+        self._system_prompt_path = system_prompt_path
 
     def build(self) -> PromptTemplate:
         system_template = (

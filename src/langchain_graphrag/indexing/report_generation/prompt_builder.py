@@ -9,6 +9,7 @@ from langchain_graphrag.types.graphs.community import Community  # noqa: TCH001
 from langchain_graphrag.types.prompts import PromptBuilder
 
 from .utils import get_info
+from .default_prompts import DEFAULT_PROMPT
 
 
 class ReportGenerationPromptBuilder(PromptBuilder):
@@ -19,9 +20,10 @@ class ReportGenerationPromptBuilder(PromptBuilder):
         prompt_path: Path | None = None,
     ):
         if prompt is None and prompt_path is None:
-            raise ValueError("prompt or prompt_path is required")
+            self._prompt = DEFAULT_PROMPT
+        else:
+            self._prompt = prompt
 
-        self._prompt = prompt
         self._prompt_path = prompt_path
 
     def build(self) -> PromptTemplate:
