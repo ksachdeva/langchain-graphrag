@@ -1,6 +1,6 @@
 from typing import Any
 from pathlib import Path
-from typing import Unpack
+from typing_extensions import Unpack
 
 from langchain_core.prompts import (
     ChatPromptTemplate,

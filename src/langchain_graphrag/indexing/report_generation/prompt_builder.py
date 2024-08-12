@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Any
-from typing import Unpack
+from typing_extensions import Unpack
 
 import networkx as nx  # noqa: TCH002
 import pandas as pd

@@ -1,5 +1,5 @@
 from typing import Any, Protocol
-from typing import Unpack
+from typing_extensions import Unpack
 
 from langchain_core.prompts import BasePromptTemplate
 
