@@ -11,7 +11,7 @@ DEFAULT_COMPLETION_DELIMITER = "<|COMPLETE|>"
 DEFAULT_ENTITY_TYPES = ["organization", "person", "geo", "event"]
 
 
-class DefaultEntityExtractionPromptBuilder(PromptBuilder):
+class EntityExtractionPromptBuilder(PromptBuilder):
     def __init__(
         self,
         *,

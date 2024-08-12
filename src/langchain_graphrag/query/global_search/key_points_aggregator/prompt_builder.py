@@ -24,7 +24,7 @@ Importance Score: {score}
 """
 
 
-class DefaultAggregatorPromptBuilder(PromptBuilder):
+class KeyPointsAggregatorPromptBuilder(PromptBuilder):
     def __init__(
         self,
         *,

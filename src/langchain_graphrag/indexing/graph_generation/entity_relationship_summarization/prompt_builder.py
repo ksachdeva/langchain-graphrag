@@ -6,7 +6,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_graphrag.types.prompts import PromptBuilder
 
 
-class DefaultSummarizeDescriptionPromptBuilder(PromptBuilder):
+class SummarizeDescriptionPromptBuilder(PromptBuilder):
     def __init__(
         self,
         *,

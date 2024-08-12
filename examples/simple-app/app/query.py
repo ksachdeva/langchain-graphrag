@@ -28,13 +28,13 @@ from langchain_graphrag.query.global_search.community_weight_calculator import (
     CommunityWeightCalculator,
 )
 from langchain_graphrag.query.global_search.key_points_aggregator import (
-    DefaultAggregatorPromptBuilder,
     KeyPointsAggregator,
+    KeyPointsAggregatorPromptBuilder,
 )
 from langchain_graphrag.query.global_search.key_points_generator import (
-    DefaultKeyPointsGeneratorPromptBuilder,
     KeyPointsGenerator,
     KeyPointsOutputParser,
+    KeyPointsGeneratorPromptBuilder,
 )
 from langchain_graphrag.query.local_search.context_builders import (
     CommunitiesReportsContextBuilder,
@@ -68,13 +68,13 @@ def global_search(  # noqa: PLR0913
     artifacts_dir = output_dir / "artifacts"
 
     points_generator = KeyPointsGenerator(
-        prompt_builder=DefaultKeyPointsGeneratorPromptBuilder(),
+        prompt_builder=KeyPointsGeneratorPromptBuilder(),
         llm=make_llm_instance(llm_type, llm_model, cache_dir),
         output_parser=KeyPointsOutputParser(),
     )
 
     points_aggregator = KeyPointsAggregator(
-        prompt_builder=DefaultAggregatorPromptBuilder(),
+        prompt_builder=KeyPointsAggregatorPromptBuilder(),
         llm=make_llm_instance(llm_type, llm_model, cache_dir),
         output_parser=StrOutputParser(),
     )

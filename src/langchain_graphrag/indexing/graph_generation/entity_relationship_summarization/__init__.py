@@ -1,9 +1,9 @@
 """Entity Relationship Description Summarization Module."""
 
-from .prompt import DefaultSummarizeDescriptionPromptBuilder
+from .prompt_builder import SummarizeDescriptionPromptBuilder
 from .summarizer import EntityRelationshipDescriptionSummarizer
 
 __all__ = [
-    "DefaultSummarizeDescriptionPromptBuilder",
+    "SummarizeDescriptionPromptBuilder",
     "EntityRelationshipDescriptionSummarizer",
 ]

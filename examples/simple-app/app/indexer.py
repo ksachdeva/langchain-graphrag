@@ -37,7 +37,7 @@ from langchain_graphrag.indexing.report_generation import (
     CommunityReportGenerator,
     CommunityReportOutputParser,
     CommunityReportWriter,
-    DefaulReportGenerationPromptBuilder,
+    ReportGenerationPromptBuilder,
 )
 from langchain_graphrag.indexing.table_generation import (
     CommunitiesReportsTableGenerator,
@@ -89,7 +89,7 @@ def index(  # noqa: PLR0913
 
     # Prompt Builder for Entity Extraction
     er_extraction_prompt = prompts_dir / "entity_extraction.txt"
-    er_prompt_builder = er.DefaultEntityExtractionPromptBuilder(
+    er_prompt_builder = er.EntityExtractionPromptBuilder(
         prompt_path=er_extraction_prompt
     )
 
@@ -110,7 +110,7 @@ def index(  # noqa: PLR0913
 
     # Prompt Builder for Entity Extraction
     es_extraction_prompt = prompts_dir / "summarize_descriptions.txt"
-    es_prompt_builder = es.DefaultSummarizeDescriptionPromptBuilder(
+    es_prompt_builder = es.SummarizeDescriptionPromptBuilder(
         prompt_path=es_extraction_prompt
     )
 
@@ -186,7 +186,7 @@ def index(  # noqa: PLR0913
     report_gen_llm = make_llm_instance(llm_type, llm_model, cache_dir)
 
     report_generation_prompt = prompts_dir / "community_report.txt"
-    report_prompt_builder = DefaulReportGenerationPromptBuilder(
+    report_prompt_builder = ReportGenerationPromptBuilder(
         prompt_path=report_generation_prompt
     )
     report_generator = CommunityReportGenerator(

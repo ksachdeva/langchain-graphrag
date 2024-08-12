@@ -11,7 +11,7 @@ from langchain_graphrag.types.prompts import PromptBuilder
 from .utils import get_info
 
 
-class DefaulReportGenerationPromptBuilder(PromptBuilder):
+class ReportGenerationPromptBuilder(PromptBuilder):
     def __init__(
         self,
         *,

@@ -7,7 +7,7 @@ from typing import Any
 import networkx as nx
 from langchain_core.output_parsers import BaseOutputParser
 
-from .prompt import DEFAULT_RECORD_DELIMITER, DEFAULT_TUPLE_DELIMITER
+from .prompt_builder import DEFAULT_RECORD_DELIMITER, DEFAULT_TUPLE_DELIMITER
 
 ENTITY_ATTRIBUTES_LENGTH = 4
 RELATIONSHIP_ATTRIBUTES_LENGTH = 5

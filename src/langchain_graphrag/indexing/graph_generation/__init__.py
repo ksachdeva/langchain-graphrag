@@ -1,19 +1,19 @@
 """Graph generation Module."""
 
 from .entity_relationship_extraction import (
-    DefaultEntityExtractionPromptBuilder,
+    EntityExtractionPromptBuilder,
     EntityRelationshipExtractor,
 )
 from .entity_relationship_summarization import (
-    DefaultSummarizeDescriptionPromptBuilder,
+    SummarizeDescriptionPromptBuilder,
     EntityRelationshipDescriptionSummarizer,
 )
 from .generator import GraphGenerator
 
 __all__ = [
     "EntityRelationshipExtractor",
-    "DefaultEntityExtractionPromptBuilder",
+    "EntityExtractionPromptBuilder",
     "EntityRelationshipDescriptionSummarizer",
-    "DefaultSummarizeDescriptionPromptBuilder",
+    "SummarizeDescriptionPromptBuilder",
     "GraphGenerator",
 ]

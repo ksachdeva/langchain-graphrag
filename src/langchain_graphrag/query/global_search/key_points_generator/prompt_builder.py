@@ -25,7 +25,7 @@ Report:
 """
 
 
-class DefaultKeyPointsGeneratorPromptBuilder(PromptBuilder):
+class KeyPointsGeneratorPromptBuilder(PromptBuilder):
     def __init__(
         self,
         *,
