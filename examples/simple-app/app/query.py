@@ -50,7 +50,10 @@ from langchain_graphrag.query.local_search.context_selectors import (
     RelationshipsSelector,
     TextUnitsSelector,
 )
-from langchain_graphrag.query.local_search.search import LocalQuerySearch
+from langchain_graphrag.query.local_search import (
+    LocalQuerySearch,
+    LocalSearchPromptBuilder,
+)
 from langchain_graphrag.utils import TiktokenCounter
 
 app = Typer()
@@ -143,9 +146,14 @@ def local_search(
     )
 
     searcher = LocalQuerySearch(
+        prompt_builder=LocalSearchPromptBuilder(),
+        llm=make_llm_instance(llm_type, llm_model, cache_dir),
+        output_parser=StrOutputParser(),
         context_selector=context_selector,
         context_builder=context_builder,
     )
 
     artifacts = IndexerArtifacts.load(artifacts_dir)
-    searcher.invoke(query, artifacts)
+    response = searcher.invoke(query, artifacts)
+
+    print(response)
