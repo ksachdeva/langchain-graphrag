@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Any
 from typing import Unpack
 
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate, BasePromptTemplate
 
 from langchain_graphrag.types.prompts import PromptBuilder
 
@@ -16,6 +16,7 @@ class SummarizeDescriptionPromptBuilder(PromptBuilder):
         prompt: str | None = None,
         prompt_path: Path | None = None,
     ):
+        self._prompt: str | None
         if prompt is None and prompt_path is None:
             self._prompt = DEFAULT_PROMPT
         else:
@@ -23,12 +24,14 @@ class SummarizeDescriptionPromptBuilder(PromptBuilder):
 
         self._prompt_path = prompt_path
 
-    def build(self) -> PromptTemplate:
-        return (
-            PromptTemplate.from_template(self._prompt)
-            if self._prompt
-            else PromptTemplate.from_file(self._prompt_path)
-        )
+    def build(self) -> BasePromptTemplate:
+        if self._prompt:
+            prompt_template = PromptTemplate.from_template(self._prompt)
+        else:
+            assert self._prompt_path is not None
+            prompt_template = PromptTemplate.from_file(self._prompt_path)
+
+        return prompt_template
 
     def prepare_chain_input(self, **kwargs: Unpack[dict[str, Any]]) -> dict[str, str]:
         entity_name = kwargs.get("entity_name", None)

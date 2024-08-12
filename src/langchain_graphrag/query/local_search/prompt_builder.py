@@ -4,7 +4,7 @@ from typing import Unpack
 
 from langchain_core.prompts import (
     ChatPromptTemplate,
-    PromptTemplate,
+    BasePromptTemplate,
     SystemMessagePromptTemplate,
 )
 
@@ -30,12 +30,17 @@ class LocalSearchPromptBuilder(PromptBuilder):
 
         self._system_prompt_path = system_prompt_path
 
-    def build(self) -> PromptTemplate:
-        system_template = (
-            SystemMessagePromptTemplate.from_template(self._system_prompt)
-            if self._system_prompt
-            else SystemMessagePromptTemplate.from_file(self._system_prompt_path)
-        )
+    def build(self) -> BasePromptTemplate:
+        if self._system_prompt:
+            system_template = SystemMessagePromptTemplate.from_template(
+                self._system_prompt
+            )
+        else:
+            assert self._system_prompt_path is not None
+            system_template = SystemMessagePromptTemplate.from_template_file(
+                self._system_prompt_path,
+                input_variables=["context_data"],
+            )
 
         return ChatPromptTemplate([system_template, ("user", "{local_query}")])
 
