@@ -28,7 +28,13 @@ rye run simple-app-indexer
 ```
 
 ```bash
-# Step 2 - Global Query
+# Step 2 - Global Search
 # make sure to run this from the root of the repository
 rye run simple-app-global-search --query "What are the top themes in this story?"
+```
+
+```bash
+# Step 3 - Local Search
+# make sure to run this from the root of the repository
+rye run simple-app-local-search --query "Who is Scrooge, and what are his main relationships?"
 ```

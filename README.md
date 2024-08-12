@@ -87,10 +87,17 @@ rye run simple-app-indexer --help
 ```
 
 ```bash
-# To do global query
-# default set azure_openai/gpt4-o/text-embedding-3-small
+# To do global search/query
+# defaults are azure_openai/gpt4-o/text-embedding-3-small
 # you can change the model and other parameters from command line 
 rye run simple-app-global-search --query "What are the top themes in this story?"
+```
+
+```bash
+# To do local search/query
+# defaults are azure_openai/gpt4-o/text-embedding-3-small
+# you can change the model and other parameters from command line 
+rye run simple-app-local-search --query "Who is Scrooge, and what are his main relationships?"
 ```
 
 See `examples/simple-app/README.md` for more details.
