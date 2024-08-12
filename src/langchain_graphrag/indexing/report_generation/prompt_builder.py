@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Any
+from typing import Unpack
 
 import networkx as nx  # noqa: TCH002
 import pandas as pd
@@ -19,6 +20,7 @@ class ReportGenerationPromptBuilder(PromptBuilder):
         prompt: str | None = None,
         prompt_path: Path | None = None,
     ):
+        self._prompt: str | None
         if prompt is None and prompt_path is None:
             self._prompt = DEFAULT_PROMPT
         else:
@@ -33,7 +35,7 @@ class ReportGenerationPromptBuilder(PromptBuilder):
             else PromptTemplate.from_file(self._prompt_path)
         )
 
-    def prepare_chain_input(self, **kwargs: dict[str, Any]) -> dict[str, str]:
+    def prepare_chain_input(self, **kwargs: Unpack[dict[str, Any]]) -> dict[str, str]:
         community: Community = kwargs.get("community", None)
         graph: nx.Graph = kwargs.get("graph", None)
 

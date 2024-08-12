@@ -22,7 +22,12 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
-dev-dependencies = ["pytest>=8.3.2", "ipykernel>=6.29.5"]
+dev-dependencies = [
+    "pytest>=8.3.2",
+    "ipykernel>=6.29.5",
+    "types-networkx>=3.2.1.20240811",
+    "types-tqdm>=4.66.0.20240417",
+]
 
 [tool.hatch.metadata]
 allow-direct-references = true

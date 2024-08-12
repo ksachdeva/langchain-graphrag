@@ -1,5 +1,6 @@
 from typing import Any
 from pathlib import Path
+from typing import Unpack
 
 from langchain_core.prompts import (
     ChatPromptTemplate,
@@ -32,6 +33,7 @@ class KeyPointsGeneratorPromptBuilder(PromptBuilder):
         system_prompt: str | None = None,
         system_prompt_path: Path | None = None,
     ):
+        self._system_prompt: str | None
         if system_prompt is None and system_prompt_path is None:
             self._system_prompt = MAP_SYSTEM_PROMPT
         else:
@@ -48,7 +50,7 @@ class KeyPointsGeneratorPromptBuilder(PromptBuilder):
 
         return ChatPromptTemplate([system_template, ("user", "{global_query}")])
 
-    def prepare_chain_input(self, **kwargs: dict[str, Any]) -> dict[str, str]:
+    def prepare_chain_input(self, **kwargs: Unpack[dict[str, Any]]) -> dict[str, str]:
         global_query = kwargs.get("global_query", None)
         reports: list[CommunityReport] = kwargs.get("reports", [])
 

@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Any
+from typing import Unpack
 
 from langchain_core.prompts import (
     ChatPromptTemplate,
@@ -38,7 +39,7 @@ class LocalSearchPromptBuilder(PromptBuilder):
 
         return ChatPromptTemplate([system_template, ("user", "{local_query}")])
 
-    def prepare_chain_input(self, **kwargs: dict[str, Any]) -> dict[str, str]:
+    def prepare_chain_input(self, **kwargs: Unpack[dict[str, Any]]) -> dict[str, str]:
         local_query: str | None = kwargs.get("local_query", None)
         documents: list[Document] | None = kwargs.get("documents", None)
 

@@ -11,10 +11,10 @@ from graspologic.utils import largest_connected_component
 
 def _stabilize_graph(graph: nx.Graph) -> nx.Graph:
     """Ensure an undirected graph with the same relationships will always be read the same way."""
-    fixed_graph = nx.DiGraph() if graph.is_directed() else nx.Graph()
+    fixed_graph: nx.Graph = nx.DiGraph() if graph.is_directed() else nx.Graph()
 
-    sorted_nodes = graph.nodes(data=True)
-    sorted_nodes = sorted(sorted_nodes, key=lambda x: x[0])
+    graph_nodes = graph.nodes(data=True)
+    sorted_nodes = sorted(graph_nodes, key=lambda x: x[0])
 
     fixed_graph.add_nodes_from(sorted_nodes)
     edges = list(graph.edges(data=True))
