@@ -3,7 +3,10 @@ from langchain_core.language_models import BaseLLM
 from langchain_core.output_parsers.base import BaseOutputParser
 from tqdm import tqdm
 
+from langchain_core.output_parsers.string import StrOutputParser
 from langchain_graphrag.types.prompts import PromptBuilder
+
+from .prompt_builder import SummarizeDescriptionPromptBuilder
 
 
 class EntityRelationshipDescriptionSummarizer:
@@ -16,6 +19,14 @@ class EntityRelationshipDescriptionSummarizer:
         prompt = prompt_builder.build()
         self._summarize_chain = prompt | llm | output_parser
         self._prompt_builder = prompt_builder
+
+    @staticmethod
+    def build_default(llm: BaseLLM) -> "EntityRelationshipDescriptionSummarizer":
+        return EntityRelationshipDescriptionSummarizer(
+            prompt_builder=SummarizeDescriptionPromptBuilder(),
+            llm=llm,
+            output_parser=StrOutputParser(),
+        )
 
     def invoke(self, graph: nx.Graph) -> nx.Graph:
         for node_name, node in tqdm(

@@ -2,12 +2,12 @@
 
 from .generator import CommunityReportGenerator
 from .output_parser import CommunityReportOutputParser
-from .prompt_builder import ReportGenerationPromptBuilder
+from .prompt_builder import CommunityReportGenerationPromptBuilder
 from .writer import CommunityReportWriter
 
 __all__ = [
     "CommunityReportGenerator",
-    "ReportGenerationPromptBuilder",
+    "CommunityReportGenerationPromptBuilder",
     "CommunityReportOutputParser",
     "CommunityReportWriter",
 ]

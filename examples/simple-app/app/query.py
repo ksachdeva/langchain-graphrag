@@ -2,6 +2,7 @@
 # ruff: noqa: E402
 
 from pathlib import Path
+from typing import cast
 
 import typer
 from dotenv import load_dotenv
@@ -29,12 +30,9 @@ from langchain_graphrag.query.global_search.community_weight_calculator import (
 )
 from langchain_graphrag.query.global_search.key_points_aggregator import (
     KeyPointsAggregator,
-    KeyPointsAggregatorPromptBuilder,
 )
 from langchain_graphrag.query.global_search.key_points_generator import (
     KeyPointsGenerator,
-    KeyPointsOutputParser,
-    KeyPointsGeneratorPromptBuilder,
 )
 from langchain_graphrag.query.local_search.context_builders import (
     CommunitiesReportsContextBuilder,
@@ -55,6 +53,7 @@ from langchain_graphrag.query.local_search import (
     LocalSearchPromptBuilder,
 )
 from langchain_graphrag.utils import TiktokenCounter
+from langchain_graphrag.types.graphs.community import CommunityLevel
 
 app = Typer()
 
@@ -70,20 +69,16 @@ def global_search(  # noqa: PLR0913
 ):
     artifacts_dir = output_dir / "artifacts"
 
-    points_generator = KeyPointsGenerator(
-        prompt_builder=KeyPointsGeneratorPromptBuilder(),
-        llm=make_llm_instance(llm_type, llm_model, cache_dir),
-        output_parser=KeyPointsOutputParser(),
+    points_generator = KeyPointsGenerator.build_default(
+        llm=make_llm_instance(llm_type, llm_model, cache_dir)
     )
 
-    points_aggregator = KeyPointsAggregator(
-        prompt_builder=KeyPointsAggregatorPromptBuilder(),
-        llm=make_llm_instance(llm_type, llm_model, cache_dir),
-        output_parser=StrOutputParser(),
+    points_aggregator = KeyPointsAggregator.build_default(
+        llm=make_llm_instance(llm_type, llm_model, cache_dir)
     )
 
     searcher = GlobalSearch(
-        community_level=level,
+        community_level=cast(CommunityLevel, level),
         weight_calculator=CommunityWeightCalculator(),
         key_points_generator=points_generator,
         key_points_aggregator=points_aggregator,
@@ -129,7 +124,9 @@ def local_search(
         entities_selector=entities_selector,
         text_units_selector=TextUnitsSelector(),
         relationships_selector=RelationshipsSelector(),
-        communities_reports_selector=CommunitiesReportsSelector(level),
+        communities_reports_selector=CommunitiesReportsSelector(
+            cast(CommunityLevel, level)
+        ),
     )
 
     token_counter = TiktokenCounter()

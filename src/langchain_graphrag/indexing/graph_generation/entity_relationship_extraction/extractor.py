@@ -7,6 +7,8 @@ from tqdm import tqdm
 from langchain_graphrag.types.prompts import PromptBuilder
 
 from .graphs_merger import GraphsMerger
+from .prompt_builder import EntityExtractionPromptBuilder
+from .output_parser import EntityExtractionOutputParser
 
 
 class EntityRelationshipExtractor:
@@ -21,6 +23,15 @@ class EntityRelationshipExtractor:
         self._graphs_merger = graphs_merger
         self._extraction_chain = prompt | llm | output_parser
         self._prompt_builder = prompt_builder
+
+    @staticmethod
+    def build_default(llm: BaseLLM) -> "EntityRelationshipExtractor":
+        return EntityRelationshipExtractor(
+            prompt_builder=EntityExtractionPromptBuilder(),
+            llm=llm,
+            output_parser=EntityExtractionOutputParser(),
+            graphs_merger=GraphsMerger(),
+        )
 
     def invoke(self, input_data: pd.DataFrame) -> nx.Graph:
         def _run_chain(series: pd.Series) -> nx.Graph:

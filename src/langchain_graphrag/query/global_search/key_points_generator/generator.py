@@ -5,6 +5,8 @@ from langchain_graphrag.query.global_search.community_report import CommunityRep
 from langchain_graphrag.types.prompts import PromptBuilder
 
 from .utils import KeyPointsResult
+from .prompt_builder import KeyPointsGeneratorPromptBuilder
+from .output_parser import KeyPointsOutputParser
 
 
 class KeyPointsGenerator:
@@ -17,6 +19,14 @@ class KeyPointsGenerator:
         prompt = prompt_builder.build()
         self._chain = prompt | llm | output_parser
         self._prompt_builder = prompt_builder
+
+    @staticmethod
+    def build_default(llm: BaseLLM) -> "KeyPointsGenerator":
+        return KeyPointsGenerator(
+            prompt_builder=KeyPointsGeneratorPromptBuilder(),
+            llm=llm,
+            output_parser=KeyPointsOutputParser(),
+        )
 
     def invoke(self, query: str, reports: list[CommunityReport]) -> KeyPointsResult:
         chain_input = self._prompt_builder.prepare_chain_input(

@@ -13,7 +13,7 @@ from .utils import get_info
 from .default_prompts import DEFAULT_PROMPT
 
 
-class ReportGenerationPromptBuilder(PromptBuilder):
+class CommunityReportGenerationPromptBuilder(PromptBuilder):
     def __init__(
         self,
         *,

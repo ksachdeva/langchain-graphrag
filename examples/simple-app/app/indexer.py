@@ -1,4 +1,5 @@
 # ruff: noqa: B008
+# ruff: noqa: E402
 
 from pathlib import Path
 
@@ -23,7 +24,6 @@ from common import (
 )
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 from langchain_community.document_loaders.directory import DirectoryLoader
-from langchain_core.output_parsers.string import StrOutputParser
 from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 from langchain_graphrag.indexing.embedding_generation.graph import (
     Node2VectorGraphEmbeddingGenerator,
@@ -35,9 +35,7 @@ from langchain_graphrag.indexing.graph_generation.generator import GraphGenerato
 from langchain_graphrag.indexing.indexer import Indexer
 from langchain_graphrag.indexing.report_generation import (
     CommunityReportGenerator,
-    CommunityReportOutputParser,
     CommunityReportWriter,
-    ReportGenerationPromptBuilder,
 )
 from langchain_graphrag.indexing.table_generation import (
     CommunitiesReportsTableGenerator,
@@ -56,7 +54,6 @@ app = Typer()
 def index(  # noqa: PLR0913
     input_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
-    prompts_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     llm_type: LLMType = typer.Option(LLMType.azure_openai, case_sensitive=False),
     llm_model: LLMModel = typer.Option(LLMModel.gpt4o, case_sensitive=False),
@@ -87,39 +84,18 @@ def index(  # noqa: PLR0913
     # TextUnitExtractor that extracts text units from the text files
     text_unit_extractor = TextUnitExtractor(text_splitter=text_splitter)
 
-    # Prompt Builder for Entity Extraction
-    er_extraction_prompt = prompts_dir / "entity_extraction.txt"
-    er_prompt_builder = er.EntityExtractionPromptBuilder(
-        prompt_path=er_extraction_prompt
-    )
-
-    # LLM
+    # LLM for Entity Extraction
     er_llm = make_llm_instance(llm_type, llm_model, cache_dir)
-    # Output Parser
-    er_op = er.EntityExtractionOutputParser()
-    # Graph Merger
-    er_gm = er.GraphsMerger()
-
-    # Entity Extractor
-    entity_extractor = er.EntityRelationshipExtractor(
-        prompt_builder=er_prompt_builder,
-        llm=er_llm,
-        output_parser=er_op,
-        graphs_merger=er_gm,
-    )
+    entity_extractor = er.EntityRelationshipExtractor.build_default(llm=er_llm)
 
     # Prompt Builder for Entity Extraction
-    es_extraction_prompt = prompts_dir / "summarize_descriptions.txt"
-    es_prompt_builder = es.SummarizeDescriptionPromptBuilder(
-        prompt_path=es_extraction_prompt
-    )
 
-    # LLM
+    # LLM For Description Summarization
     es_llm = make_llm_instance(llm_type, llm_model, cache_dir)
 
     # Entity Summarizer
-    entity_summarizer = es.EntityRelationshipDescriptionSummarizer(
-        prompt_builder=es_prompt_builder, llm=es_llm, output_parser=StrOutputParser()
+    entity_summarizer = es.EntityRelationshipDescriptionSummarizer.build_default(
+        llm=es_llm
     )
 
     # Graph Generator
@@ -182,18 +158,8 @@ def index(  # noqa: PLR0913
     communities_table_generator = CommunitiesTableGenerator()
 
     # Community Report Generator
-
     report_gen_llm = make_llm_instance(llm_type, llm_model, cache_dir)
-
-    report_generation_prompt = prompts_dir / "community_report.txt"
-    report_prompt_builder = ReportGenerationPromptBuilder(
-        prompt_path=report_generation_prompt
-    )
-    report_generator = CommunityReportGenerator(
-        prompt_builder=report_prompt_builder,
-        llm=report_gen_llm,
-        output_parser=CommunityReportOutputParser(),
-    )
+    report_generator = CommunityReportGenerator.build_default(llm=report_gen_llm)
 
     report_writer = CommunityReportWriter()
 
