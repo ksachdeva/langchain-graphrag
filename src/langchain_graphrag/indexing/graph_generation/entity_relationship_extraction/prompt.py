@@ -14,20 +14,31 @@ DEFAULT_ENTITY_TYPES = ["organization", "person", "geo", "event"]
 class DefaultEntityExtractionPromptBuilder(PromptBuilder):
     def __init__(
         self,
-        prompt_path: Path,
+        *,
+        prompt: str | None = None,
+        prompt_path: Path | None = None,
         entity_types: list[str] = DEFAULT_ENTITY_TYPES,
         tuple_delimiter: str = DEFAULT_TUPLE_DELIMITER,
         record_delimiter: str = DEFAULT_RECORD_DELIMITER,
         completion_delimiter: str = DEFAULT_COMPLETION_DELIMITER,
     ):
+        if prompt is None and prompt_path is None:
+            raise ValueError("prompt or prompt_path is required")
+
+        self._prompt = prompt
         self._prompt_path = prompt_path
+
         self._entity_types = entity_types
         self._tuple_delimiter = tuple_delimiter
         self._record_delimiter = record_delimiter
         self._completion_delimiter = completion_delimiter
 
     def build(self) -> PromptTemplate:
-        prompt_template = PromptTemplate.from_file(self._prompt_path)
+        prompt_template = (
+            PromptTemplate.from_template(self._prompt)
+            if self._prompt
+            else PromptTemplate.from_file(self._prompt_path)
+        )
         return prompt_template.partial(
             completion_delimiter=self._completion_delimiter,
             tuple_delimiter=self._tuple_delimiter,

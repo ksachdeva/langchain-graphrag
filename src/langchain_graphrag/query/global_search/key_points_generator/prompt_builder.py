@@ -1,6 +1,11 @@
 from typing import Any
+from pathlib import Path
 
-from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
+from langchain_core.prompts import (
+    ChatPromptTemplate,
+    PromptTemplate,
+    SystemMessagePromptTemplate,
+)
 
 from langchain_graphrag.query.global_search.community_report import CommunityReport
 from langchain_graphrag.types.prompts import PromptBuilder
@@ -21,13 +26,26 @@ Report:
 
 
 class DefaultKeyPointsGeneratorPromptBuilder(PromptBuilder):
-    def __init__(self, prompt: str | None = None):
-        self._system_prompt = prompt if prompt is not None else MAP_SYSTEM_PROMPT
+    def __init__(
+        self,
+        *,
+        system_prompt: str | None = None,
+        system_prompt_path: Path | None = None,
+    ):
+        if system_prompt is None and system_prompt_path is None:
+            self._system_prompt = MAP_SYSTEM_PROMPT
+        else:
+            self._system_prompt = system_prompt
+            self._system_prompt_path = system_prompt_path
 
     def build(self) -> PromptTemplate:
-        return ChatPromptTemplate(
-            [("system", self._system_prompt), ("user", "{global_query}")]
+        system_template = (
+            SystemMessagePromptTemplate.from_template(self._system_prompt)
+            if self._system_prompt
+            else SystemMessagePromptTemplate.from_file(self._system_prompt_path)
         )
+
+        return ChatPromptTemplate([system_template, ("user", "{global_query}")])
 
     def prepare_chain_input(self, **kwargs: dict[str, Any]) -> dict[str, str]:
         global_query = kwargs.get("global_query", None)

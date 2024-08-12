@@ -14,13 +14,15 @@ from .utils import get_info
 class DefaulReportGenerationPromptBuilder(PromptBuilder):
     def __init__(
         self,
+        *,
         prompt: str | None = None,
         prompt_path: Path | None = None,
     ):
         if prompt is None and prompt_path is None:
             raise ValueError("prompt or prompt_path is required")
-        self._prompt_path = prompt_path
+
         self._prompt = prompt
+        self._prompt_path = prompt_path
 
     def build(self) -> PromptTemplate:
         return (

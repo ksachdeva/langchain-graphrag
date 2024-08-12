@@ -89,7 +89,9 @@ def index(  # noqa: PLR0913
 
     # Prompt Builder for Entity Extraction
     er_extraction_prompt = prompts_dir / "entity_extraction.txt"
-    er_prompt_builder = er.DefaultEntityExtractionPromptBuilder(er_extraction_prompt)
+    er_prompt_builder = er.DefaultEntityExtractionPromptBuilder(
+        prompt_path=er_extraction_prompt
+    )
 
     # LLM
     er_llm = make_llm_instance(llm_type, llm_model, cache_dir)
@@ -109,7 +111,7 @@ def index(  # noqa: PLR0913
     # Prompt Builder for Entity Extraction
     es_extraction_prompt = prompts_dir / "summarize_descriptions.txt"
     es_prompt_builder = es.DefaultSummarizeDescriptionPromptBuilder(
-        es_extraction_prompt
+        prompt_path=es_extraction_prompt
     )
 
     # LLM
