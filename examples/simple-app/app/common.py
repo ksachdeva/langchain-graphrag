@@ -18,26 +18,26 @@ from langchain_openai import (
 )
 
 
-class LLMType(str,Enum):
+class LLMType(str, Enum):
     openai: str = "openai"
     azure_openai: str = "azure_openai"
     ollama: str = "ollama"
 
 
-class LLMModel(str,Enum):
+class LLMModel(str, Enum):
     gpt4o: str = "gpt-4o"
     gpt4omini: str = "gpt-4o-mini"
     gemma2_9b_instruct_q8_0: str = "gemma2:9b-instruct-q8_0"
     gemma2_27b_instruct_q6_K: str = "gemma2:27b-instruct-q6_K"  # noqa: N815
 
 
-class EmbeddingModelType(str,Enum):
+class EmbeddingModelType(str, Enum):
     openai: str = "openai"
     azure_openai: str = "azure_openai"
     ollama: str = "ollama"
 
 
-class EmbeddingModel(str,Enum):
+class EmbeddingModel(str, Enum):
     text_embedding_3_small: str = "text-embedding-3-small"
     nomic_embed_text: str = "nomic_embed_text"
 
