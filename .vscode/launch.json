@@ -21,8 +21,6 @@
                 "${workspaceFolder}/examples/input-data",
                 "--output-dir",
                 "${workspaceFolder}/tmp",
-                "--prompts-dir",
-                "${workspaceFolder}/examples/prompts",
                 "--cache-dir",
                 "${workspaceFolder}/tmp/cache"
             ]
