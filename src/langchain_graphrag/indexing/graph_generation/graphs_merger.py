@@ -69,7 +69,7 @@ class GraphsMerger:
         self,
         graphs: list[nx.Graph],
     ) -> nx.Graph:
-        merged_graph = nx.Graph()
+        merged_graph: nx.Graph = nx.Graph()
         for g in graphs:
             merge_nodes(target_graph=merged_graph, sub_graph=g)
             merge_edges(target_graph=merged_graph, sub_graph=g)

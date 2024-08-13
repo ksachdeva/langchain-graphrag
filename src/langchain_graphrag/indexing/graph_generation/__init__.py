@@ -8,6 +8,7 @@ from .entity_relationship_summarization import (
     SummarizeDescriptionPromptBuilder,
     EntityRelationshipDescriptionSummarizer,
 )
+from .graphs_merger import GraphsMerger
 from .generator import GraphGenerator
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "EntityRelationshipDescriptionSummarizer",
     "SummarizeDescriptionPromptBuilder",
     "GraphGenerator",
+    "GraphsMerger",
 ]

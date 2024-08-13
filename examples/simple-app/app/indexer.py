@@ -12,8 +12,13 @@ from typer import Typer
 # before the imports below
 load_dotenv()
 
-import langchain_graphrag.indexing.graph_generation.entity_relationship_extraction as er
-import langchain_graphrag.indexing.graph_generation.entity_relationship_summarization as es  # noqa: E501
+
+from langchain_graphrag.indexing.graph_generation import (
+    GraphsMerger,
+    GraphGenerator,
+    EntityRelationshipExtractor,
+    EntityRelationshipDescriptionSummarizer,
+)
 from common import (
     EmbeddingModel,
     EmbeddingModelType,
@@ -31,7 +36,6 @@ from langchain_graphrag.indexing.embedding_generation.graph import (
 from langchain_graphrag.indexing.graph_clustering.leiden_community_detector import (
     HierarchicalLeidenCommunityDetector,
 )
-from langchain_graphrag.indexing.graph_generation.generator import GraphGenerator
 from langchain_graphrag.indexing.indexer import Indexer
 from langchain_graphrag.indexing.report_generation import (
     CommunityReportGenerator,
@@ -86,7 +90,7 @@ def index(  # noqa: PLR0913
 
     # LLM for Entity Extraction
     er_llm = make_llm_instance(llm_type, llm_model, cache_dir)
-    entity_extractor = er.EntityRelationshipExtractor.build_default(llm=er_llm)
+    entity_extractor = EntityRelationshipExtractor.build_default(llm=er_llm)
 
     # Prompt Builder for Entity Extraction
 
@@ -94,13 +98,14 @@ def index(  # noqa: PLR0913
     es_llm = make_llm_instance(llm_type, llm_model, cache_dir)
 
     # Entity Summarizer
-    entity_summarizer = es.EntityRelationshipDescriptionSummarizer.build_default(
+    entity_summarizer = EntityRelationshipDescriptionSummarizer.build_default(
         llm=es_llm
     )
 
     # Graph Generator
     graph_generator = GraphGenerator(
         er_extractor=entity_extractor,
+        graphs_merger=GraphsMerger(),
         er_description_summarizer=entity_summarizer,
     )
 
