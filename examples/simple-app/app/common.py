@@ -4,11 +4,13 @@ import os
 from enum import Enum
 from pathlib import Path
 
+import pandas as pd
 from langchain.embeddings.cache import CacheBackedEmbeddings
 from langchain_community.cache import SQLiteCache
 from langchain_community.storage import SQLStore
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import BaseLLM
+from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 from langchain_ollama import OllamaEmbeddings, OllamaLLM
 from langchain_openai import (
     AzureChatOpenAI,
@@ -115,4 +117,28 @@ def make_embedding_instance(
     return CacheBackedEmbeddings.from_bytes_store(
         underlying_embeddings=underlying_embedding,
         document_embedding_cache=store,
+    )
+
+
+def save_artifacts(artifacts: IndexerArtifacts, path: Path):
+    artifacts.entities.to_parquet(f"{path}/entities.parquet")
+    artifacts.relationships.to_parquet(f"{path}/relationships.parquet")
+    artifacts.text_units.to_parquet(f"{path}/text_units.parquet")
+    artifacts.communities.to_parquet(f"{path}/communities.parquet")
+    artifacts.communities_reports.to_parquet(f"{path}/communities_reports.parquet")
+
+
+def load_artifacts(path: Path) -> IndexerArtifacts:
+    entities = pd.read_parquet(f"{path}/entities.parquet")
+    relationships = pd.read_parquet(f"{path}/relationships.parquet")
+    text_units = pd.read_parquet(f"{path}/text_units.parquet")
+    communities = pd.read_parquet(f"{path}/communities.parquet")
+    communities_reports = pd.read_parquet(f"{path}/communities_reports.parquet")
+
+    return IndexerArtifacts(
+        entities,
+        relationships,
+        text_units,
+        communities,
+        communities_reports,
     )

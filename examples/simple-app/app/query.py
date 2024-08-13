@@ -18,12 +18,12 @@ from common import (
     EmbeddingModelType,
     LLMModel,
     LLMType,
+    load_artifacts,
     make_embedding_instance,
     make_llm_instance,
 )
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 from langchain_core.output_parsers.string import StrOutputParser
-from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 from langchain_graphrag.query.global_search import GlobalSearch
 from langchain_graphrag.query.global_search.community_weight_calculator import (
     CommunityWeightCalculator,
@@ -84,7 +84,7 @@ def global_search(
         key_points_aggregator=points_aggregator,
     )
 
-    artifacts = IndexerArtifacts.load(artifacts_dir)
+    artifacts = load_artifacts(artifacts_dir)
     response = searcher.invoke(query, artifacts)
 
     print(response)
@@ -150,7 +150,7 @@ def local_search(
         context_builder=context_builder,
     )
 
-    artifacts = IndexerArtifacts.load(artifacts_dir)
+    artifacts = load_artifacts(artifacts_dir)
     response = searcher.invoke(query, artifacts)
 
     print(response)

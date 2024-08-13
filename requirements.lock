@@ -95,7 +95,6 @@ fastapi==0.112.0
     # via chromadb
     # via langchain-chroma
 fastparquet==2024.5.0
-    # via langchain-graphrag
 filelock==3.15.4
     # via huggingface-hub
 filetype==1.2.0
@@ -335,7 +334,6 @@ protobuf==4.25.4
 psutil==6.0.0
     # via unstructured
 pyarrow==17.0.0
-    # via langchain-graphrag
 pyasn1==0.6.0
     # via pyasn1-modules
     # via rsa

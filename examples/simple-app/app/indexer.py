@@ -18,8 +18,10 @@ from common import (
     EmbeddingModelType,
     LLMModel,
     LLMType,
+    load_artifacts,
     make_embedding_instance,
     make_llm_instance,
+    save_artifacts,
 )
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 from langchain_community.document_loaders.directory import DirectoryLoader
@@ -196,7 +198,7 @@ def index(
     # save the artifacts
     artifacts_dir = output_dir / "artifacts"
     artifacts_dir.mkdir(parents=True, exist_ok=True)
-    artifacts.save(artifacts_dir)
+    save_artifacts(artifacts, artifacts_dir)
 
     artifacts.report()
 
@@ -205,5 +207,5 @@ def index(
 def report(
     artifacts_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
 ):
-    artifacts = IndexerArtifacts.load(artifacts_dir)
+    artifacts: IndexerArtifacts = load_artifacts(artifacts_dir)
     artifacts.report()

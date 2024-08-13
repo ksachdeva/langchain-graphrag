@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import NamedTuple
 
 import pandas as pd
@@ -11,29 +10,6 @@ class IndexerArtifacts(NamedTuple):
     text_units: pd.DataFrame
     communities: pd.DataFrame
     communities_reports: pd.DataFrame
-
-    def save(self, path: Path):
-        self.entities.to_parquet(f"{path}/entities.parquet")
-        self.relationships.to_parquet(f"{path}/relationships.parquet")
-        self.text_units.to_parquet(f"{path}/text_units.parquet")
-        self.communities.to_parquet(f"{path}/communities.parquet")
-        self.communities_reports.to_parquet(f"{path}/communities_reports.parquet")
-
-    @staticmethod
-    def load(path: Path) -> "IndexerArtifacts":
-        entities = pd.read_parquet(f"{path}/entities.parquet")
-        relationships = pd.read_parquet(f"{path}/relationships.parquet")
-        text_units = pd.read_parquet(f"{path}/text_units.parquet")
-        communities = pd.read_parquet(f"{path}/communities.parquet")
-        communities_reports = pd.read_parquet(f"{path}/communities_reports.parquet")
-
-        return IndexerArtifacts(
-            entities,
-            relationships,
-            text_units,
-            communities,
-            communities_reports,
-        )
 
     def _entity_info(self, top_k: int) -> None:
         tableprint.banner("Entities")
