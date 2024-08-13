@@ -27,6 +27,9 @@ dev-dependencies = [
     "ipykernel>=6.29.5",
     "types-networkx>=3.2.1.20240811",
     "types-tqdm>=4.66.0.20240417",
+    "mkdocs>=1.6.0",
+    "mkdocstrings[python]>=0.25.2",
+    "markdown-include>=0.8.1",
 ]
 
 [tool.hatch.metadata]
