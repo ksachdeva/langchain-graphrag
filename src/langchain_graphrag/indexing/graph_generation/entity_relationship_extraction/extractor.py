@@ -6,8 +6,8 @@ from tqdm import tqdm
 
 from langchain_graphrag.types.prompts import PromptBuilder
 
-from .prompt_builder import EntityExtractionPromptBuilder
 from .output_parser import EntityExtractionOutputParser
+from .prompt_builder import EntityExtractionPromptBuilder
 
 
 class EntityRelationshipExtractor:

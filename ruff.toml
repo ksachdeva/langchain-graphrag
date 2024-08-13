@@ -56,20 +56,23 @@ ignore = [
     "Q003",
     "W191",
     "T201",
-    "D101",   # Missing docstring in public class
-    "D102",   # Missing docstring in public method
-    "D103",   # Missing docstring in public function
-    "D107",   # Missing docstring in `__init__`
-    "ANN201", # Missing return type annotation 
-    "ANN204", # Missing return type annotation 
+    "D101",    # Missing docstring in public class
+    "D102",    # Missing docstring in public method
+    "D103",    # Missing docstring in public function
+    "D107",    # Missing docstring in `__init__`
+    "ANN201",  # Missing return type annotation 
+    "ANN204",  # Missing return type annotation 
     "ANN401",
-    "PD002",  # inplace=True 
-    "C408",   # Unnecessary dict call
+    "PD002",   # inplace=True 
+    "C408",    # Unnecessary dict call
     "E402",
     "UP035",
     "EM101",
     "TRY003",
     "G004",
+    "TCH001",
+    "TCH002",
+    "PLR0913",
 ]
 
 

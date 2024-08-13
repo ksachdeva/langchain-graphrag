@@ -1,16 +1,16 @@
 from pathlib import Path
 from typing import Any
+
+import networkx as nx
+import pandas as pd
+from langchain_core.prompts import BasePromptTemplate, PromptTemplate
 from typing_extensions import Unpack
 
-import networkx as nx  # noqa: TCH002
-import pandas as pd
-from langchain_core.prompts import PromptTemplate, BasePromptTemplate
-
-from langchain_graphrag.types.graphs.community import Community  # noqa: TCH001
+from langchain_graphrag.types.graphs.community import Community
 from langchain_graphrag.types.prompts import PromptBuilder
 
-from .utils import get_info
 from .default_prompts import DEFAULT_PROMPT
+from .utils import get_info
 
 
 class CommunityReportGenerationPromptBuilder(PromptBuilder):

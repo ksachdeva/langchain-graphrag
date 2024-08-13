@@ -1,3 +1,5 @@
+# ruff: noqa
+
 LOCAL_SEARCH_SYSTEM_PROMPT = """
 ---Role---
 

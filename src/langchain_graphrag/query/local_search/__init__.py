@@ -1,6 +1,6 @@
-"""Local Search module"""
+"""Local Search module."""
 
-from .search import LocalSearch
 from .prompt_builder import LocalSearchPromptBuilder
+from .search import LocalSearch
 
 __all__ = ["LocalSearch", "LocalSearchPromptBuilder"]

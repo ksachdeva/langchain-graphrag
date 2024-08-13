@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import Any
-from typing_extensions import Unpack
 
-from langchain_core.prompts import PromptTemplate, BasePromptTemplate
+from langchain_core.prompts import BasePromptTemplate, PromptTemplate
+from typing_extensions import Unpack
 
 from langchain_graphrag.types.prompts import PromptBuilder
 

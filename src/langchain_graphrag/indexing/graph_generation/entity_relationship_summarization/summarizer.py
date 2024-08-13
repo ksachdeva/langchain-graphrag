@@ -1,9 +1,9 @@
 import networkx as nx
 from langchain_core.language_models import BaseLLM
 from langchain_core.output_parsers.base import BaseOutputParser
+from langchain_core.output_parsers.string import StrOutputParser
 from tqdm import tqdm
 
-from langchain_core.output_parsers.string import StrOutputParser
 from langchain_graphrag.types.prompts import PromptBuilder
 
 from .prompt_builder import SummarizeDescriptionPromptBuilder

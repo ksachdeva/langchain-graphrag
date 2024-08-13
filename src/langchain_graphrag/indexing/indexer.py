@@ -15,7 +15,7 @@ from .text_unit_extractor import TextUnitExtractor
 
 
 class Indexer:
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
         data_loader: BaseLoader,
         text_unit_extractor: TextUnitExtractor,

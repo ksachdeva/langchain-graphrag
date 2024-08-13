@@ -1,6 +1,7 @@
-from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 from langchain_core.language_models import BaseLLM
 from langchain_core.output_parsers.base import BaseOutputParser
+
+from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 
 from .context_builders import ContextBuilder
 from .context_selectors import ContextSelector

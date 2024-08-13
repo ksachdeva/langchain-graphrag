@@ -5,9 +5,9 @@ from langchain_core.output_parsers.base import BaseOutputParser
 from langchain_graphrag.types.graphs.community import Community
 from langchain_graphrag.types.prompts import PromptBuilder
 
-from .utils import CommunityReportResult
-from .prompt_builder import CommunityReportGenerationPromptBuilder
 from .output_parser import CommunityReportOutputParser
+from .prompt_builder import CommunityReportGenerationPromptBuilder
+from .utils import CommunityReportResult
 
 
 class CommunityReportGenerator:

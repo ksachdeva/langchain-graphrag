@@ -5,11 +5,11 @@ from .entity_relationship_extraction import (
     EntityRelationshipExtractor,
 )
 from .entity_relationship_summarization import (
-    SummarizeDescriptionPromptBuilder,
     EntityRelationshipDescriptionSummarizer,
+    SummarizeDescriptionPromptBuilder,
 )
-from .graphs_merger import GraphsMerger
 from .generator import GraphGenerator
+from .graphs_merger import GraphsMerger
 
 __all__ = [
     "EntityRelationshipExtractor",

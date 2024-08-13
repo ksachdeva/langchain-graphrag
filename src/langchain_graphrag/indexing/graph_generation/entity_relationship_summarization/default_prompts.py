@@ -1,3 +1,5 @@
+# ruff: noqa: E501
+
 DEFAULT_PROMPT = """
 You are a helpful assistant responsible for generating a comprehensive summary of the data provided below.
 Given one or two entities, and a list of descriptions, all related to the same entity or group of entities.

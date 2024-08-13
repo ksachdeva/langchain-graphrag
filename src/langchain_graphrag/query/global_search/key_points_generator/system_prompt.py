@@ -1,3 +1,5 @@
+# ruff: noqa: E501
+
 MAP_SYSTEM_PROMPT = """
 ---Role---
 

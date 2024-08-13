@@ -34,6 +34,10 @@ from langchain_graphrag.query.global_search.key_points_aggregator import (
 from langchain_graphrag.query.global_search.key_points_generator import (
     KeyPointsGenerator,
 )
+from langchain_graphrag.query.local_search import (
+    LocalSearch,
+    LocalSearchPromptBuilder,
+)
 from langchain_graphrag.query.local_search.context_builders import (
     CommunitiesReportsContextBuilder,
     ContextBuilder,
@@ -48,18 +52,14 @@ from langchain_graphrag.query.local_search.context_selectors import (
     RelationshipsSelector,
     TextUnitsSelector,
 )
-from langchain_graphrag.query.local_search import (
-    LocalSearch,
-    LocalSearchPromptBuilder,
-)
-from langchain_graphrag.utils import TiktokenCounter
 from langchain_graphrag.types.graphs.community import CommunityLevel
+from langchain_graphrag.utils import TiktokenCounter
 
 app = Typer()
 
 
 @app.command()
-def global_search(  # noqa: PLR0913
+def global_search(
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     llm_type: LLMType = typer.Option(LLMType.azure_openai, case_sensitive=False),

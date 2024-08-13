@@ -9,7 +9,7 @@ from langchain_graphrag.types.graphs.embedding import GraphEmbeddingGenerator
 
 
 class Node2VectorGraphEmbeddingGenerator(GraphEmbeddingGenerator):
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
         *,
         use_lcc: bool = True,

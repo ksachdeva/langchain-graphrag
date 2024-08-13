@@ -2,6 +2,7 @@ import logging
 
 import pandas as pd
 from langchain_core.documents import Document
+
 from langchain_graphrag.types.tokens import TokenCounter
 
 logger = logging.getLogger(__name__)

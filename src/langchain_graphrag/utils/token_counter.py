@@ -1,4 +1,4 @@
-"""Counter for Tiktoken based tokens"""
+"""Counter for Tiktoken based tokens."""
 
 import tiktoken
 

@@ -6,7 +6,6 @@ import pandas as pd
 from langchain_core.vectorstores import VectorStore
 
 from langchain_graphrag.types.graphs.community import (
-    Community,
     CommunityDetectionResult,
     CommunityId,
 )

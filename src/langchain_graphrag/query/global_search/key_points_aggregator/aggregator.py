@@ -6,6 +6,7 @@ from langchain_graphrag.query.global_search.key_points_generator.utils import (
     KeyPointsResult,
 )
 from langchain_graphrag.types.prompts import PromptBuilder
+
 from .prompt_builder import KeyPointsAggregatorPromptBuilder
 
 

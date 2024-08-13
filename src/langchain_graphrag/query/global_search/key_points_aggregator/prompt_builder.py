@@ -1,12 +1,12 @@
 from pathlib import Path
 from typing import Any
-from typing_extensions import Unpack
 
 from langchain_core.prompts import (
-    ChatPromptTemplate,
     BasePromptTemplate,
+    ChatPromptTemplate,
     SystemMessagePromptTemplate,
 )
+from typing_extensions import Unpack
 
 from langchain_graphrag.query.global_search.key_points_generator.utils import (
     KeyPointsResult,

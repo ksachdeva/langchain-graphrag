@@ -1,7 +1,7 @@
 from typing import Any, Protocol
-from typing_extensions import Unpack
 
 from langchain_core.prompts import BasePromptTemplate
+from typing_extensions import Unpack
 
 
 class PromptBuilder(Protocol):

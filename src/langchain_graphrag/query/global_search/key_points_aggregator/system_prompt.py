@@ -1,3 +1,5 @@
+# ruff: noqa
+
 REDUCE_SYSTEM_PROMPT = """
 ---Role---
 

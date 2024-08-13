@@ -4,9 +4,9 @@ from langchain_core.output_parsers.base import BaseOutputParser
 from langchain_graphrag.query.global_search.community_report import CommunityReport
 from langchain_graphrag.types.prompts import PromptBuilder
 
-from .utils import KeyPointsResult
-from .prompt_builder import KeyPointsGeneratorPromptBuilder
 from .output_parser import KeyPointsOutputParser
+from .prompt_builder import KeyPointsGeneratorPromptBuilder
+from .utils import KeyPointsResult
 
 
 class KeyPointsGenerator:

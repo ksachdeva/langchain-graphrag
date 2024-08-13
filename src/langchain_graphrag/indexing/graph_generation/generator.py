@@ -1,9 +1,9 @@
 import networkx as nx
 import pandas as pd
 
-from .graphs_merger import GraphsMerger
 from .entity_relationship_extraction import EntityRelationshipExtractor
 from .entity_relationship_summarization import EntityRelationshipDescriptionSummarizer
+from .graphs_merger import GraphsMerger
 
 
 class GraphGenerator:

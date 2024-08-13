@@ -10,7 +10,7 @@ from graspologic.utils import largest_connected_component
 
 
 def _stabilize_graph(graph: nx.Graph) -> nx.Graph:
-    """Ensure an undirected graph with the same relationships will always be read the same way."""
+    """Ensure an undirected graph with the same relationships will always be read the same way."""  # noqa: E501
     fixed_graph: nx.Graph = nx.DiGraph() if graph.is_directed() else nx.Graph()
 
     graph_nodes = graph.nodes(data=True)
@@ -19,7 +19,8 @@ def _stabilize_graph(graph: nx.Graph) -> nx.Graph:
     fixed_graph.add_nodes_from(sorted_nodes)
     edges = list(graph.edges(data=True))
 
-    # If the graph is undirected, we create the edges in a stable way, so we get the same results
+    # If the graph is undirected, we create the edges in a stable way, so we get
+    # the same results
     # for example:
     # A -> B
     # in graph theory is the same as
@@ -31,7 +32,7 @@ def _stabilize_graph(graph: nx.Graph) -> nx.Graph:
     # so we sort the nodes in the edge in a stable way, so that we always get the same order
     if not graph.is_directed():
 
-        def _sort_source_target(edge):
+        def _sort_source_target(edge: Any) -> tuple[str, str, dict[str, Any]]:
             source, target, edge_data = edge
             if source > target:
                 temp = source
@@ -52,7 +53,7 @@ def _stabilize_graph(graph: nx.Graph) -> nx.Graph:
 
 def normalize_node_names(graph: nx.Graph | nx.DiGraph) -> nx.Graph | nx.DiGraph:
     """Normalize node names."""
-    node_mapping = {node: html.unescape(node.upper().strip()) for node in graph.nodes()}  # type: ignore
+    node_mapping = {node: html.unescape(node.upper().strip()) for node in graph.nodes()}
     return nx.relabel_nodes(graph, node_mapping)
 
 

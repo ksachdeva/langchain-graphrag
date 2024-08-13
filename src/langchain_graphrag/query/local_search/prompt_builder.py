@@ -1,16 +1,15 @@
 from pathlib import Path
 from typing import Any
-from typing_extensions import Unpack
 
+from langchain_core.documents import Document
 from langchain_core.prompts import (
-    ChatPromptTemplate,
     BasePromptTemplate,
+    ChatPromptTemplate,
     SystemMessagePromptTemplate,
 )
-
+from typing_extensions import Unpack
 
 from langchain_graphrag.types.prompts import PromptBuilder
-from langchain_core.documents import Document
 
 from .system_prompt import LOCAL_SEARCH_SYSTEM_PROMPT
 

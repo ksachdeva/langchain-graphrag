@@ -1,4 +1,5 @@
 import logging
+
 import pandas as pd
 from langchain_core.documents import Document
 
@@ -42,7 +43,7 @@ class RelationshipsContextBuilder:
             relationships: pd.DataFrame,
             context_text: str,
             token_count: int,
-        ) -> None:
+        ) -> tuple[str, int]:
             for relationship in relationships.itertuples():
                 new_context = [
                     str(relationship.human_readable_id),
@@ -58,7 +59,7 @@ class RelationshipsContextBuilder:
 
                 if token_count + new_token_count > self._max_tokens:
                     logger.warning(
-                        f"Stopping relationships context build at {token_count} tokens ..."
+                        f"Stopping relationships context build at {token_count} tokens..."  # noqa: E501
                     )
                     return context_text, token_count
 

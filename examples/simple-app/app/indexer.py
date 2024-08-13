@@ -13,12 +13,6 @@ from typer import Typer
 load_dotenv()
 
 
-from langchain_graphrag.indexing.graph_generation import (
-    GraphsMerger,
-    GraphGenerator,
-    EntityRelationshipExtractor,
-    EntityRelationshipDescriptionSummarizer,
-)
 from common import (
     EmbeddingModel,
     EmbeddingModelType,
@@ -35,6 +29,12 @@ from langchain_graphrag.indexing.embedding_generation.graph import (
 )
 from langchain_graphrag.indexing.graph_clustering.leiden_community_detector import (
     HierarchicalLeidenCommunityDetector,
+)
+from langchain_graphrag.indexing.graph_generation import (
+    EntityRelationshipDescriptionSummarizer,
+    EntityRelationshipExtractor,
+    GraphGenerator,
+    GraphsMerger,
 )
 from langchain_graphrag.indexing.indexer import Indexer
 from langchain_graphrag.indexing.report_generation import (
@@ -55,7 +55,7 @@ app = Typer()
 
 
 @app.command()
-def index(  # noqa: PLR0913
+def index(
     input_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
