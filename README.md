@@ -1,5 +1,9 @@
 # GraphRAG
 
+[![Documentation build status](https://readthedocs.org/projects/langchain-graphrag/badge/?version=latest
+)](https://langchain-graphrag.readthedocs.io/en/latest/)
+
+
 ** WORK IN PROGRESS **
 
 This is an implementation of GraphRAG as described in 
