@@ -3,6 +3,7 @@ from typing import Any
 
 import networkx as nx
 import pandas as pd
+from langchain_core.output_parsers.base import BaseOutputParser
 from langchain_core.prompts import BasePromptTemplate, PromptTemplate
 from typing_extensions import Unpack
 
@@ -10,6 +11,7 @@ from langchain_graphrag.types.graphs.community import Community
 from langchain_graphrag.types.prompts import PromptBuilder
 
 from .default_prompts import DEFAULT_PROMPT
+from .output_parser import CommunityReportOutputParser
 from .utils import get_info
 
 
@@ -28,14 +30,14 @@ class CommunityReportGenerationPromptBuilder(PromptBuilder):
 
         self._prompt_path = prompt_path
 
-    def build(self) -> BasePromptTemplate:
+    def build(self) -> tuple[BasePromptTemplate, BaseOutputParser]:
         if self._prompt:
             prompt_template = PromptTemplate.from_template(self._prompt)
         else:
             assert self._prompt_path is not None
             prompt_template = PromptTemplate.from_file(self._prompt_path)
 
-        return prompt_template
+        return prompt_template, CommunityReportOutputParser()
 
     def prepare_chain_input(self, **kwargs: Unpack[dict[str, Any]]) -> dict[str, str]:
         community: Community = kwargs.get("community", None)

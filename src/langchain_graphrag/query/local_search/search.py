@@ -1,5 +1,4 @@
 from langchain_core.language_models import BaseLLM
-from langchain_core.output_parsers.base import BaseOutputParser
 
 from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 
@@ -13,7 +12,6 @@ class LocalSearch:
         self,
         prompt_builder: LocalSearchPromptBuilder,
         llm: BaseLLM,
-        output_parser: BaseOutputParser,
         context_selector: ContextSelector,
         context_builder: ContextBuilder,
     ):
@@ -21,7 +19,7 @@ class LocalSearch:
         self._context_selector = context_selector
         self._context_builder = context_builder
 
-        prompt = prompt_builder.build()
+        prompt, output_parser = prompt_builder.build()
         self._chain = prompt | llm | output_parser
         self._prompt_builder = prompt_builder
 

@@ -1,23 +1,20 @@
+import logging
+
 import networkx as nx
 import pandas as pd
 from langchain_core.language_models import BaseLLM
-from langchain_core.output_parsers.base import BaseOutputParser
 from tqdm import tqdm
 
 from langchain_graphrag.types.prompts import PromptBuilder
 
-from .output_parser import EntityExtractionOutputParser
 from .prompt_builder import EntityExtractionPromptBuilder
+
+logger = logging.getLogger("langchain_graphrag.er_extractor")
 
 
 class EntityRelationshipExtractor:
-    def __init__(
-        self,
-        prompt_builder: PromptBuilder,
-        llm: BaseLLM,
-        output_parser: BaseOutputParser,
-    ):
-        prompt = prompt_builder.build()
+    def __init__(self, prompt_builder: PromptBuilder, llm: BaseLLM):
+        prompt, output_parser = prompt_builder.build()
         self._extraction_chain = prompt | llm | output_parser
         self._prompt_builder = prompt_builder
 
@@ -26,7 +23,6 @@ class EntityRelationshipExtractor:
         return EntityRelationshipExtractor(
             prompt_builder=EntityExtractionPromptBuilder(),
             llm=llm,
-            output_parser=EntityExtractionOutputParser(),
         )
 
     def invoke(self, input_data: pd.DataFrame) -> list[nx.Graph]:
@@ -48,6 +44,10 @@ class EntityRelationshipExtractor:
             # add the chunk_id to the edges as well
             for edge_names in chunk_graph.edges():
                 chunk_graph.edges[edge_names]["text_unit_ids"] = [text_id]
+
+            if logging.getLevelName(logger.getEffectiveLevel()) == "DEBUG":
+                logger.debug(f"Graph for: {text_id}")
+                logger.debug(chunk_graph)
 
             return chunk_graph
 

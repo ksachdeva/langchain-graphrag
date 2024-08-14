@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any
 
+from langchain_core.output_parsers.base import BaseOutputParser
 from langchain_core.prompts import (
     BasePromptTemplate,
     ChatPromptTemplate,
@@ -11,6 +12,7 @@ from typing_extensions import Unpack
 from langchain_graphrag.query.global_search.community_report import CommunityReport
 from langchain_graphrag.types.prompts import PromptBuilder
 
+from .output_parser import KeyPointsOutputParser
 from .system_prompt import MAP_SYSTEM_PROMPT
 
 _REPORT_TEMPLATE = """
@@ -41,7 +43,7 @@ class KeyPointsGeneratorPromptBuilder(PromptBuilder):
 
         self._system_prompt_path = system_prompt_path
 
-    def build(self) -> BasePromptTemplate:
+    def build(self) -> tuple[BasePromptTemplate, BaseOutputParser]:
         if self._system_prompt:
             system_template = SystemMessagePromptTemplate.from_template(
                 self._system_prompt
@@ -53,7 +55,10 @@ class KeyPointsGeneratorPromptBuilder(PromptBuilder):
                 input_variables=["context_data"],
             )
 
-        return ChatPromptTemplate([system_template, ("user", "{global_query}")])
+        template = ChatPromptTemplate([system_template, ("user", "{global_query}")])
+        output_parser = KeyPointsOutputParser()
+
+        return template, output_parser
 
     def prepare_chain_input(self, **kwargs: Unpack[dict[str, Any]]) -> dict[str, str]:
         global_query = kwargs.get("global_query", None)

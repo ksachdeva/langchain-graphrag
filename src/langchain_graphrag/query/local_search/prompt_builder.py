@@ -2,6 +2,8 @@ from pathlib import Path
 from typing import Any
 
 from langchain_core.documents import Document
+from langchain_core.output_parsers.base import BaseOutputParser
+from langchain_core.output_parsers.string import StrOutputParser
 from langchain_core.prompts import (
     BasePromptTemplate,
     ChatPromptTemplate,
@@ -29,7 +31,7 @@ class LocalSearchPromptBuilder(PromptBuilder):
 
         self._system_prompt_path = system_prompt_path
 
-    def build(self) -> BasePromptTemplate:
+    def build(self) -> tuple[BasePromptTemplate, BaseOutputParser]:
         if self._system_prompt:
             system_template = SystemMessagePromptTemplate.from_template(
                 self._system_prompt
@@ -41,7 +43,9 @@ class LocalSearchPromptBuilder(PromptBuilder):
                 input_variables=["context_data"],
             )
 
-        return ChatPromptTemplate([system_template, ("user", "{local_query}")])
+        template = ChatPromptTemplate([system_template, ("user", "{local_query}")])
+        output_parser = StrOutputParser()
+        return template, output_parser
 
     def prepare_chain_input(self, **kwargs: Unpack[dict[str, Any]]) -> dict[str, str]:
         local_query: str | None = kwargs.get("local_query", None)

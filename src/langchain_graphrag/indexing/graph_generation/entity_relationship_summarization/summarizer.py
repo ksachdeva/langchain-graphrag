@@ -1,7 +1,5 @@
 import networkx as nx
 from langchain_core.language_models import BaseLLM
-from langchain_core.output_parsers.base import BaseOutputParser
-from langchain_core.output_parsers.string import StrOutputParser
 from tqdm import tqdm
 
 from langchain_graphrag.types.prompts import PromptBuilder
@@ -10,13 +8,8 @@ from .prompt_builder import SummarizeDescriptionPromptBuilder
 
 
 class EntityRelationshipDescriptionSummarizer:
-    def __init__(
-        self,
-        prompt_builder: PromptBuilder,
-        llm: BaseLLM,
-        output_parser: BaseOutputParser,
-    ):
-        prompt = prompt_builder.build()
+    def __init__(self, prompt_builder: PromptBuilder, llm: BaseLLM):
+        prompt, output_parser = prompt_builder.build()
         self._summarize_chain = prompt | llm | output_parser
         self._prompt_builder = prompt_builder
 
@@ -25,7 +18,6 @@ class EntityRelationshipDescriptionSummarizer:
         return EntityRelationshipDescriptionSummarizer(
             prompt_builder=SummarizeDescriptionPromptBuilder(),
             llm=llm,
-            output_parser=StrOutputParser(),
         )
 
     def invoke(self, graph: nx.Graph) -> nx.Graph:

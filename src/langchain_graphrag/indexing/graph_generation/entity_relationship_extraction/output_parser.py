@@ -7,8 +7,6 @@ from typing import Any
 import networkx as nx
 from langchain_core.output_parsers import BaseOutputParser
 
-from .prompt_builder import DEFAULT_RECORD_DELIMITER, DEFAULT_TUPLE_DELIMITER
-
 ENTITY_ATTRIBUTES_LENGTH = 4
 RELATIONSHIP_ATTRIBUTES_LENGTH = 5
 
@@ -17,7 +15,7 @@ def _clean_str(input_str: Any) -> str:
     """Remove HTML escapes, control characters, and other unwanted characters."""
     # If we get non-string input, just give it back
     if not isinstance(input_str, str):
-        return input
+        return input_str
 
     result = html.unescape(input_str.strip())
     # https://stackoverflow.com/questions/4324790/removing-control-characters-from-a-string-in-python
@@ -29,17 +27,8 @@ def _unpack_descriptions(data: Mapping) -> list[str]:
 
 
 class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
-    tuple_delimiter: str = DEFAULT_TUPLE_DELIMITER
-    record_delimiter: str = DEFAULT_TUPLE_DELIMITER
-
-    def __init__(
-        self,
-        tuple_delimiter: str = DEFAULT_TUPLE_DELIMITER,
-        record_delimiter: str = DEFAULT_RECORD_DELIMITER,
-    ):
-        super().__init__()
-        self.tuple_delimiter = tuple_delimiter
-        self.record_delimiter = record_delimiter
+    tuple_delimiter: str
+    record_delimiter: str
 
     def _process_entity(self, record_attributes: list[str], graph: nx.Graph) -> None:
         if (record_attributes[0] != '"entity"') or (
@@ -127,7 +116,7 @@ class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
         self._process_relationship(record_attributes, graph)
 
     def parse(self, text: str) -> nx.Graph:
-        graph = nx.Graph()
+        graph: nx.Graph = nx.Graph()
         records = [r.strip() for r in text.split(self.record_delimiter)]
         for record in records:
             self._process_record(graph, record)

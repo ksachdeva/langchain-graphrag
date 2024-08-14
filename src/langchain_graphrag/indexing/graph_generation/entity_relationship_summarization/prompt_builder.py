@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any
 
+from langchain_core.output_parsers.base import BaseOutputParser
+from langchain_core.output_parsers.string import StrOutputParser
 from langchain_core.prompts import BasePromptTemplate, PromptTemplate
 from typing_extensions import Unpack
 
@@ -24,14 +26,14 @@ class SummarizeDescriptionPromptBuilder(PromptBuilder):
 
         self._prompt_path = prompt_path
 
-    def build(self) -> BasePromptTemplate:
+    def build(self) -> tuple[BasePromptTemplate, BaseOutputParser]:
         if self._prompt:
             prompt_template = PromptTemplate.from_template(self._prompt)
         else:
             assert self._prompt_path is not None
             prompt_template = PromptTemplate.from_file(self._prompt_path)
 
-        return prompt_template
+        return prompt_template, StrOutputParser()
 
     def prepare_chain_input(self, **kwargs: Unpack[dict[str, Any]]) -> dict[str, str]:
         entity_name = kwargs.get("entity_name", None)

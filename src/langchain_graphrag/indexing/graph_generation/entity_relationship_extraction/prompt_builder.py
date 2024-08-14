@@ -1,12 +1,14 @@
 from pathlib import Path
 from typing import Any
 
+from langchain_core.output_parsers.base import BaseOutputParser
 from langchain_core.prompts import BasePromptTemplate, PromptTemplate
 from typing_extensions import Unpack
 
 from langchain_graphrag.types.prompts import PromptBuilder
 
 from .default_prompts import DEFAULT_ER_EXTRACTION_PROMPT
+from .output_parser import EntityExtractionOutputParser
 
 DEFAULT_TUPLE_DELIMITER = "<|>"
 DEFAULT_RECORD_DELIMITER = "##"
@@ -38,18 +40,24 @@ class EntityExtractionPromptBuilder(PromptBuilder):
         self._record_delimiter = record_delimiter
         self._completion_delimiter = completion_delimiter
 
-    def build(self) -> BasePromptTemplate:
+    def build(self) -> tuple[BasePromptTemplate, BaseOutputParser]:
         if self._prompt:
             prompt_template = PromptTemplate.from_template(self._prompt)
         else:
             assert self._prompt_path is not None
             prompt_template = PromptTemplate.from_file(self._prompt_path)
 
-        return prompt_template.partial(
-            completion_delimiter=self._completion_delimiter,
-            tuple_delimiter=self._tuple_delimiter,
-            record_delimiter=self._record_delimiter,
-            entity_types=",".join(self._entity_types),
+        return (
+            prompt_template.partial(
+                completion_delimiter=self._completion_delimiter,
+                tuple_delimiter=self._tuple_delimiter,
+                record_delimiter=self._record_delimiter,
+                entity_types=",".join(self._entity_types),
+            ),
+            EntityExtractionOutputParser(
+                tuple_delimiter=self._tuple_delimiter,
+                record_delimiter=self._record_delimiter,
+            ),
         )
 
     def prepare_chain_input(self, **kwargs: Unpack[dict[str, Any]]) -> dict[str, str]:

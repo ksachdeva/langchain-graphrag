@@ -12,6 +12,8 @@ from langchain_graphrag.query.global_search.key_points_generator.utils import (
     KeyPointsResult,
 )
 from langchain_graphrag.types.prompts import PromptBuilder
+from langchain_core.output_parsers.base import BaseOutputParser
+from langchain_core.output_parsers.string import StrOutputParser
 
 from .system_prompt import REDUCE_SYSTEM_PROMPT
 
@@ -40,7 +42,7 @@ class KeyPointsAggregatorPromptBuilder(PromptBuilder):
 
         self._system_prompt_path = system_prompt_path
 
-    def build(self) -> BasePromptTemplate:
+    def build(self) -> tuple[BasePromptTemplate, BaseOutputParser]:
         if self._system_prompt:
             system_template = SystemMessagePromptTemplate.from_template(
                 self._system_prompt
@@ -52,7 +54,10 @@ class KeyPointsAggregatorPromptBuilder(PromptBuilder):
                 input_variables=["response_type", "report_data"],
             )
 
-        return ChatPromptTemplate([system_template, ("user", "{global_query}")])
+        template = ChatPromptTemplate([system_template, ("user", "{global_query}")])
+        output_parser = StrOutputParser()
+
+        return template, output_parser
 
     def prepare_chain_input(self, **kwargs: Unpack[dict[str, Any]]) -> dict[str, str]:
         global_query = kwargs.get("global_query", None)
