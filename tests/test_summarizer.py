@@ -1,20 +1,18 @@
 import networkx as nx
 from langchain_core.language_models import FakeListLLM
-from langchain_core.output_parsers import StrOutputParser
 
 from langchain_graphrag.indexing.graph_generation import (
-    DefaultSummarizeDescriptionPromptBuilder,
     EntityRelationshipDescriptionSummarizer,
+    SummarizeDescriptionPromptBuilder,
 )
 
 
 def test_summarizer():
     llm = FakeListLLM(responses=["fake summary 1", "fake summary 2", "fake summary 3"])
-    prompt_builder = DefaultSummarizeDescriptionPromptBuilder(
-        prompt_path="/workspaces/langchain-graphrag/examples/prompts/summarize_descriptions.txt"
-    )
+    prompt_builder = SummarizeDescriptionPromptBuilder()
     summarizer = EntityRelationshipDescriptionSummarizer(
-        prompt_builder, llm, StrOutputParser()
+        prompt_builder,
+        llm,
     )
 
     graph1 = nx.Graph()
