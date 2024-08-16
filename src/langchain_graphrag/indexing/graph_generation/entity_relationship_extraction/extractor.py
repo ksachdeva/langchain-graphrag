@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 
 import networkx as nx
@@ -19,7 +21,7 @@ class EntityRelationshipExtractor:
         self._prompt_builder = prompt_builder
 
     @staticmethod
-    def build_default(llm: BaseLLM) -> "EntityRelationshipExtractor":
+    def build_default(llm: BaseLLM) -> EntityRelationshipExtractor:
         return EntityRelationshipExtractor(
             prompt_builder=EntityExtractionPromptBuilder(),
             llm=llm,

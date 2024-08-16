@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any
 
+from langchain_core.output_parsers.base import BaseOutputParser
+from langchain_core.output_parsers.string import StrOutputParser
 from langchain_core.prompts import (
     BasePromptTemplate,
     ChatPromptTemplate,
@@ -12,8 +14,6 @@ from langchain_graphrag.query.global_search.key_points_generator.utils import (
     KeyPointsResult,
 )
 from langchain_graphrag.types.prompts import PromptBuilder
-from langchain_core.output_parsers.base import BaseOutputParser
-from langchain_core.output_parsers.string import StrOutputParser
 
 from .system_prompt import REDUCE_SYSTEM_PROMPT
 

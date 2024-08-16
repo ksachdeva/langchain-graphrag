@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from langchain_core.language_models import BaseLLM
 
 from langchain_graphrag.query.global_search.community_report import CommunityReport
@@ -14,7 +16,7 @@ class KeyPointsGenerator:
         self._prompt_builder = prompt_builder
 
     @staticmethod
-    def build_default(llm: BaseLLM) -> "KeyPointsGenerator":
+    def build_default(llm: BaseLLM) -> KeyPointsGenerator:
         return KeyPointsGenerator(
             prompt_builder=KeyPointsGeneratorPromptBuilder(),
             llm=llm,

@@ -24,6 +24,7 @@ from common import (
 )
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 from langchain_core.output_parsers.string import StrOutputParser
+
 from langchain_graphrag.query.global_search import GlobalSearch
 from langchain_graphrag.query.global_search.community_weight_calculator import (
     CommunityWeightCalculator,
@@ -34,10 +35,7 @@ from langchain_graphrag.query.global_search.key_points_aggregator import (
 from langchain_graphrag.query.global_search.key_points_generator import (
     KeyPointsGenerator,
 )
-from langchain_graphrag.query.local_search import (
-    LocalSearch,
-    LocalSearchPromptBuilder,
-)
+from langchain_graphrag.query.local_search import LocalSearch, LocalSearchPromptBuilder
 from langchain_graphrag.query.local_search.context_builders import (
     CommunitiesReportsContextBuilder,
     ContextBuilder,

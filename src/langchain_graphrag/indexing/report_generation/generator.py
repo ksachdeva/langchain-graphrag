@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import networkx as nx
 from langchain_core.language_models import BaseLLM
 
@@ -15,7 +17,7 @@ class CommunityReportGenerator:
         self._prompt_builder = prompt_builder
 
     @staticmethod
-    def build_default(llm: BaseLLM) -> "CommunityReportGenerator":
+    def build_default(llm: BaseLLM) -> CommunityReportGenerator:
         return CommunityReportGenerator(
             prompt_builder=CommunityReportGenerationPromptBuilder(),
             llm=llm,

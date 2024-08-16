@@ -10,7 +10,6 @@ from langchain_community.cache import SQLiteCache
 from langchain_community.storage import SQLStore
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import BaseLLM
-from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 from langchain_ollama import OllamaEmbeddings, OllamaLLM
 from langchain_openai import (
     AzureChatOpenAI,
@@ -18,6 +17,8 @@ from langchain_openai import (
     ChatOpenAI,
     OpenAIEmbeddings,
 )
+
+from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 
 
 class LLMType(str, Enum):

@@ -35,6 +35,8 @@ indent-width = 4
 # Assume Python 3.10
 target-version = "py310"
 
+src = ["src", "tests"]
+
 [lint]
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
 select = ["ALL"]
@@ -60,10 +62,10 @@ ignore = [
     "D102",    # Missing docstring in public method
     "D103",    # Missing docstring in public function
     "D107",    # Missing docstring in `__init__`
-    "ANN201",  # Missing return type annotation 
-    "ANN204",  # Missing return type annotation 
+    "ANN201",  # Missing return type annotation
+    "ANN204",  # Missing return type annotation
     "ANN401",
-    "PD002",   # inplace=True 
+    "PD002",   # inplace=True
     "C408",    # Unnecessary dict call
     "E402",
     "UP035",
@@ -73,6 +75,10 @@ ignore = [
     "TCH001",
     "TCH002",
     "PLR0913",
+    "FIX002", # Line contains TODO, consider resolving the issue
+    "TD002",  # Missing author in TODO;
+    "TD003",  # Missing issue link on the line following this TODO
+    "S101",   # Use of `assert` detected
 ]
 
 
