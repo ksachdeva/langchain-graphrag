@@ -1,4 +1,5 @@
 import networkx as nx
+
 from langchain_graphrag.indexing.graph_generation.graphs_merger import (
     merge_edges,
     merge_nodes,

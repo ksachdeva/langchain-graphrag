@@ -1,11 +1,11 @@
-site_name: GraphRAG 
+site_name: GraphRAG
 theme:
   name: readthedocs
   highlightjs: true
 plugins:
   - search
   - mkdocstrings:
-      handlers:        
+      handlers:
         python:
           options:
             docstring_style: sphinx
@@ -16,7 +16,5 @@ markdown_extensions:
       base_path: .
   - admonition
 nav:
-  - Home: index.md    
-  - Overview: overview.md    
-  
-       
+  - Home: index.md
+  - Overview: overview.md

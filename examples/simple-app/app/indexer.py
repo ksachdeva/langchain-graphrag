@@ -25,6 +25,8 @@ from common import (
 )
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 from langchain_community.document_loaders.directory import DirectoryLoader
+from langchain_text_splitters import TokenTextSplitter
+
 from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 from langchain_graphrag.indexing.embedding_generation.graph import (
     Node2VectorGraphEmbeddingGenerator,
@@ -51,7 +53,6 @@ from langchain_graphrag.indexing.table_generation import (
     TextUnitsTableGenerator,
 )
 from langchain_graphrag.indexing.text_unit_extractor import TextUnitExtractor
-from langchain_text_splitters import TokenTextSplitter
 
 app = Typer()
 

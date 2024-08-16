@@ -6,9 +6,7 @@ from langchain_graphrag.query.global_search.community_weight_calculator import (
 from langchain_graphrag.types.graphs.community import CommunityId, CommunityLevel
 
 from .key_points_aggregator import KeyPointsAggregator
-from .key_points_generator import (
-    KeyPointsGenerator,
-)
+from .key_points_generator import KeyPointsGenerator
 
 
 class GlobalSearch:

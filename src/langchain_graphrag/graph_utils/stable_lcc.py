@@ -28,8 +28,9 @@ def _stabilize_graph(graph: nx.Graph) -> nx.Graph:
     # in an undirected graph
     # however, this can lead to downstream issues because sometimes
     # consumers read graph.nodes() which ends up being [A, B] and sometimes it's [B, A]
-    # but they base some of their logic on the order of the nodes, so the order ends up being important
-    # so we sort the nodes in the edge in a stable way, so that we always get the same order
+    # but they base some of their logic on the order of the nodes, so the order ends up
+    # being important so we sort the nodes in the edge in a stable way, so that we
+    # always get the same order
     if not graph.is_directed():
 
         def _sort_source_target(edge: Any) -> tuple[str, str, dict[str, Any]]:
