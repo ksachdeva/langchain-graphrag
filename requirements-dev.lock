@@ -58,6 +58,8 @@ certifi==2024.7.4
     # via kubernetes
     # via requests
     # via unstructured-client
+cfgv==3.4.0
+    # via pre-commit
 chardet==5.2.0
     # via unstructured
 charset-normalizer==3.3.2
@@ -99,6 +101,8 @@ deprecated==1.2.14
     # via opentelemetry-api
     # via opentelemetry-exporter-otlp-proto-grpc
     # via opentelemetry-semantic-conventions
+distlib==0.3.8
+    # via virtualenv
 distro==1.9.0
     # via openai
 emoji==2.12.1
@@ -115,6 +119,7 @@ fastapi==0.112.0
 fastparquet==2024.5.0
 filelock==3.15.4
     # via huggingface-hub
+    # via virtualenv
 filetype==1.2.0
     # via unstructured
 flatbuffers==24.3.25
@@ -167,6 +172,8 @@ humanfriendly==10.0
     # via coloredlogs
 hyppo==0.4.0
     # via graspologic
+identify==2.6.0
+    # via pre-commit
 idna==3.7
     # via anyio
     # via httpx
@@ -294,6 +301,8 @@ networkx==3.3
     # via langchain-graphrag
 nltk==3.8.1
     # via unstructured
+nodeenv==1.9.1
+    # via pre-commit
 numba==0.60.0
     # via hyppo
     # via pynndescent
@@ -404,12 +413,14 @@ platformdirs==4.2.2
     # via jupyter-core
     # via mkdocs-get-deps
     # via mkdocstrings
+    # via virtualenv
 pluggy==1.5.0
     # via pytest
 posthog==3.5.0
     # via chromadb
 pot==0.9.4
     # via graspologic
+pre-commit==3.8.0
 prompt-toolkit==3.0.47
     # via ipython
 protobuf==4.25.4
@@ -479,6 +490,7 @@ pyyaml==6.0.1
     # via langchain-core
     # via mkdocs
     # via mkdocs-get-deps
+    # via pre-commit
     # via pymdown-extensions
     # via pyyaml-env-tag
     # via uvicorn
@@ -638,6 +650,8 @@ uvicorn==0.30.5
     # via chromadb
 uvloop==0.19.0
     # via uvicorn
+virtualenv==20.26.3
+    # via pre-commit
 watchdog==4.0.2
     # via mkdocs
 watchfiles==0.22.0

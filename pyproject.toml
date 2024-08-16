@@ -28,6 +28,7 @@ dev-dependencies = [
     "mkdocs>=1.6.0",
     "mkdocstrings[python]>=0.25.2",
     "markdown-include>=0.8.1",
+    "pre-commit>=3.8.0",
 ]
 
 [tool.hatch.metadata]
@@ -44,3 +45,6 @@ simple-app-indexer = "python examples/simple-app/app/main.py indexer index --inp
 simple-app-report = "python examples/simple-app/app/main.py indexer report --artifacts-dir tmp/artifacts"
 simple-app-local-search = "python examples/simple-app/app/main.py query local-search --output-dir tmp --cache-dir tmp/cache"
 simple-app-global-search = "python examples/simple-app/app/main.py query global-search --output-dir tmp --cache-dir tmp/cache"
+
+[tool.isort]
+profile = "black"
