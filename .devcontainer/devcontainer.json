@@ -29,15 +29,17 @@
                 }
             }
         },
-        "extensions": [
-            "ms-python.python",
-            "charliermarsh.ruff",
-            "ms-python.vscode-pylance",
-            "ms-toolsai.jupyter",
-            "visualstudioexptteam.vscodeintellicode",
-            "ms-python.mypy-type-checker",
-            "github.vscode-github-actions"
-        ]
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "charliermarsh.ruff",
+                "ms-python.vscode-pylance",
+                "ms-toolsai.jupyter",
+                "visualstudioexptteam.vscodeintellicode",
+                "ms-python.mypy-type-checker",
+                "github.vscode-github-actions"
+            ]
+        }
     },
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
