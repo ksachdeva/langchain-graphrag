@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import networkx as nx
 from langchain_core.language_models import BaseLLM
 from tqdm import tqdm
@@ -14,7 +16,7 @@ class EntityRelationshipDescriptionSummarizer:
         self._prompt_builder = prompt_builder
 
     @staticmethod
-    def build_default(llm: BaseLLM) -> "EntityRelationshipDescriptionSummarizer":
+    def build_default(llm: BaseLLM) -> EntityRelationshipDescriptionSummarizer:
         return EntityRelationshipDescriptionSummarizer(
             prompt_builder=SummarizeDescriptionPromptBuilder(),
             llm=llm,
