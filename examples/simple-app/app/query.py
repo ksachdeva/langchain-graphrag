@@ -143,7 +143,6 @@ def local_search(
     searcher = LocalSearch(
         prompt_builder=LocalSearchPromptBuilder(),
         llm=make_llm_instance(llm_type, llm_model, cache_dir),
-        output_parser=StrOutputParser(),
         context_selector=context_selector,
         context_builder=context_builder,
     )
