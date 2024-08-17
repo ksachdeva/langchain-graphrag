@@ -40,11 +40,11 @@ from langchain_graphrag.indexing.graph_generation import (
     GraphGenerator,
     GraphsMerger,
 )
-from langchain_graphrag.indexing.indexer import Indexer
 from langchain_graphrag.indexing.report_generation import (
     CommunityReportGenerator,
     CommunityReportWriter,
 )
+from langchain_graphrag.indexing.simple_indexer import SimpleIndexer
 from langchain_graphrag.indexing.table_generation import (
     CommunitiesReportsTableGenerator,
     EntitiesTableGenerator,
@@ -178,7 +178,7 @@ def index(
 
     ######### End of creation of various objects/dependencies #############
 
-    indexer = Indexer(
+    indexer = SimpleIndexer(
         data_loader=data_loader,
         text_unit_extractor=text_unit_extractor,
         graph_generator=graph_generator,

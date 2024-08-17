@@ -1,3 +1,10 @@
+"""A simple indexer that sequentially uses various components to index a document.
+
+You could implement a more complex indexer that uses a pipeline, workflow engines
+etc to index a document.
+
+"""
+
 from langchain_core.document_loaders.base import BaseLoader
 
 from langchain_graphrag.types.graphs.community import CommunityDetector
@@ -13,7 +20,7 @@ from .table_generation import (
 from .text_unit_extractor import TextUnitExtractor
 
 
-class Indexer:
+class SimpleIndexer:
     def __init__(
         self,
         data_loader: BaseLoader,
