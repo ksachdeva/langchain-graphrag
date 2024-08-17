@@ -40,11 +40,8 @@ class SimpleIndexer:
         self._text_units_table_generator = text_units_table_generator
 
     def run(self, documents: list[Document]) -> IndexerArtifacts:
-        if len(documents) > 1:
-            raise ValueError("Only one document is supported for now")
-
         # Step 1 - Text Unit extraction
-        df_base_text_units = self._text_unit_extractor.run(documents[0])
+        df_base_text_units = self._text_unit_extractor.run(documents)
 
         # Step 2 - Generate graph
         graph = self._graph_generator.run(df_base_text_units)
