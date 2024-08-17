@@ -31,7 +31,7 @@ def _make_temporary_frame(
     return output.reset_index()
 
 
-class TextUnitsTableGenerator:
+class TextUnitsArtifactsGenerator:
     def __init__(self, vector_store: VectorStore | None = None):
         self._vector_store = vector_store
 

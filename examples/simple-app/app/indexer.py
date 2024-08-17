@@ -29,8 +29,14 @@ from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import TokenTextSplitter
 
 from langchain_graphrag.indexing.artifacts import IndexerArtifacts
+from langchain_graphrag.indexing.artifacts_generation import (
+    CommunitiesReportsArtifactsGenerator,
+    EntitiesArtifactsGenerator,
+    RelationshipsArtifactsGenerator,
+    TextUnitsArtifactsGenerator,
+)
 from langchain_graphrag.indexing.embedding_generation.graph import (
-    Node2VectorGraphEmbeddingGenerator,
+    Node2VectorGraphEmbeddingGenerator,  # noqa: F401
 )
 from langchain_graphrag.indexing.graph_clustering.leiden_community_detector import (
     HierarchicalLeidenCommunityDetector,
@@ -46,12 +52,6 @@ from langchain_graphrag.indexing.report_generation import (
     CommunityReportWriter,
 )
 from langchain_graphrag.indexing.simple_indexer import SimpleIndexer
-from langchain_graphrag.indexing.table_generation import (
-    CommunitiesReportsTableGenerator,
-    EntitiesTableGenerator,
-    RelationshipsTableGenerator,
-    TextUnitsTableGenerator,
-)
 from langchain_graphrag.indexing.text_unit_extractor import TextUnitExtractor
 
 app = Typer()
@@ -111,7 +111,7 @@ def index(
     # Community Detector
     community_detector = HierarchicalLeidenCommunityDetector()
 
-    # Entities Table Generator
+    # Entities artifacts Generator
     # We need the vector Store (mandatory) for entities
     entities_vector_store = ChromaVectorStore(
         collection_name="entity_name_description",
@@ -127,12 +127,12 @@ def index(
     # how you would create it
     # graph_embedding_generator = Node2VectorGraphEmbeddingGenerator()
     graph_embedding_generator = None
-    entities_table_generator = EntitiesTableGenerator(
+    entities_artifacts_generator = EntitiesArtifactsGenerator(
         entities_vector_store=entities_vector_store,  # mandatory
         graph_embedding_generator=graph_embedding_generator,  # optional
     )
 
-    # Relationships Table Generator
+    # Relationships artifacts Generator
     # VectorStore for relationships is optional
     # Below is an example if you needed one
     # relationships_vector_store = ChromaVectorStore(
@@ -147,7 +147,7 @@ def index(
     # Since the search implementation does not use it
     # we pass None
     relationships_vector_store = None
-    relationships_table_generator = RelationshipsTableGenerator(
+    relationships_artifacts_generator = RelationshipsArtifactsGenerator(
         relationships_vector_store=relationships_vector_store
     )
 
@@ -157,12 +157,12 @@ def index(
 
     report_writer = CommunityReportWriter()
 
-    communities_report_table_generator = CommunitiesReportsTableGenerator(
+    communities_report_artifacts_generator = CommunitiesReportsArtifactsGenerator(
         report_generator=report_generator,
         report_writer=report_writer,
     )
 
-    # TextUnitsTableGenerator
+    # TextUnits Artifacts Generator
     # The vector store for text units embedding is optional
     # Below is an example of how you would create it
     # text_units_vector_store = ChromaVectorStore(
@@ -177,7 +177,7 @@ def index(
     # Since the search implementation does not use it
     # we pass None
     text_units_vector_store = None
-    text_units_table_generator = TextUnitsTableGenerator(
+    text_units_artifacts_generator = TextUnitsArtifactsGenerator(
         vector_store=text_units_vector_store,
     )
 
@@ -187,10 +187,10 @@ def index(
         text_unit_extractor=text_unit_extractor,
         graph_generator=graph_generator,
         community_detector=community_detector,
-        entities_table_generator=entities_table_generator,
-        relationships_table_generator=relationships_table_generator,
-        text_units_table_generator=text_units_table_generator,
-        communities_report_table_generator=communities_report_table_generator,
+        entities_artifacts_generator=entities_artifacts_generator,
+        relationships_artifacts_generator=relationships_artifacts_generator,
+        text_units_artifacts_generator=text_units_artifacts_generator,
+        communities_report_artifacts_generator=communities_report_artifacts_generator,
     )
 
     artifacts = indexer.run(documents)

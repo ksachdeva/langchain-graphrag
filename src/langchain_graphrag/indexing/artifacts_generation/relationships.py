@@ -3,7 +3,7 @@ import pandas as pd
 from langchain_core.vectorstores import VectorStore
 
 
-class RelationshipsTableGenerator:
+class RelationshipsArtifactsGenerator:
     def __init__(
         self,
         relationships_vector_store: VectorStore | None = None,

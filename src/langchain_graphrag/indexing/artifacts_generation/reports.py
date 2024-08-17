@@ -16,7 +16,7 @@ def _get_entities(community: Community, graph: nx.Graph) -> list[str]:
     return [graph.nodes[n.name]["id"] for n in community.nodes]
 
 
-class CommunitiesReportsTableGenerator:
+class CommunitiesReportsArtifactsGenerator:
     def __init__(
         self,
         report_generator: CommunityReportGenerator,

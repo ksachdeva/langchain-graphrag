@@ -22,7 +22,7 @@ def _make_entity_to_communities_map(
     return entity_to_communities
 
 
-class EntitiesTableGenerator:
+class EntitiesArtifactsGenerator:
     def __init__(
         self,
         entities_vector_store: VectorStore,

@@ -10,13 +10,13 @@ from langchain_core.documents import Document
 from langchain_graphrag.types.graphs.community import CommunityDetector
 
 from .artifacts import IndexerArtifacts
-from .graph_generation import GraphGenerator
-from .table_generation import (
-    CommunitiesReportsTableGenerator,
-    EntitiesTableGenerator,
-    RelationshipsTableGenerator,
-    TextUnitsTableGenerator,
+from .artifacts_generation import (
+    CommunitiesReportsArtifactsGenerator,
+    EntitiesArtifactsGenerator,
+    RelationshipsArtifactsGenerator,
+    TextUnitsArtifactsGenerator,
 )
+from .graph_generation import GraphGenerator
 from .text_unit_extractor import TextUnitExtractor
 
 
@@ -26,18 +26,20 @@ class SimpleIndexer:
         text_unit_extractor: TextUnitExtractor,
         graph_generator: GraphGenerator,
         community_detector: CommunityDetector,
-        entities_table_generator: EntitiesTableGenerator,
-        relationships_table_generator: RelationshipsTableGenerator,
-        communities_report_table_generator: CommunitiesReportsTableGenerator,
-        text_units_table_generator: TextUnitsTableGenerator,
+        entities_artifacts_generator: EntitiesArtifactsGenerator,
+        relationships_artifacts_generator: RelationshipsArtifactsGenerator,
+        communities_report_artifacts_generator: CommunitiesReportsArtifactsGenerator,
+        text_units_artifacts_generator: TextUnitsArtifactsGenerator,
     ):
         self._text_unit_extractor = text_unit_extractor
         self._graph_generator = graph_generator
         self._community_detector = community_detector
-        self._entities_table_generator = entities_table_generator
-        self._relationships_table_generator = relationships_table_generator
-        self._communities_report_table_generator = communities_report_table_generator
-        self._text_units_table_generator = text_units_table_generator
+        self._entities_artifacts_generator = entities_artifacts_generator
+        self._relationships_artifacts_generator = relationships_artifacts_generator
+        self._communities_report_artifacts_generator = (
+            communities_report_artifacts_generator
+        )
+        self._text_units_artifacts_generator = text_units_artifacts_generator
 
     def run(self, documents: list[Document]) -> IndexerArtifacts:
         # Step 1 - Text Unit extraction
@@ -50,22 +52,22 @@ class SimpleIndexer:
         community_detection_result = self._community_detector.run(graph)
 
         # Step 4 - Reports for detected Communities (depends on Step 2 & Step 3)
-        df_communities_reports = self._communities_report_table_generator.run(
+        df_communities_reports = self._communities_report_artifacts_generator.run(
             community_detection_result,
             graph,
         )
 
         # Step 5 - Entities generation (depends on Step 2 & Step 3)
-        df_entities = self._entities_table_generator.run(
+        df_entities = self._entities_artifacts_generator.run(
             community_detection_result,
             graph,
         )
 
         # Step 6 - Relationships generation (depends on Step 2)
-        df_relationships = self._relationships_table_generator.run(graph)
+        df_relationships = self._relationships_artifacts_generator.run(graph)
 
         # Step 7 - Text Units generation (depends on Steps 1, 5, 6)
-        df_text_units = self._text_units_table_generator.run(
+        df_text_units = self._text_units_artifacts_generator.run(
             df_base_text_units,
             df_entities,
             df_relationships,
