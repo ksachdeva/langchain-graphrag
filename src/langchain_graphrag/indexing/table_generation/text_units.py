@@ -32,7 +32,7 @@ def _make_temporary_frame(
 
 
 class TextUnitsTableGenerator:
-    def __init__(self, vector_store: VectorStore):
+    def __init__(self, vector_store: VectorStore | None = None):
         self._vector_store = vector_store
 
     def run(
@@ -94,16 +94,19 @@ class TextUnitsTableGenerator:
                 text_unit_id=chunk_id,  # TODO: Remove once langchain is fixed
             )
 
+            assert self._vector_store is not None
+
             self._vector_store.add_texts(
                 [chunk_to_embedd],
                 metadata=[chunk_metadata],
                 ids=[chunk_id],
             )
 
-        tqdm.pandas(desc="Generating chunk embedding ...")
-        text_units.progress_apply(
-            _run_embedder,
-            axis=1,
-        )
+        if self._vector_store:
+            tqdm.pandas(desc="Generating chunk embedding ...")
+            text_units.progress_apply(
+                _run_embedder,
+                axis=1,
+            )
 
         return text_units

@@ -1,5 +1,6 @@
 # ruff: noqa: B008
 # ruff: noqa: E402
+# ruff: noqa: ERA001
 
 from pathlib import Path
 
@@ -90,18 +91,14 @@ def index(
     # TextUnitExtractor that extracts text units from the text files
     text_unit_extractor = TextUnitExtractor(text_splitter=text_splitter)
 
-    # LLM for Entity Extraction
-    er_llm = make_llm_instance(llm_type, llm_model, cache_dir)
-    entity_extractor = EntityRelationshipExtractor.build_default(llm=er_llm)
+    # Entity Relationship Extractor
+    entity_extractor = EntityRelationshipExtractor.build_default(
+        llm=make_llm_instance(llm_type, llm_model, cache_dir)
+    )
 
-    # Prompt Builder for Entity Extraction
-
-    # LLM For Description Summarization
-    es_llm = make_llm_instance(llm_type, llm_model, cache_dir)
-
-    # Entity Summarizer
+    # Entity Relationship Description Summarizer
     entity_summarizer = EntityRelationshipDescriptionSummarizer.build_default(
-        llm=es_llm
+        llm=make_llm_instance(llm_type, llm_model, cache_dir)
     )
 
     # Graph Generator
@@ -114,10 +111,8 @@ def index(
     # Community Detector
     community_detector = HierarchicalLeidenCommunityDetector()
 
-    # Graph Embedding Generator
-    graph_embedding_generator = Node2VectorGraphEmbeddingGenerator()
-
-    # Entity Vector Store
+    # Entities Table Generator
+    # We need the vector Store (mandatory) for entities
     entities_vector_store = ChromaVectorStore(
         collection_name="entity_name_description",
         persist_directory=str(output_dir / "vector_stores"),
@@ -127,36 +122,31 @@ def index(
             cache_dir=cache_dir,
         ),
     )
-
-    # Relationship Embedding Generator
-    relationships_vector_store = ChromaVectorStore(
-        collection_name="relationship_description",
-        persist_directory=str(output_dir / "vector_stores"),
-        embedding_function=make_embedding_instance(
-            embedding_type=embedding_type,
-            embedding_model=embedding_model,
-            cache_dir=cache_dir,
-        ),
-    )
-
-    # TextUnits vector store
-    text_units_vector_store = ChromaVectorStore(
-        collection_name="text_units",
-        persist_directory=str(output_dir / "vector_stores"),
-        embedding_function=make_embedding_instance(
-            embedding_type=embedding_type,
-            embedding_model=embedding_model,
-            cache_dir=cache_dir,
-        ),
-    )
-
-    # Entities Generator
+    # Graph Embedding Generator (Optional)
+    # Not used in the search implementation but you needed this is
+    # how you would create it
+    # graph_embedding_generator = Node2VectorGraphEmbeddingGenerator()
+    graph_embedding_generator = None
     entities_table_generator = EntitiesTableGenerator(
-        entities_vector_store=entities_vector_store,
-        graph_embedding_generator=graph_embedding_generator,
+        entities_vector_store=entities_vector_store,  # mandatory
+        graph_embedding_generator=graph_embedding_generator,  # optional
     )
 
-    # Relationships Generator
+    # Relationships Table Generator
+    # VectorStore for relationships is optional
+    # Below is an example if you needed one
+    # relationships_vector_store = ChromaVectorStore(
+    #     collection_name="relationship_description",
+    #     persist_directory=str(output_dir / "vector_stores"),
+    #     embedding_function=make_embedding_instance(
+    #         embedding_type=embedding_type,
+    #         embedding_model=embedding_model,
+    #         cache_dir=cache_dir,
+    #     ),
+    # )
+    # Since the search implementation does not use it
+    # we pass None
+    relationships_vector_store = None
     relationships_table_generator = RelationshipsTableGenerator(
         relationships_vector_store=relationships_vector_store
     )
@@ -172,6 +162,21 @@ def index(
         report_writer=report_writer,
     )
 
+    # TextUnitsTableGenerator
+    # The vector store for text units embedding is optional
+    # Below is an example of how you would create it
+    # text_units_vector_store = ChromaVectorStore(
+    #     collection_name="text_units",
+    #     persist_directory=str(output_dir / "vector_stores"),
+    #     embedding_function=make_embedding_instance(
+    #         embedding_type=embedding_type,
+    #         embedding_model=embedding_model,
+    #         cache_dir=cache_dir,
+    #     ),
+    # )
+    # Since the search implementation does not use it
+    # we pass None
+    text_units_vector_store = None
     text_units_table_generator = TextUnitsTableGenerator(
         vector_store=text_units_vector_store,
     )

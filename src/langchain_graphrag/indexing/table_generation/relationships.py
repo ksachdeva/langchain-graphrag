@@ -6,7 +6,7 @@ from langchain_core.vectorstores import VectorStore
 class RelationshipsTableGenerator:
     def __init__(
         self,
-        relationships_vector_store: VectorStore,
+        relationships_vector_store: VectorStore | None = None,
     ):
         self._relationships_vector_store = relationships_vector_store
 
@@ -23,8 +23,7 @@ class RelationshipsTableGenerator:
         ]
         return pd.DataFrame.from_records(records)
 
-    def run(self, graph: nx.Graph) -> pd.DataFrame:
-        # Step 1
+    def _embed_relationships(self, graph: nx.Graph) -> None:
         # Extract the information to embed from the graph
         # and put in the vectorstore
         texts_to_embed = []
@@ -52,12 +51,16 @@ class RelationshipsTableGenerator:
                 )
             )
 
+        assert self._relationships_vector_store is not None
+
         self._relationships_vector_store.add_texts(
             texts_to_embed,
             metadatas=texts_metadata,
             ids=texts_ids,
         )
 
-        # Step 2
-        # Make a dataframe
+    def run(self, graph: nx.Graph) -> pd.DataFrame:
+        if self._relationships_vector_store:
+            self._embed_relationships(graph)
+
         return self._unpack_edges(graph)
