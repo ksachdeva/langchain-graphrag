@@ -1,7 +1,11 @@
 site_name: GraphRAG
+
 theme:
   name: material
   highlightjs: true
+  features:
+    - navigation.tabs
+
 plugins:
   - search
   - gen-files:
@@ -20,6 +24,7 @@ plugins:
             docstring_style: google
             show_if_no_docstring: true
             members_order: alphabetical
+  - mkdocs-jupyter
 
 markdown_extensions:
   - markdown_include.include:
@@ -27,5 +32,10 @@ markdown_extensions:
   - admonition
 nav:
   - Home: index.md
-  - Overview: overview.md
+  - Guides:
+    - Text Unit Extraction: guides/text_units_extraction.ipynb
+    
   - API Reference: reference/
+
+repo_name: ksachdeva/langchain-graphrag
+repo_url: https://github.com/ksachdeva/langchain-graphrag

@@ -33,6 +33,7 @@ dev-dependencies = [
     "mkdocs-literate-nav>=0.6.1",
     "mkdocs-section-index>=0.3.9",
     "mkdocs-material>=9.5.31",
+    "mkdocs-jupyter>=0.24.8",
 ]
 
 [tool.hatch.metadata]
