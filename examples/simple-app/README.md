@@ -17,7 +17,7 @@ python examples/simple-app/app/main.py --help
 
 ```bash
 # assuming you are at the root of the repo
-python examples/simple-app/app/main.py indexer --input-dir examples/input-data --output-dir temp --prompts-dir examples/prompts --cache-dir temp/cache
+python examples/simple-app/app/main.py indexer --input-file examples/input-data/book.txt --output-dir temp --prompts-dir examples/prompts --cache-dir temp/cache
 ```
 Or, you can run it via `rye`. The below command can take additional args of simple-app
 

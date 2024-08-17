@@ -24,7 +24,7 @@ from common import (
     save_artifacts,
 )
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
-from langchain_community.document_loaders.directory import DirectoryLoader
+from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import TokenTextSplitter
 
 from langchain_graphrag.indexing.artifacts import IndexerArtifacts
@@ -58,7 +58,7 @@ app = Typer()
 
 @app.command()
 def index(
-    input_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
+    input_file: Path = typer.Option(..., dir_okay=False, file_okay=True),
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     llm_type: LLMType = typer.Option(LLMType.azure_openai, case_sensitive=False),
@@ -79,7 +79,7 @@ def index(
 
     # Dataloader that loads all the text files from
     # the supplied directory
-    data_loader = DirectoryLoader(str(input_dir), glob="*.txt")
+    documents = TextLoader(file_path=input_file).load()
 
     # TextSplitter required by TextUnitExtractor
     text_splitter = TokenTextSplitter(
@@ -179,7 +179,6 @@ def index(
     ######### End of creation of various objects/dependencies #############
 
     indexer = SimpleIndexer(
-        data_loader=data_loader,
         text_unit_extractor=text_unit_extractor,
         graph_generator=graph_generator,
         community_detector=community_detector,
@@ -189,7 +188,7 @@ def index(
         communities_report_table_generator=communities_report_table_generator,
     )
 
-    artifacts = indexer.run()
+    artifacts = indexer.run(documents)
 
     # save the artifacts
     artifacts_dir = output_dir / "artifacts"

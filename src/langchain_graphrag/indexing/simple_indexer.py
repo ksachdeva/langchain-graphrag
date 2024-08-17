@@ -5,7 +5,7 @@ etc to index a document.
 
 """
 
-from langchain_core.document_loaders.base import BaseLoader
+from langchain_core.documents import Document
 
 from langchain_graphrag.types.graphs.community import CommunityDetector
 
@@ -23,7 +23,6 @@ from .text_unit_extractor import TextUnitExtractor
 class SimpleIndexer:
     def __init__(
         self,
-        data_loader: BaseLoader,
         text_unit_extractor: TextUnitExtractor,
         graph_generator: GraphGenerator,
         community_detector: CommunityDetector,
@@ -32,7 +31,6 @@ class SimpleIndexer:
         communities_report_table_generator: CommunitiesReportsTableGenerator,
         text_units_table_generator: TextUnitsTableGenerator,
     ):
-        self._data_loader = data_loader
         self._text_unit_extractor = text_unit_extractor
         self._graph_generator = graph_generator
         self._community_detector = community_detector
@@ -41,12 +39,12 @@ class SimpleIndexer:
         self._communities_report_table_generator = communities_report_table_generator
         self._text_units_table_generator = text_units_table_generator
 
-    def run(self) -> IndexerArtifacts:
-        # Step 0 - For now only 1 document is supported
-        document = self._data_loader.load()[0]
+    def run(self, documents: list[Document]) -> IndexerArtifacts:
+        if len(documents) > 1:
+            raise ValueError("Only one document is supported for now")
 
         # Step 1 - Text Unit extraction
-        df_base_text_units = self._text_unit_extractor.run(document)
+        df_base_text_units = self._text_unit_extractor.run(documents[0])
 
         # Step 2 - Generate graph
         graph = self._graph_generator.run(df_base_text_units)
