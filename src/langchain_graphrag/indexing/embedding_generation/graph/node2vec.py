@@ -4,7 +4,7 @@ import graspologic as gl
 import networkx as nx
 import numpy as np
 
-from langchain_graphrag.graph_utils.stable_lcc import stable_largest_connected_component
+from langchain_graphrag.indexing._graph_utils import stable_largest_connected_component
 from langchain_graphrag.types.graphs.embedding import GraphEmbeddingGenerator
 
 

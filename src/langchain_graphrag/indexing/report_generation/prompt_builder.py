@@ -10,7 +10,7 @@ from typing_extensions import Unpack
 from langchain_graphrag.types.graphs.community import Community
 from langchain_graphrag.types.prompts import PromptBuilder
 
-from .default_prompts import DEFAULT_PROMPT
+from ._default_prompts import DEFAULT_PROMPT
 from .output_parser import CommunityReportOutputParser
 from .utils import get_info
 

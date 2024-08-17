@@ -15,7 +15,7 @@ from langchain_graphrag.query.global_search.key_points_generator.utils import (
 )
 from langchain_graphrag.types.prompts import PromptBuilder
 
-from .system_prompt import REDUCE_SYSTEM_PROMPT
+from ._system_prompt import REDUCE_SYSTEM_PROMPT
 
 _REPORT_TEMPLATE = """
 --- Analyst {analyst_id} ---

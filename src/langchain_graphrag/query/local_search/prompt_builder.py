@@ -13,7 +13,7 @@ from typing_extensions import Unpack
 
 from langchain_graphrag.types.prompts import PromptBuilder
 
-from .system_prompt import LOCAL_SEARCH_SYSTEM_PROMPT
+from ._system_prompt import LOCAL_SEARCH_SYSTEM_PROMPT
 
 
 class LocalSearchPromptBuilder(PromptBuilder):

@@ -7,7 +7,7 @@ from graspologic.partition import (
     hierarchical_leiden,
 )
 
-from langchain_graphrag.graph_utils.stable_lcc import stable_largest_connected_component
+from langchain_graphrag.indexing._graph_utils import stable_largest_connected_component
 from langchain_graphrag.types.graphs.community import (
     Community,
     CommunityDetectionResult,

@@ -13,7 +13,7 @@ from langchain_graphrag.query.global_search.community_report import CommunityRep
 from langchain_graphrag.types.prompts import PromptBuilder
 
 from .output_parser import KeyPointsOutputParser
-from .system_prompt import MAP_SYSTEM_PROMPT
+from ._system_prompt import MAP_SYSTEM_PROMPT
 
 _REPORT_TEMPLATE = """
 --- Report {report_id} ---
