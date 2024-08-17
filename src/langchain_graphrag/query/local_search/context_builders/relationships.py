@@ -8,7 +8,7 @@ from langchain_graphrag.query.local_search.context_selectors.relationships impor
 )
 from langchain_graphrag.types.tokens import TokenCounter
 
-logger = logging.getLogger(__name__)
+_LOGGER = logging.getLogger(__name__)
 
 
 class RelationshipsContextBuilder:
@@ -58,7 +58,7 @@ class RelationshipsContextBuilder:
                 new_token_count = self._token_counter.count_tokens(new_context_text)
 
                 if token_count + new_token_count > self._max_tokens:
-                    logger.warning(
+                    _LOGGER.warning(
                         f"Stopping relationships context build at {token_count} tokens..."  # noqa: E501
                     )
                     return context_text, token_count

@@ -5,7 +5,7 @@ from typing import TypedDict
 
 import pandas as pd
 
-logger = logging.getLogger(__name__)
+_LOGGER = logging.getLogger(__name__)
 
 
 class SelectedTextUnit(TypedDict):
@@ -82,8 +82,8 @@ class TextUnitsSelector:
             ascending=[False, False],
         ).reset_index(drop=True)
 
-        if logger.getEffectiveLevel() == logging.DEBUG:
-            logger.debug(
+        if _LOGGER.getEffectiveLevel() == logging.DEBUG:
+            _LOGGER.debug(
                 f"\n\t ==Selected Text units==\n {df_selected_text_units[[ 'id', 'entity_score', 'relationship_score']]}"  # noqa: E501
             )
 

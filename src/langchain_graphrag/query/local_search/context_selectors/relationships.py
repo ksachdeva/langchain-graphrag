@@ -4,7 +4,7 @@ from typing import NamedTuple
 
 import pandas as pd
 
-logger = logging.getLogger(__name__)
+_LOGGER = logging.getLogger(__name__)
 
 
 class RelationshipsSelectionResult(NamedTuple):
@@ -43,10 +43,10 @@ def _find_in_network_relationships(
         by="rank", ascending=False
     ).reset_index(drop=True)
 
-    if logger.getEffectiveLevel() == logging.DEBUG:
+    if _LOGGER.getEffectiveLevel() == logging.DEBUG:
         how_many = len(df_relationships)
-        logger.debug(f"\nFound {how_many} in-network relationships ...")
-        logger.debug(
+        _LOGGER.debug(f"\nFound {how_many} in-network relationships ...")
+        _LOGGER.debug(
             f"\n\t ==Selected In Network Relationships==\n {df_relationships[['source', 'target', 'rank']]}"  # noqa: E501
         )
 
@@ -124,10 +124,10 @@ def _find_out_network_relationships(
         ascending=[False, False],
     ).reset_index(drop=True)
 
-    if logger.getEffectiveLevel() == logging.DEBUG:
+    if _LOGGER.getEffectiveLevel() == logging.DEBUG:
         how_many = len(df_relationships)
-        logger.debug(f"\nFound {how_many} out-network relationships ...")
-        logger.debug(
+        _LOGGER.debug(f"\nFound {how_many} out-network relationships ...")
+        _LOGGER.debug(
             f"\n\t ==Selected Out Network Relationships==\n {df_relationships[['source', 'target', 'rank', 'links']]}"  # noqa: E501
         )
 

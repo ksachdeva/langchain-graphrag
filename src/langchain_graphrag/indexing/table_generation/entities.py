@@ -1,5 +1,3 @@
-import logging
-
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -11,13 +9,11 @@ from langchain_graphrag.types.graphs.community import (
 )
 from langchain_graphrag.types.graphs.embedding import GraphEmbeddingGenerator
 
-logger = logging.getLogger(__name__)
-
 
 def _make_entity_to_communities_map(
     detection_result: CommunityDetectionResult,
 ) -> dict[str, list[CommunityId]]:
-    entity_to_communities = {}
+    entity_to_communities: dict[str, list[CommunityId]] = {}
     for level in detection_result.communities:
         communities = detection_result.communities_at_level(level)
         for c in communities:

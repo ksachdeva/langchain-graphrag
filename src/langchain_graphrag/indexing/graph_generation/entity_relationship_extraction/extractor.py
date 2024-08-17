@@ -11,7 +11,7 @@ from langchain_graphrag.types.prompts import PromptBuilder
 
 from .prompt_builder import EntityExtractionPromptBuilder
 
-logger = logging.getLogger("langchain_graphrag.er_extractor")
+_LOGGER = logging.getLogger(__name__)
 
 
 class EntityRelationshipExtractor:
@@ -47,9 +47,9 @@ class EntityRelationshipExtractor:
             for edge_names in chunk_graph.edges():
                 chunk_graph.edges[edge_names]["text_unit_ids"] = [text_id]
 
-            if logging.getLevelName(logger.getEffectiveLevel()) == "DEBUG":
-                logger.debug(f"Graph for: {text_id}")
-                logger.debug(chunk_graph)
+            if logging.getLevelName(_LOGGER.getEffectiveLevel()) == "DEBUG":
+                _LOGGER.debug(f"Graph for: {text_id}")
+                _LOGGER.debug(chunk_graph)
 
             return chunk_graph
 

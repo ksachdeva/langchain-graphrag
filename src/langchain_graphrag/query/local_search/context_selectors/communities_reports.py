@@ -6,7 +6,7 @@ import pandas as pd
 
 from langchain_graphrag.types.graphs.community import CommunityId, CommunityLevel
 
-logger = logging.getLogger(__name__)
+_LOGGER = logging.getLogger(__name__)
 
 
 class CommunitiesReportsSelector:
@@ -58,8 +58,8 @@ class CommunitiesReportsSelector:
                 selected_reports["selected_entities_count"] > 0
             ]
 
-        if logger.getEffectiveLevel() == logging.DEBUG:
-            logger.debug(
+        if _LOGGER.getEffectiveLevel() == logging.DEBUG:
+            _LOGGER.debug(
                 f'\n\t ==Selected Reports ==\n {selected_reports[["community_id", "level", "selected_entities_count", "rating"]]}'  # noqa: E501
             )
 
