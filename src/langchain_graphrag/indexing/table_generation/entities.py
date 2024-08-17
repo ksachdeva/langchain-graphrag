@@ -25,8 +25,8 @@ def _make_entity_to_communities_map(
 class EntitiesTableGenerator:
     def __init__(
         self,
-        graph_embedding_generator: GraphEmbeddingGenerator,
         entities_vector_store: VectorStore,
+        graph_embedding_generator: GraphEmbeddingGenerator | None = None,
     ):
         self._graph_embedding_generator = graph_embedding_generator
         self._entities_vector_store = entities_vector_store
@@ -34,15 +34,17 @@ class EntitiesTableGenerator:
     def _unpack_nodes(
         self,
         graph: nx.Graph,
-        graph_embeddings: dict[str, np.ndarray],
         entity_to_commnunities_map: dict[str, list[CommunityId]],
+        graph_embeddings: dict[str, np.ndarray] | None,
     ) -> pd.DataFrame:
         records = [
             {
                 "title": label,
                 **(node_data or {}),
                 "communities": entity_to_commnunities_map.get(label),
-                "graph_embedding": graph_embeddings.get(label),
+                "graph_embedding": graph_embeddings.get(label)
+                if graph_embeddings
+                else None,
             }
             for label, node_data in graph.nodes(data=True)
         ]
@@ -53,9 +55,13 @@ class EntitiesTableGenerator:
         detection_result: CommunityDetectionResult,
         graph: nx.Graph,
     ) -> pd.DataFrame:
-        # Step 1
+        # Step 1 (Optional)
         # Generate graph embeddings
-        graph_embeddings = self._graph_embedding_generator.run(graph)
+        graph_embeddings = (
+            self._graph_embedding_generator.run(graph)
+            if self._graph_embedding_generator
+            else None
+        )
 
         # Step 2
         # Extract the information to embed from the graph
@@ -96,6 +102,6 @@ class EntitiesTableGenerator:
         # Make a dataframe
         return self._unpack_nodes(
             graph,
-            graph_embeddings,
             entity_to_commnunities_map,
+            graph_embeddings,
         )
