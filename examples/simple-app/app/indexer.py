@@ -47,7 +47,6 @@ from langchain_graphrag.indexing.report_generation import (
 )
 from langchain_graphrag.indexing.table_generation import (
     CommunitiesReportsTableGenerator,
-    CommunitiesTableGenerator,
     EntitiesTableGenerator,
     RelationshipsTableGenerator,
     TextUnitsTableGenerator,
@@ -151,19 +150,16 @@ def index(
         ),
     )
 
-    # Final Entities Generator
+    # Entities Generator
     entities_table_generator = EntitiesTableGenerator(
         entities_vector_store=entities_vector_store,
         graph_embedding_generator=graph_embedding_generator,
     )
 
-    # Final Relationships Generator
+    # Relationships Generator
     relationships_table_generator = RelationshipsTableGenerator(
         relationships_vector_store=relationships_vector_store
     )
-
-    # Final Communities Generator
-    communities_table_generator = CommunitiesTableGenerator()
 
     # Community Report Generator
     report_gen_llm = make_llm_instance(llm_type, llm_model, cache_dir)
@@ -189,7 +185,6 @@ def index(
         community_detector=community_detector,
         entities_table_generator=entities_table_generator,
         relationships_table_generator=relationships_table_generator,
-        communities_table_generator=communities_table_generator,
         text_units_table_generator=text_units_table_generator,
         communities_report_table_generator=communities_report_table_generator,
     )

@@ -8,7 +8,6 @@ class IndexerArtifacts(NamedTuple):
     entities: pd.DataFrame
     relationships: pd.DataFrame
     text_units: pd.DataFrame
-    communities: pd.DataFrame
     communities_reports: pd.DataFrame
 
     def _entity_info(self, top_k: int) -> None:
@@ -51,8 +50,8 @@ class IndexerArtifacts(NamedTuple):
         rows = [["Count", len(self.text_units)]]
         tableprint.table(rows)
 
-    def _community_info(self) -> None:
-        tableprint.banner("Communities")
+    def _communities_reports_info(self) -> None:
+        tableprint.banner("Communities Reports")
 
         levels = self.communities_reports["level"].unique()
 
@@ -74,4 +73,4 @@ class IndexerArtifacts(NamedTuple):
         self._text_units_info()
         self._entity_info(top_k=top_k_entities)
         self._relationships_info(top_k=top_k_relationships)
-        self._community_info()
+        self._communities_reports_info()

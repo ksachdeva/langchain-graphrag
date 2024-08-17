@@ -125,7 +125,6 @@ def save_artifacts(artifacts: IndexerArtifacts, path: Path):
     artifacts.entities.to_parquet(f"{path}/entities.parquet")
     artifacts.relationships.to_parquet(f"{path}/relationships.parquet")
     artifacts.text_units.to_parquet(f"{path}/text_units.parquet")
-    artifacts.communities.to_parquet(f"{path}/communities.parquet")
     artifacts.communities_reports.to_parquet(f"{path}/communities_reports.parquet")
 
 
@@ -133,13 +132,11 @@ def load_artifacts(path: Path) -> IndexerArtifacts:
     entities = pd.read_parquet(f"{path}/entities.parquet")
     relationships = pd.read_parquet(f"{path}/relationships.parquet")
     text_units = pd.read_parquet(f"{path}/text_units.parquet")
-    communities = pd.read_parquet(f"{path}/communities.parquet")
     communities_reports = pd.read_parquet(f"{path}/communities_reports.parquet")
 
     return IndexerArtifacts(
         entities,
         relationships,
         text_units,
-        communities,
         communities_reports,
     )
