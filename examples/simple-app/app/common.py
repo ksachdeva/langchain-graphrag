@@ -18,7 +18,7 @@ from langchain_openai import (
     OpenAIEmbeddings,
 )
 
-from langchain_graphrag.indexing.artifacts import IndexerArtifacts
+from langchain_graphrag.indexing import IndexerArtifacts
 
 
 class LLMType(str, Enum):

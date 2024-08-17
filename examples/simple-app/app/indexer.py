@@ -28,6 +28,7 @@ from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import TokenTextSplitter
 
+from langchain_graphrag.indexing import SimpleIndexer, TextUnitExtractor
 from langchain_graphrag.indexing.artifacts import IndexerArtifacts
 from langchain_graphrag.indexing.artifacts_generation import (
     CommunitiesReportsArtifactsGenerator,
@@ -51,8 +52,6 @@ from langchain_graphrag.indexing.report_generation import (
     CommunityReportGenerator,
     CommunityReportWriter,
 )
-from langchain_graphrag.indexing.simple_indexer import SimpleIndexer
-from langchain_graphrag.indexing.text_unit_extractor import TextUnitExtractor
 
 app = Typer()
 

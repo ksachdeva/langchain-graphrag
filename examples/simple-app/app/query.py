@@ -23,7 +23,6 @@ from common import (
     make_llm_instance,
 )
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
-from langchain_core.output_parsers.string import StrOutputParser
 
 from langchain_graphrag.query.global_search import GlobalSearch
 from langchain_graphrag.query.global_search.community_weight_calculator import (
