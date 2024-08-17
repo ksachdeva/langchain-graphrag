@@ -1,12 +1,19 @@
 site_name: GraphRAG
 theme:
-  name: readthedocs
+  name: material
   highlightjs: true
 plugins:
   - search
+  - gen-files:
+      scripts:
+        - scripts/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - section-index
   - mkdocstrings:
       handlers:
         python:
+          paths: [src]
           options:
             docstring_style: sphinx
             show_submodules: true
@@ -18,3 +25,4 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Overview: overview.md
+  - API Reference: reference/

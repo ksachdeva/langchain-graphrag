@@ -29,6 +29,10 @@ dev-dependencies = [
     "mkdocstrings[python]>=0.25.2",
     "markdown-include>=0.8.1",
     "pre-commit>=3.8.0",
+    "mkdocs-gen-files>=0.5.0",
+    "mkdocs-literate-nav>=0.6.1",
+    "mkdocs-section-index>=0.3.9",
+    "mkdocs-material>=9.5.31",
 ]
 
 [tool.hatch.metadata]
