@@ -81,7 +81,7 @@ class TextUnitsArtifactsGenerator:
         ).drop("_merge", axis=1)
 
         def _run_embedder(series: pd.Series) -> None:
-            chunk_to_embedd = series["text"]
+            chunk_to_embedd = series["text_unit"]
             chunk_id = series["id"]
 
             # Bug in langchain vectorstore retrival that

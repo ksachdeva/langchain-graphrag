@@ -10,9 +10,10 @@ _LOGGER = logging.getLogger(__name__)
 
 class SelectedTextUnit(TypedDict):
     id: str
+    short_id: str
     entity_score: float
     relationship_score: int
-    text: str
+    text_unit: str
 
 
 def compute_relationship_score(
@@ -50,7 +51,7 @@ class TextUnitsSelector:
                 entity.title,
             )
 
-            text = df_texts_units_subset["text"].iloc[0]
+            text_unit = df_texts_units_subset["text_unit"].iloc[0]
             short_id = df_texts_units_subset.index.to_numpy()[0]
 
             return SelectedTextUnit(
@@ -58,7 +59,7 @@ class TextUnitsSelector:
                 short_id=short_id,
                 entity_score=entity.score,
                 relationship_score=relationship_score,
-                text=text,
+                text_unit=text_unit,
             )
 
         def _process_entity(entity) -> None:  # noqa: ANN001

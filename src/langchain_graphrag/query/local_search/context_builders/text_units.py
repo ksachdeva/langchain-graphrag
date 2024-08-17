@@ -29,8 +29,8 @@ class TextUnitsContextBuilder:
         context_text += self._column_delimiter.join(header) + "\n"
         token_count = self._token_counter.count_tokens(context_text)
 
-        for text_unit in text_units.itertuples():
-            new_context = [str(text_unit.short_id), text_unit.text]
+        for row in text_units.itertuples():
+            new_context = [str(row.short_id), row.text_unit]
             new_context_text = self._column_delimiter.join(new_context) + "\n"
 
             new_token_count = self._token_counter.count_tokens(new_context_text)

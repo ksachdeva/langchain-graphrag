@@ -9,10 +9,10 @@ from langchain_text_splitters import TextSplitter
 from tqdm import tqdm
 
 
-class TextUnit(TypedDict):
+class _TextUnit(TypedDict):
     id: str
     document_id: str
-    text: str
+    text_unit: str
 
 
 class TextUnitExtractor:
@@ -20,7 +20,7 @@ class TextUnitExtractor:
         self._text_splitter = text_splitter
 
     def run(self, documents: list[Document]) -> pd.DataFrame:
-        response: list[TextUnit] = []
+        response: list[_TextUnit] = []
 
         # TODO: Parallize this
         for document in tqdm(documents, desc="Processing documents ..."):
@@ -30,10 +30,10 @@ class TextUnitExtractor:
 
             for t in tqdm(text_units, desc="Extracting text units ..."):
                 response.append(  # noqa: PERF401
-                    TextUnit(
+                    _TextUnit(
                         document_id=document_id,
                         id=str(uuid.uuid4()),
-                        text=t,
+                        text_unit=t,
                     )
                 )
 
