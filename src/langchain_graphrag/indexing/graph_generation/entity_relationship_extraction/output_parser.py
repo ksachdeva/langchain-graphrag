@@ -1,3 +1,5 @@
+"""Default OutputParser for Entity Relationship Extraction."""
+
 import html
 import numbers
 import re
@@ -7,8 +9,8 @@ from typing import Any
 import networkx as nx
 from langchain_core.output_parsers import BaseOutputParser
 
-ENTITY_ATTRIBUTES_LENGTH = 4
-RELATIONSHIP_ATTRIBUTES_LENGTH = 5
+_ENTITY_ATTRIBUTES_LENGTH = 4
+_RELATIONSHIP_ATTRIBUTES_LENGTH = 5
 
 
 def _clean_str(input_str: Any) -> str:
@@ -27,12 +29,26 @@ def _unpack_descriptions(data: Mapping) -> list[str]:
 
 
 class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
+    """OutputParser for extracting entities and relationships.
+
+    This parses the output from the LLM based on the conventions & formats
+    used in the default prompt.
+
+    Note:
+        You would not use this class directly.
+
+
+    Attributes:
+        tuple_delimiter (str): Delimiter used to separate attributes within a record.
+        record_delimiter (str): Delimiter used to separate records.
+    """
+
     tuple_delimiter: str
     record_delimiter: str
 
     def _process_entity(self, record_attributes: list[str], graph: nx.Graph) -> None:
         if (record_attributes[0] != '"entity"') or (
-            len(record_attributes) < ENTITY_ATTRIBUTES_LENGTH
+            len(record_attributes) < _ENTITY_ATTRIBUTES_LENGTH
         ):
             return
 
@@ -67,7 +83,7 @@ class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
     ) -> None:
         if (
             record_attributes[0] != '"relationship"'
-            or len(record_attributes) < RELATIONSHIP_ATTRIBUTES_LENGTH
+            or len(record_attributes) < _RELATIONSHIP_ATTRIBUTES_LENGTH
         ):
             return
 
@@ -116,6 +132,14 @@ class EntityExtractionOutputParser(BaseOutputParser[nx.Graph]):
         self._process_relationship(record_attributes, graph)
 
     def parse(self, text: str) -> nx.Graph:
+        """Parses the given text and returns a networkx Graph object.
+
+        Parameters:
+            text (str): The text to be parsed.
+
+        Returns:
+            The parsed graph object.
+        """
         graph: nx.Graph = nx.Graph()
         records = [r.strip() for r in text.split(self.record_delimiter)]
         for record in records:

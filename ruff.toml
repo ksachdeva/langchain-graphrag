@@ -75,10 +75,10 @@ ignore = [
     "TCH001",
     "TCH002",
     "PLR0913",
-    "FIX002", # Line contains TODO, consider resolving the issue
-    "TD002",  # Missing author in TODO;
-    "TD003",  # Missing issue link on the line following this TODO
-    "S101",   # Use of `assert` detected
+    "FIX002",  # Line contains TODO, consider resolving the issue
+    "TD002",   # Missing author in TODO;
+    "TD003",   # Missing issue link on the line following this TODO
+    "S101",    # Use of `assert` detected
 ]
 
 
@@ -101,3 +101,6 @@ skip-magic-trailing-comma = false
 
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
+
+[lint.pydocstyle]
+convention = "google"
