@@ -12,7 +12,7 @@ from typing_extensions import Unpack
 from langchain_graphrag.query.global_search.community_report import CommunityReport
 from langchain_graphrag.types.prompts import PromptBuilder
 
-from .output_parser import KeyPointsOutputParser
+from ._output_parser import KeyPointsOutputParser
 from ._system_prompt import MAP_SYSTEM_PROMPT
 
 _REPORT_TEMPLATE = """

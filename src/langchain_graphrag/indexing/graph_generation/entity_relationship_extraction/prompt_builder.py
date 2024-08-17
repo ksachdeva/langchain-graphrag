@@ -10,7 +10,7 @@ from typing_extensions import Unpack
 from langchain_graphrag.types.prompts import PromptBuilder
 
 from ._default_prompts import DEFAULT_ER_EXTRACTION_PROMPT
-from .output_parser import EntityExtractionOutputParser
+from ._output_parser import EntityExtractionOutputParser
 
 _DEFAULT_TUPLE_DELIMITER = "<|>"
 _DEFAULT_RECORD_DELIMITER = "##"

@@ -11,7 +11,7 @@ from langchain_graphrag.types.graphs.community import Community
 from langchain_graphrag.types.prompts import PromptBuilder
 
 from ._default_prompts import DEFAULT_PROMPT
-from .output_parser import CommunityReportOutputParser
+from ._output_parser import CommunityReportOutputParser
 from .utils import get_info
 
 
