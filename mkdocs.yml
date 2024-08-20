@@ -34,6 +34,10 @@ nav:
   - Home: index.md
   - Guides:
     - Text Unit Extraction: guides/text_units_extraction.ipynb
+    - Graph Generation:
+        - Overview: guides/graph_extraction/index.md
+        - Entity Relationship Extraction: guides/graph_extraction/er_extraction.ipynb
+        - Graph Generator: guides/graph_extraction/graph_generator.ipynb
     
   - API Reference: reference/
 
