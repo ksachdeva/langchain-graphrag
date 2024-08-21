@@ -4,9 +4,6 @@
 )](https://langchain-graphrag.readthedocs.io/en/latest/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
-
-** WORK IN PROGRESS **
-
 This is an implementation of GraphRAG as described in
 
 https://arxiv.org/pdf/2404.16130
@@ -19,21 +16,29 @@ https://github.com/microsoft/graphrag/
 
 ## Why re-implementation 🤔?
 
-The primary reasons for re-implementing:
+### Personal Preference
 
-* Develop better understanding of the intricacies of the paper by implementing it
-* Official implementation
-    - is not built upon popular frameworks like langchain, llamaIndex etc
-    - is bit difficult to understand because of reliance on `datashaper` package
-    - does not support models other than OpenAI or AzureOpenAI
+While I generally prefer utilizing and refining existing implementations, as re-implementation often isn't optimal, I decided to take a different approach after encountering several challenges with the official version.
 
-## Install (Not Recommended yet!)
+### Issues with the Official Implementation
 
-Note - this is work in progress so installing the package is not recommended yet.
-It would be better to clone the repo and try out current state of the code.
-See below for more details.
+- Lacks integration with popular frameworks like LangChain, LlamaIndex, etc.
+- Complexity due to dependence on the datashaper package, making it harder to understand.
+- Limited to OpenAI and AzureOpenAI models, with no support for other providers.
 
-I published the package so as to reserve the name. Clone the repo and install the package locally.
+### Why reling on established frameworks like LangChain?
+
+Using an established foundation like LangChain offers numerous benefits. It abstracts various providers, whether related to LLMs, embeddings, vector stores, etc., allowing for easy component swapping without altering core logic or adding complex support. More importantly, a solid foundation like this lets you focus on the problem's core logic rather than reinventing the wheel.
+
+LangChain also supports advanced features like batching and streaming, provided your components align with the framework’s guidelines. For instance, using chains (LCEL) allows you to take full advantage of these capabilities.
+
+### Modularity & Extensibility focused design
+
+The APIs are designed to be modular and extensible. You can replace any component with your own implementation as long as it implements the required interface. 
+
+Given the nature of the domain, this is important for conducting experiments by swapping out various components.
+
+## Install 
 
 ```bash
 pip install langchain-graphrag
@@ -49,7 +54,72 @@ This is the core library that implements the GraphRAG paper. It is built on top 
 
 The concepts described in GraphRAG paper are implemented in a modular fashion with easy extensibility and replacement in mind.
 
-To use the development version (Recommended as it is under active development):
+#### An example code for local search using the API
+
+Below is a snippet taken from the `example-app` to show the style of API
+and extensibility offered by the library.
+
+Almost all the components (classes/functions) can be replaced by your own
+implementations. The library is designed to be modular and extensible.
+
+```python
+# Reload the vector Store that stores
+# the entity name & description embeddings
+entities_vector_store = ChromaVectorStore(
+    collection_name="entity_name_description",
+    persist_directory=str(vector_store_dir),
+    embedding_function=make_embedding_instance(
+        embedding_type=embedding_type,
+        embedding_model=embedding_model,
+        cache_dir=cache_dir,
+    ),
+)
+
+# Build the Context Selector using the default
+# components; You can supply the various components
+# and achieve as much extensibility as you want
+# Below builds the one using default components.
+context_selector = ContextSelector.build_default(
+    entities_vector_store=entities_vector_store,
+    entities_top_k=10,
+    community_level=cast(CommunityLevel, level),
+)
+
+# Context Builder is responsible for taking the
+# result of Context Selector & building the
+# actual context to be inserted into the prompt
+# Keeping these two separate further increases
+# extensibility & maintainability
+context_builder = ContextBuilder.build_default(
+    token_counter=TiktokenCounter(),
+)
+
+# load the artifacts
+artifacts = load_artifacts(artifacts_dir)
+
+# Make a langchain retriever that relies on
+# context selection & builder
+retriever = LocalSearchRetriever(
+    context_selector=context_selector,
+    context_builder=context_builder,
+    artifacts=artifacts,
+)
+
+# Get a langchain chain to do local search
+search_chain = make_local_search_chain(
+    prompt_builder=LocalSearchPromptBuilder(),
+    llm=make_llm_instance(llm_type, llm_model, cache_dir),
+    retriever=retriever,
+)
+
+# you could invoke
+# print(search_chain.invoke(query))
+
+# or, you could stream
+for chunk in search_chain.stream(query):
+    print(chunk, end="", flush=True)
+```
+
 
 #### Clone the repo
 
@@ -106,3 +176,13 @@ rye run simple-app-local-search --query "Who is Scrooge, and what are his main r
 ```
 
 See `examples/simple-app/README.md` for more details.
+
+## Roadmap / Things to do
+
+The state of the library is far from complete. 
+
+Here are some of the things that need to be done to make it more useful:
+
+- [ ] Add more guides
+- [ ] Document the APIs
+- [ ] Add more tests
