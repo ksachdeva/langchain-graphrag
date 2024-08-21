@@ -10,6 +10,11 @@ Normally `rye sync` at the root of the repo will install all the dependenceis
 
 ## Run
 
+**Note**:
+
+Make sure to rename `.env.example` with `.env` if you are using OpenAI or AzureOpenAI
+and fill in the necessary environment variables.
+
 ```bash
 # assuming you are at the root of the repo
 python examples/simple-app/app/main.py --help

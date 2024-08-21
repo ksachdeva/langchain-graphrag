@@ -149,6 +149,11 @@ That said, the way core library is written you can easily replace any component 
 your own implementation i.e. your choice of LLM, embedding models etc. Even some of
 the classes as long as they implement the required interface.
 
+**Note**:
+
+Make sure to rename `.env.example` with `.env` if you are using OpenAI or AzureOpenAI
+and fill in the necessary environment variables.
+
 ```bash
 # To generate the index
 # default set azure_openai/gpt4-o/text-embedding-3-small
