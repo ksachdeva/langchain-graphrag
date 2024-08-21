@@ -30,9 +30,13 @@ from langchain_graphrag.query.global_search.community_weight_calculator import (
 )
 from langchain_graphrag.query.global_search.key_points_aggregator import (
     KeyPointsAggregator,
+    KeyPointsAggregatorPromptBuilder,
+    KeyPointsContextBuilder,
 )
 from langchain_graphrag.query.global_search.key_points_generator import (
+    CommunityReportContextBuilder,
     KeyPointsGenerator,
+    KeyPointsGeneratorPromptBuilder,
 )
 from langchain_graphrag.query.local_search import (
     LocalSearchPromptBuilder,
@@ -70,25 +74,38 @@ def global_search(
 ):
     artifacts_dir = output_dir / "artifacts"
 
-    points_generator = KeyPointsGenerator.build_default(
-        llm=make_llm_instance(llm_type, llm_model, cache_dir)
-    )
+    artifacts = load_artifacts(artifacts_dir)
 
-    points_aggregator = KeyPointsAggregator.build_default(
-        llm=make_llm_instance(llm_type, llm_model, cache_dir)
-    )
-
-    searcher = GlobalSearch(
+    report_context_builder = CommunityReportContextBuilder(
         community_level=cast(CommunityLevel, level),
         weight_calculator=CommunityWeightCalculator(),
-        key_points_generator=points_generator,
-        key_points_aggregator=points_aggregator,
+        artifacts=artifacts,
     )
 
-    artifacts = load_artifacts(artifacts_dir)
-    response = searcher.invoke(query, artifacts)
+    kp_generator = KeyPointsGenerator(
+        llm=make_llm_instance(llm_type, llm_model, cache_dir),
+        prompt_builder=KeyPointsGeneratorPromptBuilder(),
+        context_builder=report_context_builder,
+    )
 
-    print(response)
+    kp_aggregator = KeyPointsAggregator(
+        llm=make_llm_instance(llm_type, llm_model, cache_dir),
+        prompt_builder=KeyPointsAggregatorPromptBuilder(),
+        context_builder=KeyPointsContextBuilder(),
+    )
+
+    global_search = GlobalSearch(
+        kp_generator=kp_generator,
+        kp_aggregator=kp_aggregator,
+    )
+
+    # A synchronous invoke
+    # response = global_search.invoke(query)
+    # print(response)
+
+    # A streaming invoke
+    for chunk in global_search.stream(query):
+        print(chunk, end="", flush=True)
 
 
 @app.command()

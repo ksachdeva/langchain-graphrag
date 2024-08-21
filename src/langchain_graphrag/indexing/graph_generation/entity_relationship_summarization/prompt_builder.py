@@ -6,12 +6,12 @@ from langchain_core.output_parsers.string import StrOutputParser
 from langchain_core.prompts import BasePromptTemplate, PromptTemplate
 from typing_extensions import Unpack
 
-from langchain_graphrag.types.prompts import PromptBuilder
+from langchain_graphrag.types.prompts import IndexingPromptBuilder
 
 from ._default_prompts import DEFAULT_PROMPT
 
 
-class SummarizeDescriptionPromptBuilder(PromptBuilder):
+class SummarizeDescriptionPromptBuilder(IndexingPromptBuilder):
     def __init__(
         self,
         *,

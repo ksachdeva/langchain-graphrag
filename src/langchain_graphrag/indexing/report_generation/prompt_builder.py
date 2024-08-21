@@ -8,14 +8,14 @@ from langchain_core.prompts import BasePromptTemplate, PromptTemplate
 from typing_extensions import Unpack
 
 from langchain_graphrag.types.graphs.community import Community
-from langchain_graphrag.types.prompts import PromptBuilder
+from langchain_graphrag.types.prompts import IndexingPromptBuilder
 
 from ._default_prompts import DEFAULT_PROMPT
 from ._output_parser import CommunityReportOutputParser
 from .utils import get_info
 
 
-class CommunityReportGenerationPromptBuilder(PromptBuilder):
+class CommunityReportGenerationPromptBuilder(IndexingPromptBuilder):
     def __init__(
         self,
         *,

@@ -9,7 +9,7 @@ import pandas as pd
 from langchain_core.language_models import BaseLLM
 from tqdm import tqdm
 
-from langchain_graphrag.types.prompts import PromptBuilder
+from langchain_graphrag.types.prompts import IndexingPromptBuilder
 
 from .prompt_builder import EntityExtractionPromptBuilder
 
@@ -17,7 +17,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class EntityRelationshipExtractor:
-    def __init__(self, prompt_builder: PromptBuilder, llm: BaseLLM):
+    def __init__(self, prompt_builder: IndexingPromptBuilder, llm: BaseLLM):
         """Extracts entities and relationships from text units using a language model.
 
         Args:

@@ -4,13 +4,13 @@ import networkx as nx
 from langchain_core.language_models import BaseLLM
 from tqdm import tqdm
 
-from langchain_graphrag.types.prompts import PromptBuilder
+from langchain_graphrag.types.prompts import IndexingPromptBuilder
 
 from .prompt_builder import SummarizeDescriptionPromptBuilder
 
 
 class EntityRelationshipDescriptionSummarizer:
-    def __init__(self, prompt_builder: PromptBuilder, llm: BaseLLM):
+    def __init__(self, prompt_builder: IndexingPromptBuilder, llm: BaseLLM):
         prompt, output_parser = prompt_builder.build()
         self._summarize_chain = prompt | llm | output_parser
         self._prompt_builder = prompt_builder

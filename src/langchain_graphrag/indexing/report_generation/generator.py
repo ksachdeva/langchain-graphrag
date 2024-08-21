@@ -4,14 +4,14 @@ import networkx as nx
 from langchain_core.language_models import BaseLLM
 
 from langchain_graphrag.types.graphs.community import Community
-from langchain_graphrag.types.prompts import PromptBuilder
+from langchain_graphrag.types.prompts import IndexingPromptBuilder
 
 from .prompt_builder import CommunityReportGenerationPromptBuilder
 from .utils import CommunityReportResult
 
 
 class CommunityReportGenerator:
-    def __init__(self, prompt_builder: PromptBuilder, llm: BaseLLM):
+    def __init__(self, prompt_builder: IndexingPromptBuilder, llm: BaseLLM):
         prompt, output_parser = prompt_builder.build()
         self._chain = prompt | llm | output_parser
         self._prompt_builder = prompt_builder

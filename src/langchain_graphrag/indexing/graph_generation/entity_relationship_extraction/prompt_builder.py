@@ -7,7 +7,7 @@ from langchain_core.output_parsers.base import BaseOutputParser
 from langchain_core.prompts import BasePromptTemplate, PromptTemplate
 from typing_extensions import Unpack
 
-from langchain_graphrag.types.prompts import PromptBuilder
+from langchain_graphrag.types.prompts import IndexingPromptBuilder
 
 from ._default_prompts import DEFAULT_ER_EXTRACTION_PROMPT
 from ._output_parser import EntityExtractionOutputParser
@@ -18,7 +18,7 @@ _DEFAULT_COMPLETION_DELIMITER = "<|COMPLETE|>"
 _DEFAULT_ENTITY_TYPES = ["organization", "person", "geo", "event"]
 
 
-class EntityExtractionPromptBuilder(PromptBuilder):
+class EntityExtractionPromptBuilder(IndexingPromptBuilder):
     """PromptBuilder for Entity Relationship extraction.
 
     This implementation assumes that the prompt is a template string with the following placeholders:
