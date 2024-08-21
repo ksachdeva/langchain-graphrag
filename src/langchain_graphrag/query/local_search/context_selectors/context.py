@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 from typing import NamedTuple
 
 import pandas as pd
+from langchain_core.vectorstores import VectorStore
 
 from langchain_graphrag.indexing.artifacts import IndexerArtifacts
+from langchain_graphrag.types.graphs.community import CommunityLevel
 
 from .communities_reports import CommunitiesReportsSelector
 from .entities import EntitiesSelector
@@ -29,6 +33,24 @@ class ContextSelector:
         self._text_units_selector = text_units_selector
         self._relationships_selector = relationships_selector
         self._communities_reports_selector = communities_reports_selector
+
+    @staticmethod
+    def build_default(
+        entities_vector_store: VectorStore,
+        entities_top_k: int,
+        community_level: CommunityLevel,
+    ) -> ContextSelector:
+        return ContextSelector(
+            entities_selector=EntitiesSelector(
+                vector_store=entities_vector_store,
+                top_k=entities_top_k,
+            ),
+            text_units_selector=TextUnitsSelector(),
+            relationships_selector=RelationshipsSelector(),
+            communities_reports_selector=CommunitiesReportsSelector(
+                community_level=community_level
+            ),
+        )
 
     def run(
         self,

@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 from langchain_core.documents import Document
 
 from langchain_graphrag.query.local_search.context_selectors import (
     ContextSelectionResult,
 )
+from langchain_graphrag.types.tokens import TokenCounter
 
 from .communities_reports import CommunitiesReportsContextBuilder
 from .entities import EntitiesContextBuilder
@@ -22,6 +25,23 @@ class ContextBuilder:
         self._relationships_context_builder = realtionships_context_builder
         self._text_units_context_builder = text_units_context_builder
         self._communities_reports_context_builder = communities_reports_context_builder
+
+    @staticmethod
+    def build_default(token_counter: TokenCounter) -> ContextBuilder:
+        return ContextBuilder(
+            entities_context_builder=EntitiesContextBuilder(
+                token_counter=token_counter,
+            ),
+            realtionships_context_builder=RelationshipsContextBuilder(
+                token_counter=token_counter,
+            ),
+            text_units_context_builder=TextUnitsContextBuilder(
+                token_counter=token_counter,
+            ),
+            communities_reports_context_builder=CommunitiesReportsContextBuilder(
+                token_counter=token_counter,
+            ),
+        )
 
     def __call__(self, result: ContextSelectionResult) -> list[Document]:
         entities_document = self._entities_context_builder(result.entities)

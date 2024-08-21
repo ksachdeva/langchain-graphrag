@@ -44,18 +44,10 @@ from langchain_graphrag.query.local_search import (
     make_local_search_chain,
 )
 from langchain_graphrag.query.local_search.context_builders import (
-    CommunitiesReportsContextBuilder,
     ContextBuilder,
-    EntitiesContextBuilder,
-    RelationshipsContextBuilder,
-    TextUnitsContextBuilder,
 )
 from langchain_graphrag.query.local_search.context_selectors import (
-    CommunitiesReportsSelector,
     ContextSelector,
-    EntitiesSelector,
-    RelationshipsSelector,
-    TextUnitsSelector,
 )
 from langchain_graphrag.types.graphs.community import CommunityLevel
 from langchain_graphrag.utils import TiktokenCounter
@@ -126,6 +118,8 @@ def local_search(
     vector_store_dir = output_dir / "vector_stores"
     artifacts_dir = output_dir / "artifacts"
 
+    # Reload the vector Store that stores
+    # the entity name & description embeddings
     entities_vector_store = ChromaVectorStore(
         collection_name="entity_name_description",
         persist_directory=str(vector_store_dir),
@@ -136,38 +130,37 @@ def local_search(
         ),
     )
 
-    entities_selector = EntitiesSelector(vector_store=entities_vector_store, top_k=10)
-
-    context_selector = ContextSelector(
-        entities_selector=entities_selector,
-        text_units_selector=TextUnitsSelector(),
-        relationships_selector=RelationshipsSelector(),
-        communities_reports_selector=CommunitiesReportsSelector(
-            cast(CommunityLevel, level)
-        ),
+    # Build the Context Selector using the default
+    # components; You can supply the various components
+    # and achieve as much extensibility as you want
+    # Below builds the one using default components.
+    context_selector = ContextSelector.build_default(
+        entities_vector_store=entities_vector_store,
+        entities_top_k=10,
+        community_level=cast(CommunityLevel, level),
     )
 
-    token_counter = TiktokenCounter()
-
-    context_builder = ContextBuilder(
-        entities_context_builder=EntitiesContextBuilder(token_counter=token_counter),
-        realtionships_context_builder=RelationshipsContextBuilder(
-            token_counter=token_counter
-        ),
-        text_units_context_builder=TextUnitsContextBuilder(token_counter=token_counter),
-        communities_reports_context_builder=CommunitiesReportsContextBuilder(
-            token_counter=token_counter
-        ),
+    # Context Builder is responsible for taking the
+    # result of Context Selector & building the
+    # actual context to be inserted into the prompt
+    # Keeping these two separate further increases
+    # extensibility & maintainability
+    context_builder = ContextBuilder.build_default(
+        token_counter=TiktokenCounter(),
     )
 
+    # load the artifacts
     artifacts = load_artifacts(artifacts_dir)
 
+    # Make a langchain retriever that relies on
+    # context selection & builder
     retriever = LocalSearchRetriever(
         context_selector=context_selector,
         context_builder=context_builder,
         artifacts=artifacts,
     )
 
+    # Get a langchain chain to do local search
     search_chain = make_local_search_chain(
         prompt_builder=LocalSearchPromptBuilder(),
         llm=make_llm_instance(llm_type, llm_model, cache_dir),
