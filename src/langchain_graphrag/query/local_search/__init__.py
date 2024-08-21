@@ -1,6 +1,11 @@
 """Local Search module."""
 
 from .prompt_builder import LocalSearchPromptBuilder
-from .search import LocalSearch
+from .retriever import LocalSearchRetriever
+from .search import make_local_search_chain
 
-__all__ = ["LocalSearch", "LocalSearchPromptBuilder"]
+__all__ = [
+    "make_local_search_chain",
+    "LocalSearchPromptBuilder",
+    "LocalSearchRetriever",
+]

@@ -34,7 +34,11 @@ from langchain_graphrag.query.global_search.key_points_aggregator import (
 from langchain_graphrag.query.global_search.key_points_generator import (
     KeyPointsGenerator,
 )
-from langchain_graphrag.query.local_search import LocalSearch, LocalSearchPromptBuilder
+from langchain_graphrag.query.local_search import (
+    LocalSearchPromptBuilder,
+    LocalSearchRetriever,
+    make_local_search_chain,
+)
 from langchain_graphrag.query.local_search.context_builders import (
     CommunitiesReportsContextBuilder,
     ContextBuilder,
@@ -139,14 +143,23 @@ def local_search(
         ),
     )
 
-    searcher = LocalSearch(
-        prompt_builder=LocalSearchPromptBuilder(),
-        llm=make_llm_instance(llm_type, llm_model, cache_dir),
+    artifacts = load_artifacts(artifacts_dir)
+
+    retriever = LocalSearchRetriever(
         context_selector=context_selector,
         context_builder=context_builder,
+        artifacts=artifacts,
     )
 
-    artifacts = load_artifacts(artifacts_dir)
-    response = searcher.invoke(query, artifacts)
+    search_chain = make_local_search_chain(
+        prompt_builder=LocalSearchPromptBuilder(),
+        llm=make_llm_instance(llm_type, llm_model, cache_dir),
+        retriever=retriever,
+    )
 
-    print(response)
+    # you could invoke
+    # print(search_chain.invoke(query))
+
+    # or, you could stream
+    for chunk in search_chain.stream(query):
+        print(chunk, end="", flush=True)
