@@ -72,6 +72,7 @@ def global_search(
         community_level=cast(CommunityLevel, level),
         weight_calculator=CommunityWeightCalculator(),
         artifacts=artifacts,
+        token_counter=TiktokenCounter(),
     )
 
     kp_generator = KeyPointsGenerator(
@@ -83,7 +84,9 @@ def global_search(
     kp_aggregator = KeyPointsAggregator(
         llm=make_llm_instance(llm_type, llm_model, cache_dir),
         prompt_builder=KeyPointsAggregatorPromptBuilder(),
-        context_builder=KeyPointsContextBuilder(),
+        context_builder=KeyPointsContextBuilder(
+            token_counter=TiktokenCounter(),
+        ),
     )
 
     global_search = GlobalSearch(

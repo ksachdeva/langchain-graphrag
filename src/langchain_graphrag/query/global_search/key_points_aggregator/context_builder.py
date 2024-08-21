@@ -1,8 +1,11 @@
+import logging
+
 from langchain_core.documents import Document
 
 from langchain_graphrag.query.global_search.key_points_generator.utils import (
     KeyPointsResult,
 )
+from langchain_graphrag.utils.token_counter import TokenCounter
 
 _REPORT_TEMPLATE = """
 --- {analyst} ---
@@ -13,17 +16,48 @@ Importance Score: {score}
 
 """
 
+_LOGGER = logging.getLogger(__name__)
+
 
 class KeyPointsContextBuilder:
+    def __init__(
+        self,
+        token_counter: TokenCounter,
+        max_tokens: int = 8000,
+    ):
+        self._token_counter = token_counter
+        self._max_tokens = max_tokens
+
     def __call__(self, key_points: dict[str, KeyPointsResult]) -> list[Document]:
         documents: list[Document] = []
+        total_tokens = 0
+        max_token_limit_reached = False
         for k, v in key_points.items():
+            if max_token_limit_reached:
+                break
             for p in v.points:
                 report = _REPORT_TEMPLATE.format(
                     analyst=k,
                     score=p.score,
                     content=p.description,
                 )
-                documents.append(Document(page_content=report))
+                report_token = self._token_counter.count_tokens(report)
+                if total_tokens + report_token > self._max_tokens:
+                    _LOGGER.warning("Reached max tokens for key points aggregation ...")
+                    max_token_limit_reached = True
+                    break
+                total_tokens += report_token
+                documents.append(
+                    Document(
+                        page_content=report,
+                        metadata={"score": p.score, "analyst": k},
+                    )
+                )
 
-        return documents
+        # we now sort the documents based on the
+        # importance score of the key points
+        return sorted(
+            documents,
+            key=lambda x: x.metadata["score"],
+            reverse=True,
+        )
