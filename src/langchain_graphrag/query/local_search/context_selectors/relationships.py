@@ -57,11 +57,15 @@ def _find_in_network_relationships(
 def _find_out_network_relationships(
     df_entities: pd.DataFrame,
     df_relationships: pd.DataFrame,
+    top_k: int = 10,
     source_column_name: str = "source_id",
     target_column_name: str = "target_id",
     entity_column_name: str = "id",
 ) -> pd.DataFrame:
     entities_ids = df_entities[entity_column_name].tolist()
+
+    # top_k is budget for out-network relationships
+    relationship_budget = top_k * len(entities_ids)
 
     def filter_out_network_relationships(source: str, target: str) -> bool:
         if source in entities_ids and target not in entities_ids:
@@ -125,6 +129,9 @@ def _find_out_network_relationships(
         ascending=[False, False],
     ).reset_index(drop=True)
 
+    # time to use the budget
+    df_relationships = df_relationships.head(relationship_budget)
+
     if _LOGGER.isEnabledFor(logging.DEBUG):
         import tableprint
 
@@ -153,6 +160,7 @@ class RelationshipsSelector:
         out_network_relationships = _find_out_network_relationships(
             df_entities,
             df_relationships.copy(deep=True),
+            top_k=self._top_k_out_network,
         )
 
         return RelationshipsSelectionResult(
