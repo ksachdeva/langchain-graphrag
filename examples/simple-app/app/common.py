@@ -42,7 +42,13 @@ class EmbeddingModelType(str, Enum):
 
 class EmbeddingModel(str, Enum):
     text_embedding_3_small: str = "text-embedding-3-small"
-    nomic_embed_text: str = "nomic_embed_text"
+    nomic_embed_text: str = "nomic-embed-text"
+
+
+_EXTRACTION_CONTEXT_SIZES: dict[LLMModel, int] = {
+    LLMModel.gemma2_9b_instruct_q8_0: 8192,
+    LLMModel.gemma2_27b_instruct_q6_K: 8192,
+}
 
 
 def make_llm_instance(
@@ -81,6 +87,8 @@ def make_llm_instance(
             cache=SQLiteCache(str(cache_dir / "ollama.db")),
             temperature=temperature,
             top_p=top_p,
+            num_ctx=_EXTRACTION_CONTEXT_SIZES.get(llm_model),
+            num_predict=-1,
         )
 
     raise ValueError
