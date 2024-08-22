@@ -148,3 +148,7 @@ def load_artifacts(path: Path) -> IndexerArtifacts:
         text_units,
         communities_reports,
     )
+
+
+def get_artifacts_dir_name(llm_model: LLMModel) -> str:
+    return f"artifacts-{llm_model.name}"

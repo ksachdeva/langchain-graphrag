@@ -2,11 +2,14 @@
 # ruff: noqa: E402
 # ruff: noqa: ERA001
 
+import logging
 from pathlib import Path
 
 import typer
 from dotenv import load_dotenv
 from typer import Typer
+
+_LOGGER = logging.getLogger("main:indexer")
 
 # going to do load_dotenv() here
 # as OLLAMA_HOST needs to be in the environment
@@ -19,6 +22,7 @@ from common import (
     EmbeddingModelType,
     LLMModel,
     LLMType,
+    get_artifacts_dir_name,
     load_artifacts,
     make_embedding_instance,
     make_llm_instance,
@@ -74,6 +78,14 @@ def index(
 ):
     output_dir.mkdir(parents=True, exist_ok=True)
     cache_dir.mkdir(parents=True, exist_ok=True)
+    vector_store_dir = output_dir / "vector_stores"
+    artifacts_dir = output_dir / get_artifacts_dir_name(llm_model)
+
+    _LOGGER.info("Input file - %s", input_file)
+    _LOGGER.info("Output directory - %s", output_dir)
+    _LOGGER.info("Cache directory - %s", cache_dir)
+    _LOGGER.info("Vector store directory - %s", vector_store_dir)
+    _LOGGER.info("Artifacts directory - %s", artifacts_dir)
 
     ######### Start of creation of various objects/dependencies #############
 
@@ -112,9 +124,13 @@ def index(
 
     # Entities artifacts Generator
     # We need the vector Store (mandatory) for entities
+
+    # let's create a collection name based on
+    # the embedding model name
+    entities_collection_name = f"entity-{embedding_model.name}"
     entities_vector_store = ChromaVectorStore(
-        collection_name="entity_name_description",
-        persist_directory=str(output_dir / "vector_stores"),
+        collection_name=entities_collection_name,
+        persist_directory=str(vector_store_dir),
         embedding_function=make_embedding_instance(
             embedding_type=embedding_type,
             embedding_model=embedding_model,
@@ -134,8 +150,9 @@ def index(
     # Relationships artifacts Generator
     # VectorStore for relationships is optional
     # Below is an example if you needed one
+    # relationships_collection_name = f"relationship-{embedding_model.name}"
     # relationships_vector_store = ChromaVectorStore(
-    #     collection_name="relationship_description",
+    #     collection_name=relationships_collection_name,
     #     persist_directory=str(output_dir / "vector_stores"),
     #     embedding_function=make_embedding_instance(
     #         embedding_type=embedding_type,
@@ -164,8 +181,9 @@ def index(
     # TextUnits Artifacts Generator
     # The vector store for text units embedding is optional
     # Below is an example of how you would create it
+    # text_units_collection_name = f"text_units-{embedding_model.name}"
     # text_units_vector_store = ChromaVectorStore(
-    #     collection_name="text_units",
+    #     collection_name=text_units_collection_name,
     #     persist_directory=str(output_dir / "vector_stores"),
     #     embedding_function=make_embedding_instance(
     #         embedding_type=embedding_type,
@@ -195,7 +213,8 @@ def index(
     artifacts = indexer.run(documents)
 
     # save the artifacts
-    artifacts_dir = output_dir / "artifacts"
+    # we would append the llm model
+    # name in the artifacts directory
     artifacts_dir.mkdir(parents=True, exist_ok=True)
     save_artifacts(artifacts, artifacts_dir)
 
@@ -204,7 +223,13 @@ def index(
 
 @app.command()
 def report(
-    artifacts_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
+    artifacts_dir: Path = typer.Option(
+        ...,
+        dir_okay=True,
+        file_okay=False,
+    ),
 ):
+    _LOGGER.info("Artifacts directory - %s", artifacts_dir)
+
     artifacts: IndexerArtifacts = load_artifacts(artifacts_dir)
     artifacts.report()

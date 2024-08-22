@@ -1,12 +1,15 @@
 # ruff: noqa: B008
 # ruff: noqa: E402
 
+import logging
 from pathlib import Path
 from typing import cast
 
 import typer
 from dotenv import load_dotenv
 from typer import Typer
+
+_LOGGER = logging.getLogger("main:query")
 
 # going to do load_dotenv() here
 # as OLLAMA_HOST needs to be in the environment
@@ -18,6 +21,7 @@ from common import (
     EmbeddingModelType,
     LLMModel,
     LLMType,
+    get_artifacts_dir_name,
     load_artifacts,
     make_embedding_instance,
     make_llm_instance,
@@ -64,7 +68,9 @@ def global_search(
     query: str = typer.Option(...),
     level: int = typer.Option(2, help="Community level to search"),
 ):
-    artifacts_dir = output_dir / "artifacts"
+    artifacts_dir = output_dir / get_artifacts_dir_name(llm_model)
+
+    _LOGGER.info("Artifacts directory - %s", artifacts_dir)
 
     artifacts = load_artifacts(artifacts_dir)
 
@@ -119,12 +125,17 @@ def local_search(
     ),
 ):
     vector_store_dir = output_dir / "vector_stores"
-    artifacts_dir = output_dir / "artifacts"
+    artifacts_dir = output_dir / get_artifacts_dir_name(llm_model)
+
+    _LOGGER.info("Vector store directory - %s", vector_store_dir)
+    _LOGGER.info("Artifacts directory - %s", artifacts_dir)
 
     # Reload the vector Store that stores
     # the entity name & description embeddings
+    entities_collection_name = f"entity-{embedding_model.name}"
+    _LOGGER.info("[Vector Store] Entities Collection - %s", entities_collection_name)
     entities_vector_store = ChromaVectorStore(
-        collection_name="entity_name_description",
+        collection_name=entities_collection_name,
         persist_directory=str(vector_store_dir),
         embedding_function=make_embedding_instance(
             embedding_type=embedding_type,
