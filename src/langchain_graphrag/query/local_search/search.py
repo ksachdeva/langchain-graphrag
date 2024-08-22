@@ -12,21 +12,25 @@ def _format_docs(documents: list[Document]) -> str:
     return context_data_str
 
 
-def make_local_search_chain(
-    llm: BaseLLM,
-    prompt_builder: PromptBuilder,
-    retriever: BaseRetriever,
-) -> Runnable:
-    prompt, output_parser = prompt_builder.build()
+class LocalSearch:
+    def __init__(
+        self,
+        llm: BaseLLM,
+        prompt_builder: PromptBuilder,
+        retriever: BaseRetriever,
+    ):
+        self._llm = llm
+        self._prompt_builder = prompt_builder
+        self._retriever = retriever
 
-    search_chain: Runnable = (
-        {
-            "context_data": retriever | _format_docs,
+    def __call__(self) -> Runnable:
+        prompt, output_parser = self._prompt_builder.build()
+
+        base_chain = prompt | self._llm | output_parser
+
+        search_chain: Runnable = {
+            "context_data": self._retriever | _format_docs,
             "local_query": RunnablePassthrough(),
-        }
-        | prompt
-        | llm
-        | output_parser
-    )
+        } | base_chain
 
-    return search_chain
+        return search_chain

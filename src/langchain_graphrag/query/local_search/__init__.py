@@ -2,10 +2,10 @@
 
 from .prompt_builder import LocalSearchPromptBuilder
 from .retriever import LocalSearchRetriever
-from .search import make_local_search_chain
+from .search import LocalSearch
 
 __all__ = [
-    "make_local_search_chain",
+    "LocalSearch",
     "LocalSearchPromptBuilder",
     "LocalSearchRetriever",
 ]

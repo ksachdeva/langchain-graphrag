@@ -39,9 +39,9 @@ from langchain_graphrag.query.global_search.key_points_generator import (
     KeyPointsGeneratorPromptBuilder,
 )
 from langchain_graphrag.query.local_search import (
+    LocalSearch,
     LocalSearchPromptBuilder,
     LocalSearchRetriever,
-    make_local_search_chain,
 )
 from langchain_graphrag.query.local_search.context_builders import (
     ContextBuilder,
@@ -163,12 +163,14 @@ def local_search(
         artifacts=artifacts,
     )
 
-    # Get a langchain chain to do local search
-    search_chain = make_local_search_chain(
+    local_search = LocalSearch(
         prompt_builder=LocalSearchPromptBuilder(),
         llm=make_llm_instance(llm_type, llm_model, cache_dir),
         retriever=retriever,
     )
+
+    # get the chain
+    search_chain = local_search()
 
     # you could invoke
     # print(search_chain.invoke(query))

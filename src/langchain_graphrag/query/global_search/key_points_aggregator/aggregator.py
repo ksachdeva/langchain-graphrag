@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import operator
 from functools import partial
 
@@ -28,30 +26,6 @@ def _kp_result_to_docs(
     return context_builder(key_points)
 
 
-def make_key_points_aggregator_chain(
-    llm: BaseLLM,
-    prompt_builder: PromptBuilder,
-    context_builder: KeyPointsContextBuilder,
-) -> Runnable:
-    kp_lambda = partial(_kp_result_to_docs, context_builder=context_builder)
-
-    prompt, output_parser = prompt_builder.build()
-
-    search_chain: Runnable = (
-        {
-            "report_data": operator.itemgetter("report_data")
-            | RunnableLambda(kp_lambda)
-            | _format_docs,
-            "global_query": operator.itemgetter("global_query"),
-        }
-        | prompt
-        | llm
-        | output_parser
-    )
-
-    return search_chain
-
-
 class KeyPointsAggregator:
     def __init__(
         self,
@@ -64,8 +38,19 @@ class KeyPointsAggregator:
         self._context_builder = context_builder
 
     def __call__(self) -> Runnable:
-        return make_key_points_aggregator_chain(
-            llm=self._llm,
-            prompt_builder=self._prompt_builder,
+        kp_lambda = partial(
+            _kp_result_to_docs,
             context_builder=self._context_builder,
         )
+
+        prompt, output_parser = self._prompt_builder.build()
+        base_chain = prompt | self._llm | output_parser
+
+        search_chain: Runnable = {
+            "report_data": operator.itemgetter("report_data")
+            | RunnableLambda(kp_lambda)
+            | _format_docs,
+            "global_query": operator.itemgetter("global_query"),
+        } | base_chain
+
+        return search_chain
