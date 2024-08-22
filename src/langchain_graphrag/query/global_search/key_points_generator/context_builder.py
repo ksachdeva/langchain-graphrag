@@ -88,11 +88,11 @@ class CommunityReportContextBuilder:
             report_str_token_count = self._token_counter.count_tokens(report_str)
 
             if token_count + report_str_token_count > self._max_tokens:
-                _LOGGER.debug("Reached max tokens for a community report call ...")
+                _LOGGER.warning("Reached max tokens for a community report call ...")
                 # we cut a new document here
                 documents.append(
                     Document(
-                        page_content="\n\n".join(report_str_accumulated),
+                        page_content="\n".join(report_str_accumulated),
                         metadata={"token_count": token_count},
                     )
                 )
@@ -102,5 +102,13 @@ class CommunityReportContextBuilder:
             else:
                 token_count += report_str_token_count
                 report_str_accumulated.append(report_str)
+
+        if report_str_accumulated:
+            documents.append(
+                Document(
+                    page_content="\n".join(report_str_accumulated),
+                    metadata={"token_count": token_count},
+                )
+            )
 
         return documents
