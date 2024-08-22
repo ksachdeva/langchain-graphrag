@@ -36,6 +36,8 @@ class CommunitiesReportsSelector:
         # number of selected entities that belong to a community
         community_to_entities_count: dict[CommunityId, int] = {}
         for entity in df_entities.itertuples():
+            if entity.communities is None:
+                continue
             for community in entity.communities:
                 if community in selected_communities:
                     community_to_entities_count[community] = (
