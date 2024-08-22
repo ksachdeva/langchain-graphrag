@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+
 from langchain_core.documents import Document
 
 from langchain_graphrag.query.local_search.context_selectors import (
@@ -11,6 +13,8 @@ from .communities_reports import CommunitiesReportsContextBuilder
 from .entities import EntitiesContextBuilder
 from .relationships import RelationshipsContextBuilder
 from .text_units import TextUnitsContextBuilder
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class ContextBuilder:
@@ -52,9 +56,31 @@ class ContextBuilder:
         communities_reports_document = self._communities_reports_context_builder(
             result.communities_reports
         )
-        return [
+
+        documents = [
             entities_document,
             relationships_document,
             text_units_document,
             communities_reports_document,
         ]
+
+        if _LOGGER.isEnabledFor(logging.DEBUG):
+            import tableprint
+
+            rows = []
+            tableprint.banner("Context Token Usage")
+            for name, doc in zip(
+                ["Entities", "Relationships", "Text Units", "Communities Reports"],
+                [
+                    entities_document,
+                    relationships_document,
+                    text_units_document,
+                    communities_reports_document,
+                ],
+                strict=True,
+            ):
+                rows.append([name, doc.metadata["token_count"]])
+
+            tableprint.table(rows, ["Context", "Token Count"])
+
+        return documents

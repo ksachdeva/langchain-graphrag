@@ -111,4 +111,14 @@ class CommunityReportContextBuilder:
                 )
             )
 
+        if _LOGGER.isEnabledFor(logging.DEBUG):
+            import tableprint
+
+            rows = []
+            tableprint.banner("KP Generation Context Token Usage")
+            for index, doc in enumerate(documents):
+                rows.append([f"Report {index}", doc.metadata["token_count"]])
+
+            tableprint.table(rows, ["Reports", "Token Count"])
+
         return documents

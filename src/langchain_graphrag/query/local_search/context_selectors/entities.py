@@ -42,9 +42,10 @@ class EntitiesSelector:
             .reset_index(drop=True)
         )
 
-        if _LOGGER.getEffectiveLevel() == logging.DEBUG:
-            _LOGGER.debug(
-                f"\n\t ==Selected entities==\n {selected_entities[[ 'title', 'degree', 'score']]}"  # noqa: E501
-            )
+        if _LOGGER.isEnabledFor(logging.DEBUG):
+            import tableprint
+
+            tableprint.banner("Selected Entities")
+            tableprint.dataframe(selected_entities[["title", "degree", "score"]])
 
         return selected_entities

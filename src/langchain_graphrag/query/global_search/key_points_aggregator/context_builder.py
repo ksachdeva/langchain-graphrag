@@ -50,14 +50,30 @@ class KeyPointsContextBuilder:
                 documents.append(
                     Document(
                         page_content=report,
-                        metadata={"score": p.score, "analyst": k},
+                        metadata={
+                            "score": p.score,
+                            "analyst": k,
+                            "token_count": report_token,
+                        },
                     )
                 )
 
         # we now sort the documents based on the
         # importance score of the key points
-        return sorted(
+        sorted_documents = sorted(
             documents,
             key=lambda x: x.metadata["score"],
             reverse=True,
         )
+
+        if _LOGGER.isEnabledFor(logging.DEBUG):
+            import tableprint
+
+            rows = []
+            tableprint.banner("KP Aggregation Context Token Usage")
+            for doc in sorted_documents:
+                rows.append([doc.metadata["analyst"], doc.metadata["token_count"]])  # noqa: PERF401
+
+            tableprint.table(rows, ["Analyst", "Token Count"])
+
+        return sorted_documents

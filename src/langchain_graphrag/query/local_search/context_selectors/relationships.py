@@ -43,12 +43,13 @@ def _find_in_network_relationships(
         by="rank", ascending=False
     ).reset_index(drop=True)
 
-    if _LOGGER.getEffectiveLevel() == logging.DEBUG:
+    if _LOGGER.isEnabledFor(logging.DEBUG):
+        import tableprint
+
         how_many = len(df_relationships)
-        _LOGGER.debug(f"\nFound {how_many} in-network relationships ...")
-        _LOGGER.debug(
-            f"\n\t ==Selected In Network Relationships==\n {df_relationships[['source', 'target', 'rank']]}"  # noqa: E501
-        )
+
+        tableprint.banner(f"Selected {how_many} In-Network Relationships")
+        tableprint.dataframe(df_relationships[["source", "target", "rank"]])
 
     return df_relationships
 
@@ -124,12 +125,13 @@ def _find_out_network_relationships(
         ascending=[False, False],
     ).reset_index(drop=True)
 
-    if _LOGGER.getEffectiveLevel() == logging.DEBUG:
+    if _LOGGER.isEnabledFor(logging.DEBUG):
+        import tableprint
+
         how_many = len(df_relationships)
-        _LOGGER.debug(f"\nFound {how_many} out-network relationships ...")
-        _LOGGER.debug(
-            f"\n\t ==Selected Out Network Relationships==\n {df_relationships[['source', 'target', 'rank', 'links']]}"  # noqa: E501
-        )
+
+        tableprint.banner(f"Selected {how_many} Out-Network Relationships")
+        tableprint.dataframe(df_relationships[["source", "target", "rank", "links"]])
 
     return df_relationships
 

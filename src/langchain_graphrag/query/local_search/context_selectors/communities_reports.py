@@ -60,9 +60,14 @@ class CommunitiesReportsSelector:
                 selected_reports["selected_entities_count"] > 0
             ]
 
-        if _LOGGER.getEffectiveLevel() == logging.DEBUG:
-            _LOGGER.debug(
-                f'\n\t ==Selected Reports ==\n {selected_reports[["community_id", "level", "selected_entities_count", "rating"]]}'  # noqa: E501
+        if _LOGGER.isEnabledFor(logging.DEBUG):
+            import tableprint
+
+            tableprint.banner("Selected Reports")
+            tableprint.dataframe(
+                selected_reports[
+                    ["community_id", "level", "selected_entities_count", "rating"]
+                ]
             )
 
         return selected_reports

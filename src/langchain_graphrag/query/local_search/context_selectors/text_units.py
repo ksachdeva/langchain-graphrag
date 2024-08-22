@@ -83,9 +83,12 @@ class TextUnitsSelector:
             ascending=[False, False],
         ).reset_index(drop=True)
 
-        if _LOGGER.getEffectiveLevel() == logging.DEBUG:
-            _LOGGER.debug(
-                f"\n\t ==Selected Text units==\n {df_selected_text_units[[ 'id', 'entity_score', 'relationship_score']]}"  # noqa: E501
+        if _LOGGER.isEnabledFor(logging.DEBUG):
+            import tableprint
+
+            tableprint.banner("Selected Text units")
+            tableprint.dataframe(
+                df_selected_text_units[["id", "entity_score", "relationship_score"]]
             )
 
         return df_selected_text_units
