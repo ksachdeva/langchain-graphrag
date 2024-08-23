@@ -1,6 +1,7 @@
 # ruff: noqa: B008
 
 import os
+import sys
 from enum import Enum
 from pathlib import Path
 
@@ -45,10 +46,46 @@ class EmbeddingModel(str, Enum):
     nomic_embed_text: str = "nomic-embed-text"
 
 
-_EXTRACTION_CONTEXT_SIZES: dict[LLMModel, int] = {
+_OLLAMA_LLM_CONTEXT_SIZES: dict[LLMModel, int] = {
     LLMModel.gemma2_9b_instruct_q8_0: 8192,
     LLMModel.gemma2_27b_instruct_q6_K: 8192,
 }
+
+
+def check_required_envs(envs_to_check: list[str]):
+    for e in envs_to_check:
+        if not os.getenv(e):
+            msg = f"""
+                Please set the environment variable - {e}
+                Look in .env.example file for the required environment variables.
+                Rename the .env.example file to .env and 
+                set the values of the required environment variables.
+            """
+            print(msg)
+
+            sys.exit(-1)
+
+
+def check_if_necessary_azure_env_set():
+    azure_envs = [
+        "LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_API_KEY",
+        "LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_ENDPOINT",
+        "LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_DEPLOYMENT",
+        "LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_API_KEY",
+        "LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_ENDPOINT",
+        "LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_DEPLOYMENT",
+    ]
+
+    check_required_envs(azure_envs)
+
+
+def check_if_necessary_openai_env_set():
+    openai_envs = [
+        "LANGCHAIN_GRAPHRAG_OPENAI_CHAT_API_KEY",
+        "LANGCHAIN_GRAPHRAG_OPENAI_EMBED_API_KEY",
+    ]
+
+    check_required_envs(openai_envs)
 
 
 def make_llm_instance(
@@ -59,6 +96,7 @@ def make_llm_instance(
     top_p: float = 1.0,
 ) -> BaseLLM:
     if llm_type == LLMType.openai:
+        check_if_necessary_openai_env_set()
         return ChatOpenAI(
             model=llm_model,
             api_key=os.getenv("LANGCHAIN_GRAPHRAG_OPENAI_CHAT_API_KEY"),
@@ -68,6 +106,7 @@ def make_llm_instance(
         )
 
     if llm_type == LLMType.azure_openai:
+        check_if_necessary_azure_env_set()
         return AzureChatOpenAI(
             model=llm_model,
             api_version="2024-05-01-preview",
@@ -87,7 +126,7 @@ def make_llm_instance(
             cache=SQLiteCache(str(cache_dir / "ollama.db")),
             temperature=temperature,
             top_p=top_p,
-            num_ctx=_EXTRACTION_CONTEXT_SIZES.get(llm_model),
+            num_ctx=_OLLAMA_LLM_CONTEXT_SIZES.get(llm_model),
             num_predict=-1,
         )
 
@@ -102,11 +141,13 @@ def make_embedding_instance(
     underlying_embedding: Embeddings
 
     if embedding_type == EmbeddingModelType.openai:
+        check_if_necessary_openai_env_set()
         underlying_embedding = OpenAIEmbeddings(
             model=embedding_model,
             api_key=os.getenv("LANGCHAIN_GRAPHRAG_OPENAI_EMBED_API_KEY"),
         )
     elif embedding_type == EmbeddingModelType.azure_openai:
+        check_if_necessary_azure_env_set()
         underlying_embedding = AzureOpenAIEmbeddings(
             model=embedding_model,
             api_version="2024-02-15-preview",
