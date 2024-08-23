@@ -5,6 +5,7 @@
 import logging
 from pathlib import Path
 
+import tableprint
 import typer
 from dotenv import load_dotenv
 from typer import Typer
@@ -39,9 +40,6 @@ from langchain_graphrag.indexing.artifacts_generation import (
     EntitiesArtifactsGenerator,
     RelationshipsArtifactsGenerator,
     TextUnitsArtifactsGenerator,
-)
-from langchain_graphrag.indexing.embedding_generation.graph import (
-    Node2VectorGraphEmbeddingGenerator,  # noqa: F401
 )
 from langchain_graphrag.indexing.graph_clustering.leiden_community_detector import (
     HierarchicalLeidenCommunityDetector,
@@ -80,17 +78,26 @@ def index(
     cache_dir.mkdir(parents=True, exist_ok=True)
     vector_store_dir = output_dir / "vector_stores"
     artifacts_dir = output_dir / get_artifacts_dir_name(llm_model)
+    artifacts_dir.mkdir(parents=True, exist_ok=True)
 
-    _LOGGER.info("Input file - %s", input_file)
-    _LOGGER.info("Output directory - %s", output_dir)
-    _LOGGER.info("Cache directory - %s", cache_dir)
-    _LOGGER.info("Vector store directory - %s", vector_store_dir)
-    _LOGGER.info("Artifacts directory - %s", artifacts_dir)
+    tableprint.table(
+        [
+            ["Input file", str(input_file)],
+            ["Cache directory", str(cache_dir)],
+            ["Vector store directory", str(vector_store_dir)],
+            ["Artifacts directory", str(artifacts_dir)],
+            ["LLM Type", llm_type],
+            ["LLM Model", llm_model],
+            ["Embedding Type", embedding_type],
+            ["Embedding Model", embedding_model],
+            ["Chunk Size", chunk_size],
+            ["Chunk Overlap", chunk_overlap],
+        ]
+    )
 
     ######### Start of creation of various objects/dependencies #############
 
-    # Dataloader that loads all the text files from
-    # the supplied directory
+    # Dataloader that loads the supplied text file for indexing
     documents = TextLoader(file_path=input_file).load()
 
     # TextSplitter required by TextUnitExtractor
@@ -137,35 +144,12 @@ def index(
             cache_dir=cache_dir,
         ),
     )
-    # Graph Embedding Generator (Optional)
-    # Not used in the search implementation but you needed this is
-    # how you would create it
-    # graph_embedding_generator = Node2VectorGraphEmbeddingGenerator()
-    graph_embedding_generator = None
+
     entities_artifacts_generator = EntitiesArtifactsGenerator(
-        entities_vector_store=entities_vector_store,  # mandatory
-        graph_embedding_generator=graph_embedding_generator,  # optional
+        entities_vector_store=entities_vector_store
     )
 
-    # Relationships artifacts Generator
-    # VectorStore for relationships is optional
-    # Below is an example if you needed one
-    # relationships_collection_name = f"relationship-{embedding_model.name}"
-    # relationships_vector_store = ChromaVectorStore(
-    #     collection_name=relationships_collection_name,
-    #     persist_directory=str(output_dir / "vector_stores"),
-    #     embedding_function=make_embedding_instance(
-    #         embedding_type=embedding_type,
-    #         embedding_model=embedding_model,
-    #         cache_dir=cache_dir,
-    #     ),
-    # )
-    # Since the search implementation does not use it
-    # we pass None
-    relationships_vector_store = None
-    relationships_artifacts_generator = RelationshipsArtifactsGenerator(
-        relationships_vector_store=relationships_vector_store
-    )
+    relationships_artifacts_generator = RelationshipsArtifactsGenerator()
 
     # Community Report Generator
     report_gen_llm = make_llm_instance(llm_type, llm_model, cache_dir)
@@ -178,25 +162,7 @@ def index(
         report_writer=report_writer,
     )
 
-    # TextUnits Artifacts Generator
-    # The vector store for text units embedding is optional
-    # Below is an example of how you would create it
-    # text_units_collection_name = f"text_units-{embedding_model.name}"
-    # text_units_vector_store = ChromaVectorStore(
-    #     collection_name=text_units_collection_name,
-    #     persist_directory=str(output_dir / "vector_stores"),
-    #     embedding_function=make_embedding_instance(
-    #         embedding_type=embedding_type,
-    #         embedding_model=embedding_model,
-    #         cache_dir=cache_dir,
-    #     ),
-    # )
-    # Since the search implementation does not use it
-    # we pass None
-    text_units_vector_store = None
-    text_units_artifacts_generator = TextUnitsArtifactsGenerator(
-        vector_store=text_units_vector_store,
-    )
+    text_units_artifacts_generator = TextUnitsArtifactsGenerator()
 
     ######### End of creation of various objects/dependencies #############
 
@@ -213,11 +179,7 @@ def index(
     artifacts = indexer.run(documents)
 
     # save the artifacts
-    # we would append the llm model
-    # name in the artifacts directory
-    artifacts_dir.mkdir(parents=True, exist_ok=True)
     save_artifacts(artifacts, artifacts_dir)
-
     artifacts.report()
 
 

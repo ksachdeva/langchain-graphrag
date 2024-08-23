@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 from typing import cast
 
+import tableprint
 import typer
 from dotenv import load_dotenv
 from typer import Typer
@@ -70,7 +71,16 @@ def global_search(
 ):
     artifacts_dir = output_dir / get_artifacts_dir_name(llm_model)
 
-    _LOGGER.info("Artifacts directory - %s", artifacts_dir)
+    tableprint.table(
+        [
+            ["cache_dir", str(cache_dir)],
+            ["artifacts_dir", str(artifacts_dir)],
+            ["llm_type", llm_type],
+            ["llm_model", llm_model],
+            ["query", query],
+            ["level", level],
+        ]
+    )
 
     artifacts = load_artifacts(artifacts_dir)
 
@@ -127,8 +137,19 @@ def local_search(
     vector_store_dir = output_dir / "vector_stores"
     artifacts_dir = output_dir / get_artifacts_dir_name(llm_model)
 
-    _LOGGER.info("Vector store directory - %s", vector_store_dir)
-    _LOGGER.info("Artifacts directory - %s", artifacts_dir)
+    tableprint.table(
+        [
+            ["cache_dir", str(cache_dir)],
+            ["vector_store_dir", str(vector_store_dir)],
+            ["artifacts_dir", str(artifacts_dir)],
+            ["llm_type", llm_type],
+            ["llm_model", llm_model],
+            ["query", query],
+            ["level", level],
+            ["embedding_type", embedding_type],
+            ["embedding_model", embedding_model],
+        ]
+    )
 
     # Reload the vector Store that stores
     # the entity name & description embeddings
