@@ -1,8 +1,9 @@
-# GraphRAG
+# GraphRAG - Powered by LangChain
 
 [![Documentation build status](https://readthedocs.org/projects/langchain-graphrag/badge/?version=latest
 )](https://langchain-graphrag.readthedocs.io/en/latest/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
 
 This is an implementation of GraphRAG as described in
 
@@ -14,6 +15,11 @@ Official implementation by the authors of the paper is available at:
 
 https://github.com/microsoft/graphrag/
 
+## Guides
+
+- [Text Unit Extraction](https://langchain-graphrag.readthedocs.io/en/latest/guides/text_units_extraction/)
+- [Graph Extraction](https://langchain-graphrag.readthedocs.io/en/latest/guides/graph_extraction/)
+
 ## Why re-implementation 🤔?
 
 ### Personal Preference
@@ -23,7 +29,6 @@ While I generally prefer utilizing and refining existing implementations, as re-
 ### Issues with the Official Implementation
 
 - Lacks integration with popular frameworks like LangChain, LlamaIndex, etc.
-- Complexity due to dependence on the datashaper package, making it harder to understand.
 - Limited to OpenAI and AzureOpenAI models, with no support for other providers.
 
 ### Why reling on established frameworks like LangChain?
@@ -51,8 +56,6 @@ There are 2 projects in the repo:
 ### `langchain_graphrag`
 
 This is the core library that implements the GraphRAG paper. It is built on top of the `langchain` library.
-
-The concepts described in GraphRAG paper are implemented in a modular fashion with easy extensibility and replacement in mind.
 
 #### An example code for local search using the API
 
@@ -157,6 +160,8 @@ the classes as long as they implement the required interface.
 Make sure to rename `.env.example` with `.env` if you are using OpenAI or AzureOpenAI
 and fill in the necessary environment variables.
 
+#### Default configuration [Azure OpenAI / text-3-embedding-small]
+
 ```bash
 # To generate the index
 # default set azure_openai/gpt4-o/text-embedding-3-small
@@ -164,10 +169,23 @@ and fill in the necessary environment variables.
 rye run simple-app-indexer
 ```
 
+#### How to use it with Ollama models
+
+```bash
+rye run simple-app-indexer \
+     --llm-type ollama \
+     --llm-model gemma2:9b-instruct-q8_0 \
+     --embedding-type ollama \
+     --embedding-model nomic-embed-text 
+```
+
 ```bash
 # To see more options
 rye run simple-app-indexer --help
 ```
+
+#### Global Search
+
 
 ```bash
 # To do global search/query
@@ -175,6 +193,9 @@ rye run simple-app-indexer --help
 # you can change the model and other parameters from command line
 rye run simple-app-global-search --query "What are the top themes in this story?"
 ```
+
+#### Local Search
+
 
 ```bash
 # To do local search/query
