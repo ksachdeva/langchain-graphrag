@@ -47,7 +47,7 @@ members = ["langchain_graphrag", "examples/simple-app"]
 
 [tool.rye.scripts]
 simple-app-indexer = "python examples/simple-app/app/main.py indexer index --input-file examples/input-data/book.txt --output-dir tmp --cache-dir tmp/cache"
-simple-app-report = "python examples/simple-app/app/main.py indexer report --artifacts-dir tmp/artifacts"
+simple-app-report = "python examples/simple-app/app/main.py indexer report"
 simple-app-local-search = "python examples/simple-app/app/main.py query local-search --output-dir tmp --cache-dir tmp/cache"
 simple-app-global-search = "python examples/simple-app/app/main.py query global-search --output-dir tmp --cache-dir tmp/cache"
 
