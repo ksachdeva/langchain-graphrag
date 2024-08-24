@@ -1,5 +1,6 @@
 # ruff: noqa: B008
 
+import logging
 import os
 import sys
 from enum import Enum
@@ -21,6 +22,10 @@ from langchain_openai import (
 
 from langchain_graphrag.indexing import IndexerArtifacts
 
+_LOGGER = logging.getLogger("main:common")
+
+_OLLAMA_NUM_CTX_DEFAULT_CHOICES: dict[str, int] = {"gemma2": 8192}
+
 
 class LLMType(str, Enum):
     openai: str = "openai"
@@ -28,28 +33,10 @@ class LLMType(str, Enum):
     ollama: str = "ollama"
 
 
-class LLMModel(str, Enum):
-    gpt4o: str = "gpt-4o"
-    gpt4omini: str = "gpt-4o-mini"
-    gemma2_9b_instruct_q8_0: str = "gemma2:9b-instruct-q8_0"
-    gemma2_27b_instruct_q6_K: str = "gemma2:27b-instruct-q6_K"  # noqa: N815
-
-
 class EmbeddingModelType(str, Enum):
     openai: str = "openai"
     azure_openai: str = "azure_openai"
     ollama: str = "ollama"
-
-
-class EmbeddingModel(str, Enum):
-    text_embedding_3_small: str = "text-embedding-3-small"
-    nomic_embed_text: str = "nomic-embed-text"
-
-
-_OLLAMA_LLM_CONTEXT_SIZES: dict[LLMModel, int] = {
-    LLMModel.gemma2_9b_instruct_q8_0: 8192,
-    LLMModel.gemma2_27b_instruct_q6_K: 8192,
-}
 
 
 def check_required_envs(envs_to_check: list[str]):
@@ -90,15 +77,16 @@ def check_if_necessary_openai_env_set():
 
 def make_llm_instance(
     llm_type: LLMType,
-    llm_model: LLMModel,
+    model: str,
     cache_dir: Path,
+    ollama_num_context: int | None = None,
     temperature: float = 0.0,
     top_p: float = 1.0,
 ) -> BaseLLM:
     if llm_type == LLMType.openai:
         check_if_necessary_openai_env_set()
         return ChatOpenAI(
-            model=llm_model,
+            model=model,
             api_key=os.getenv("LANGCHAIN_GRAPHRAG_OPENAI_CHAT_API_KEY"),
             cache=SQLiteCache(str(cache_dir / "openai_cache.db")),
             temperature=temperature,
@@ -108,7 +96,7 @@ def make_llm_instance(
     if llm_type == LLMType.azure_openai:
         check_if_necessary_azure_env_set()
         return AzureChatOpenAI(
-            model=llm_model,
+            model=model,
             api_version="2024-05-01-preview",
             api_key=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_API_KEY"),
             azure_endpoint=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_CHAT_ENDPOINT"),
@@ -121,12 +109,26 @@ def make_llm_instance(
         )
 
     if llm_type == LLMType.ollama:
+        if ollama_num_context is None:
+            for k, v in _OLLAMA_NUM_CTX_DEFAULT_CHOICES.items():
+                if k in model:
+                    ollama_num_context = v
+                    _LOGGER.warning(
+                        f"******* Forcing num_context={v} for {model} *******"
+                    )
+                    break
+
+            if ollama_num_context is None:
+                _LOGGER.warning(
+                    "******* Note - Good idea to provide num_context for Ollama Model *******"
+                )
+
         return OllamaLLM(
-            model=llm_model,
-            cache=SQLiteCache(str(cache_dir / "ollama.db")),
+            model=model,
+            cache=SQLiteCache(str(cache_dir / f"ollama-{model.replace(':','-')}.db")),
             temperature=temperature,
             top_p=top_p,
-            num_ctx=_OLLAMA_LLM_CONTEXT_SIZES.get(llm_model),
+            num_ctx=ollama_num_context,
             num_predict=-1,
         )
 
@@ -135,7 +137,7 @@ def make_llm_instance(
 
 def make_embedding_instance(
     embedding_type: EmbeddingModelType,
-    embedding_model: EmbeddingModel,
+    model: str,
     cache_dir: Path,
 ) -> Embeddings:
     underlying_embedding: Embeddings
@@ -143,13 +145,13 @@ def make_embedding_instance(
     if embedding_type == EmbeddingModelType.openai:
         check_if_necessary_openai_env_set()
         underlying_embedding = OpenAIEmbeddings(
-            model=embedding_model,
+            model=model,
             api_key=os.getenv("LANGCHAIN_GRAPHRAG_OPENAI_EMBED_API_KEY"),
         )
     elif embedding_type == EmbeddingModelType.azure_openai:
         check_if_necessary_azure_env_set()
         underlying_embedding = AzureOpenAIEmbeddings(
-            model=embedding_model,
+            model=model,
             api_version="2024-02-15-preview",
             api_key=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_API_KEY"),
             azure_endpoint=os.getenv("LANGCHAIN_GRAPHRAG_AZURE_OPENAI_EMBED_ENDPOINT"),
@@ -158,10 +160,10 @@ def make_embedding_instance(
             ),
         )
     elif embedding_type == EmbeddingModelType.ollama:
-        underlying_embedding = OllamaEmbeddings(model=embedding_model)
+        underlying_embedding = OllamaEmbeddings(model=model)
 
     embedding_db_path = "sqlite:///" + str(cache_dir.joinpath("embedding.db"))
-    store = SQLStore(namespace=embedding_model, db_url=embedding_db_path)
+    store = SQLStore(namespace=model, db_url=embedding_db_path)
     store.create_schema()
 
     return CacheBackedEmbeddings.from_bytes_store(
@@ -191,5 +193,5 @@ def load_artifacts(path: Path) -> IndexerArtifacts:
     )
 
 
-def get_artifacts_dir_name(llm_model: LLMModel) -> str:
-    return f"artifacts-{llm_model.name}"
+def get_artifacts_dir_name(model: str) -> str:
+    return f"artifacts-{model.replace(':','-')}"

@@ -18,9 +18,7 @@ _LOGGER = logging.getLogger("main:query")
 load_dotenv()
 
 from common import (
-    EmbeddingModel,
     EmbeddingModelType,
-    LLMModel,
     LLMType,
     get_artifacts_dir_name,
     load_artifacts,
@@ -65,9 +63,12 @@ def global_search(
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     llm_type: LLMType = typer.Option(LLMType.azure_openai, case_sensitive=False),
-    llm_model: LLMModel = typer.Option(LLMModel.gpt4o, case_sensitive=False),
+    llm_model: str = typer.Option("gpt-4o", case_sensitive=False),
     query: str = typer.Option(...),
     level: int = typer.Option(2, help="Community level to search"),
+    ollama_num_context: int = typer.Option(
+        None, help="Context window size for ollama model"
+    ),
 ):
     artifacts_dir = output_dir / get_artifacts_dir_name(llm_model)
 
@@ -79,6 +80,10 @@ def global_search(
             ["llm_model", llm_model],
             ["query", query],
             ["level", level],
+            [
+                "Ollama Num Context",
+                "Not Provided" if ollama_num_context is None else ollama_num_context,
+            ],
         ]
     )
 
@@ -92,7 +97,12 @@ def global_search(
     )
 
     kp_generator = KeyPointsGenerator(
-        llm=make_llm_instance(llm_type, llm_model, cache_dir),
+        llm=make_llm_instance(
+            llm_type,
+            llm_model,
+            cache_dir,
+            ollama_num_context=ollama_num_context,
+        ),
         prompt_builder=KeyPointsGeneratorPromptBuilder(),
         context_builder=report_context_builder,
     )
@@ -124,14 +134,15 @@ def local_search(
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     llm_type: LLMType = typer.Option(LLMType.azure_openai, case_sensitive=False),
-    llm_model: LLMModel = typer.Option(LLMModel.gpt4o, case_sensitive=False),
+    llm_model: str = typer.Option("gpt-4o", case_sensitive=False),
     query: str = typer.Option(...),
     level: int = typer.Option(2, help="Community level to search"),
     embedding_type: EmbeddingModelType = typer.Option(
         EmbeddingModelType.azure_openai, case_sensitive=False
     ),
-    embedding_model: EmbeddingModel = typer.Option(
-        EmbeddingModel.text_embedding_3_small, case_sensitive=False
+    embedding_model: str = typer.Option("text-embedding-3-small", case_sensitive=False),
+    ollama_num_context: int = typer.Option(
+        None, help="Context window size for ollama model"
     ),
 ):
     vector_store_dir = output_dir / "vector_stores"
@@ -148,19 +159,23 @@ def local_search(
             ["level", level],
             ["embedding_type", embedding_type],
             ["embedding_model", embedding_model],
+            [
+                "Ollama Num Context",
+                "Not Provided" if ollama_num_context is None else ollama_num_context,
+            ],
         ]
     )
 
     # Reload the vector Store that stores
     # the entity name & description embeddings
-    entities_collection_name = f"entity-{embedding_model.name}"
+    entities_collection_name = f"entity-{embedding_model}"
     _LOGGER.info("[Vector Store] Entities Collection - %s", entities_collection_name)
     entities_vector_store = ChromaVectorStore(
         collection_name=entities_collection_name,
         persist_directory=str(vector_store_dir),
         embedding_function=make_embedding_instance(
             embedding_type=embedding_type,
-            embedding_model=embedding_model,
+            model=embedding_model,
             cache_dir=cache_dir,
         ),
     )
@@ -197,7 +212,12 @@ def local_search(
 
     local_search = LocalSearch(
         prompt_builder=LocalSearchPromptBuilder(),
-        llm=make_llm_instance(llm_type, llm_model, cache_dir),
+        llm=make_llm_instance(
+            llm_type,
+            llm_model,
+            cache_dir,
+            ollama_num_context=ollama_num_context,
+        ),
         retriever=retriever,
     )
 

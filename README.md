@@ -70,7 +70,7 @@ entities_vector_store = ChromaVectorStore(
     persist_directory=str(vector_store_dir),
     embedding_function=make_embedding_instance(
         embedding_type=embedding_type,
-        embedding_model=embedding_model,
+        model=embedding_model,
         cache_dir=cache_dir,
     ),
 )

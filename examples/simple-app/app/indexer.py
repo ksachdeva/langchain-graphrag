@@ -19,9 +19,7 @@ load_dotenv()
 
 
 from common import (
-    EmbeddingModel,
     EmbeddingModelType,
-    LLMModel,
     LLMType,
     get_artifacts_dir_name,
     load_artifacts,
@@ -64,15 +62,16 @@ def index(
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     llm_type: LLMType = typer.Option(LLMType.azure_openai, case_sensitive=False),
-    llm_model: LLMModel = typer.Option(LLMModel.gpt4o, case_sensitive=False),
+    llm_model: str = typer.Option("gpt-4o", case_sensitive=False),
     embedding_type: EmbeddingModelType = typer.Option(
         EmbeddingModelType.azure_openai, case_sensitive=False
     ),
-    embedding_model: EmbeddingModel = typer.Option(
-        EmbeddingModel.text_embedding_3_small, case_sensitive=False
+    embedding_model: str = typer.Option("text-embedding-3-small", case_sensitive=False),
+    chunk_size: int = typer.Option(1200, help="Chunk size for text splitting"),
+    chunk_overlap: int = typer.Option(100, help="Chunk overlap for text splitting"),
+    ollama_num_context: int = typer.Option(
+        None, help="Context window size for ollama model"
     ),
-    chunk_size: int = typer.Option(1200),
-    chunk_overlap: int = typer.Option(100),
 ):
     output_dir.mkdir(parents=True, exist_ok=True)
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -92,6 +91,10 @@ def index(
             ["Embedding Model", embedding_model],
             ["Chunk Size", chunk_size],
             ["Chunk Overlap", chunk_overlap],
+            [
+                "Ollama Num Context",
+                "Not Provided" if ollama_num_context is None else ollama_num_context,
+            ],
         ]
     )
 
@@ -134,13 +137,13 @@ def index(
 
     # let's create a collection name based on
     # the embedding model name
-    entities_collection_name = f"entity-{embedding_model.name}"
+    entities_collection_name = f"entity-{embedding_model}"
     entities_vector_store = ChromaVectorStore(
         collection_name=entities_collection_name,
         persist_directory=str(vector_store_dir),
         embedding_function=make_embedding_instance(
             embedding_type=embedding_type,
-            embedding_model=embedding_model,
+            model=embedding_model,
             cache_dir=cache_dir,
         ),
     )
