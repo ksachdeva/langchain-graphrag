@@ -3,6 +3,7 @@
 # ruff: noqa: ERA001
 
 import logging
+import os
 from pathlib import Path
 
 import tableprint
@@ -91,6 +92,7 @@ def index(
             ["Embedding Model", embedding_model],
             ["Chunk Size", chunk_size],
             ["Chunk Overlap", chunk_overlap],
+            ["OLLAMA_HOST", os.getenv("OLLAMA_HOST")],
             [
                 "Ollama Num Context",
                 "Not Provided" if ollama_num_context is None else ollama_num_context,

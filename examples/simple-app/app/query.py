@@ -2,6 +2,7 @@
 # ruff: noqa: E402
 
 import logging
+import os
 from pathlib import Path
 from typing import cast
 
@@ -80,6 +81,7 @@ def global_search(
             ["llm_model", llm_model],
             ["query", query],
             ["level", level],
+            ["OLLAMA_HOST", os.getenv("OLLAMA_HOST")],
             [
                 "Ollama Num Context",
                 "Not Provided" if ollama_num_context is None else ollama_num_context,
@@ -159,6 +161,7 @@ def local_search(
             ["level", level],
             ["embedding_type", embedding_type],
             ["embedding_model", embedding_model],
+            ["OLLAMA_HOST", os.getenv("OLLAMA_HOST")],
             [
                 "Ollama Num Context",
                 "Not Provided" if ollama_num_context is None else ollama_num_context,
