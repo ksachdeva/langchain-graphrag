@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import networkx as nx
 from langchain_core.language_models import BaseLLM
+from langchain_core.runnables.config import RunnableConfig
 
 from langchain_graphrag.types.graphs.community import Community
 from langchain_graphrag.types.prompts import IndexingPromptBuilder
@@ -11,16 +12,28 @@ from .utils import CommunityReportResult
 
 
 class CommunityReportGenerator:
-    def __init__(self, prompt_builder: IndexingPromptBuilder, llm: BaseLLM):
+    def __init__(
+        self,
+        prompt_builder: IndexingPromptBuilder,
+        llm: BaseLLM,
+        *,
+        chain_config: RunnableConfig | None = None,
+    ):
         prompt, output_parser = prompt_builder.build()
         self._chain = prompt | llm | output_parser
         self._prompt_builder = prompt_builder
+        self._chain_config = chain_config
 
     @staticmethod
-    def build_default(llm: BaseLLM) -> CommunityReportGenerator:
+    def build_default(
+        llm: BaseLLM,
+        *,
+        chain_config: RunnableConfig | None = None,
+    ) -> CommunityReportGenerator:
         return CommunityReportGenerator(
             prompt_builder=CommunityReportGenerationPromptBuilder(),
             llm=llm,
+            chain_config=chain_config,
         )
 
     def invoke(self, community: Community, graph: nx.Graph) -> CommunityReportResult:
@@ -29,4 +42,4 @@ class CommunityReportGenerator:
             graph=graph,
         )
 
-        return self._chain.invoke(input=chain_input)
+        return self._chain.invoke(input=chain_input, config=self._chain_config)

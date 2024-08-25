@@ -122,12 +122,14 @@ def index(
 
     # Entity Relationship Extractor
     entity_extractor = EntityRelationshipExtractor.build_default(
-        llm=make_llm_instance(llm_type, llm_model, cache_dir)
+        llm=make_llm_instance(llm_type, llm_model, cache_dir),
+        chain_config={"tags": ["er-extraction"]},
     )
 
     # Entity Relationship Description Summarizer
     entity_summarizer = EntityRelationshipDescriptionSummarizer.build_default(
-        llm=make_llm_instance(llm_type, llm_model, cache_dir)
+        llm=make_llm_instance(llm_type, llm_model, cache_dir),
+        chain_config={"tags": ["er-description-summarization"]},
     )
 
     # Graph Generator
@@ -164,7 +166,10 @@ def index(
 
     # Community Report Generator
     report_gen_llm = make_llm_instance(llm_type, llm_model, cache_dir)
-    report_generator = CommunityReportGenerator.build_default(llm=report_gen_llm)
+    report_generator = CommunityReportGenerator.build_default(
+        llm=report_gen_llm,
+        chain_config={"tags": ["community-report"]},
+    )
 
     report_writer = CommunityReportWriter()
 

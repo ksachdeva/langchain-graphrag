@@ -7,6 +7,7 @@ import logging
 import networkx as nx
 import pandas as pd
 from langchain_core.language_models import BaseLLM
+from langchain_core.runnables.config import RunnableConfig
 from tqdm import tqdm
 
 from langchain_graphrag.types.prompts import IndexingPromptBuilder
@@ -17,24 +18,37 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class EntityRelationshipExtractor:
-    def __init__(self, prompt_builder: IndexingPromptBuilder, llm: BaseLLM):
+    def __init__(
+        self,
+        prompt_builder: IndexingPromptBuilder,
+        llm: BaseLLM,
+        *,
+        chain_config: RunnableConfig | None = None,
+    ):
         """Extracts entities and relationships from text units using a language model.
 
         Args:
             prompt_builder (PromptBuilder): The prompt builder object used to construct the prompt for the language model.
             llm (BaseLLM): The language model used for entity and relationship extraction.
+            chain_config (RunnableConfig, optional): The configuration object for the extraction chain. Defaults to None.
 
         """
         prompt, output_parser = prompt_builder.build()
         self._extraction_chain = prompt | llm | output_parser
         self._prompt_builder = prompt_builder
+        self._chain_config = chain_config
 
     @staticmethod
-    def build_default(llm: BaseLLM) -> EntityRelationshipExtractor:
+    def build_default(
+        llm: BaseLLM,
+        *,
+        chain_config: RunnableConfig | None = None,
+    ) -> EntityRelationshipExtractor:
         """Builds and returns an instance of EntityRelationshipExtractor with default parameters.
 
         Parameters:
             llm (BaseLLM): The BaseLLM object used for entity relationship extraction.
+            chain_config (RunnableConfig, optional): The configuration object for the extraction chain. Defaults to None.
 
         Returns:
             EntityRelationshipExtractor: An instance of EntityRelationshipExtractor with default parameters.
@@ -42,6 +56,7 @@ class EntityRelationshipExtractor:
         return EntityRelationshipExtractor(
             prompt_builder=EntityExtractionPromptBuilder(),
             llm=llm,
+            chain_config=chain_config,
         )
 
     def invoke(self, text_units: pd.DataFrame) -> list[nx.Graph]:
@@ -70,7 +85,10 @@ class EntityRelationshipExtractor:
 
             chain_input = self._prompt_builder.prepare_chain_input(text_unit=text_unit)
 
-            chunk_graph = self._extraction_chain.invoke(input=chain_input)
+            chunk_graph = self._extraction_chain.invoke(
+                input=chain_input,
+                config=self._chain_config,
+            )
 
             # add the chunk_id to the nodes
             for node_names in chunk_graph.nodes():

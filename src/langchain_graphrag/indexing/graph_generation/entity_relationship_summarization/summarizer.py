@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import networkx as nx
 from langchain_core.language_models import BaseLLM
+from langchain_core.runnables.config import RunnableConfig
 from tqdm import tqdm
 
 from langchain_graphrag.types.prompts import IndexingPromptBuilder
@@ -10,16 +11,28 @@ from .prompt_builder import SummarizeDescriptionPromptBuilder
 
 
 class EntityRelationshipDescriptionSummarizer:
-    def __init__(self, prompt_builder: IndexingPromptBuilder, llm: BaseLLM):
+    def __init__(
+        self,
+        prompt_builder: IndexingPromptBuilder,
+        llm: BaseLLM,
+        *,
+        chain_config: RunnableConfig | None = None,
+    ):
         prompt, output_parser = prompt_builder.build()
         self._summarize_chain = prompt | llm | output_parser
         self._prompt_builder = prompt_builder
+        self._chain_config = chain_config
 
     @staticmethod
-    def build_default(llm: BaseLLM) -> EntityRelationshipDescriptionSummarizer:
+    def build_default(
+        llm: BaseLLM,
+        *,
+        chain_config: RunnableConfig | None = None,
+    ) -> EntityRelationshipDescriptionSummarizer:
         return EntityRelationshipDescriptionSummarizer(
             prompt_builder=SummarizeDescriptionPromptBuilder(),
             llm=llm,
+            chain_config=chain_config,
         )
 
     def invoke(self, graph: nx.Graph) -> nx.Graph:
@@ -34,7 +47,10 @@ class EntityRelationshipDescriptionSummarizer:
                 entity_name=node_name, description_list=node["description"]
             )
 
-            node["description"] = self._summarize_chain.invoke(input=chain_input)
+            node["description"] = self._summarize_chain.invoke(
+                input=chain_input,
+                config=self._chain_config,
+            )
 
         for from_node, to_node, edge in tqdm(
             graph.edges(data=True), desc="Summarizing relationship descriptions"
@@ -48,6 +64,9 @@ class EntityRelationshipDescriptionSummarizer:
                 description_list=edge["description"],
             )
 
-            edge["description"] = self._summarize_chain.invoke(input=chain_input)
+            edge["description"] = self._summarize_chain.invoke(
+                input=chain_input,
+                config=self._chain_config,
+            )
 
         return graph

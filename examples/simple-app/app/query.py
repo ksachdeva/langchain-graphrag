@@ -126,6 +126,8 @@ def global_search(
     global_search = GlobalSearch(
         kp_generator=kp_generator,
         kp_aggregator=kp_aggregator,
+        generation_chain_config={"tags": ["kp-generation"]},
+        aggregation_chain_config={"tags": ["kp-aggregation"]},
     )
 
     # A synchronous invoke
@@ -239,8 +241,8 @@ def local_search(
     search_chain = local_search()
 
     # you could invoke
-    # print(search_chain.invoke(query))
+    # print(search_chain.invoke(query, config={"tags": ["local-search"]}))
 
     # or, you could stream
-    for chunk in search_chain.stream(query):
+    for chunk in search_chain.stream(query, config={"tags": ["local-search"]}):
         print(chunk, end="", flush=True)

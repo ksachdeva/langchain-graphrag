@@ -1,5 +1,8 @@
+import logging
+
 import networkx as nx
 import pandas as pd
+from langchain_core.exceptions import OutputParserException
 from tqdm import tqdm
 
 from langchain_graphrag.indexing.report_generation import (
@@ -10,6 +13,8 @@ from langchain_graphrag.types.graphs.community import (
     Community,
     CommunityDetectionResult,
 )
+
+_LOGGER = logging.getLogger(__name__)
 
 
 def _get_entities(community: Community, graph: nx.Graph) -> list[str]:
@@ -41,7 +46,14 @@ class CommunitiesReportsArtifactsGenerator:
                     f"Generating report for level={level} commnuity_id={c.id}"
                 )
 
-                report = self._report_generator.invoke(community=c, graph=graph)
+                try:
+                    report = self._report_generator.invoke(community=c, graph=graph)
+                except OutputParserException:
+                    _LOGGER.exception(
+                        f"Failed to generate report for level={level} community_id={c.id}"
+                    )
+                    continue
+
                 report_str = self._report_writer.write(report)
                 entities = _get_entities(c, graph)
 
