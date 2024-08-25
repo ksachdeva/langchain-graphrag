@@ -160,48 +160,95 @@ the classes as long as they implement the required interface.
 Make sure to rename `.env.example` with `.env` if you are using OpenAI or AzureOpenAI
 and fill in the necessary environment variables.
 
-#### Default configuration [Azure OpenAI / text-3-embedding-small]
+#### Indexing 
 
 ```bash
-# To generate the index
-# default set azure_openai/gpt4-o/text-embedding-3-small
-# you can change the model and other parameters from command line
-rye run simple-app-indexer
-```
-
-#### How to use it with Ollama models
-
-```bash
-rye run simple-app-indexer \
-     --llm-type ollama \
-     --llm-model gemma2:9b-instruct-q8_0 \
-     --embedding-type ollama \
-     --embedding-model nomic-embed-text 
+rye run simple-app-indexer \ 
+     --llm-type azure_openai \ # other options are - openai or ollama
+     --llm-model gpt-4o \
+     --embedding-type azure_openai \ # other options are - openai or ollama
+     --embedding-model text-embedding-3-small
 ```
 
 ```bash
 # To see more options
-rye run simple-app-indexer --help
+$ rye run simple-app-indexer --help                  
+                                                                                                                                Usage: main.py indexer index [OPTIONS]                                                                                            
+                                                                                                                                   
+╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *  --input-file                                     FILE                          [default: None] [required]                    │
+│ *  --output-dir                                     DIRECTORY                     [default: None] [required]                    │
+│ *  --cache-dir                                      DIRECTORY                     [default: None] [required]                    │
+│ *  --llm-type                                       [openai|azure_openai|ollama]  [default: None] [required]                    │
+│ *  --llm-model                                      TEXT                          [default: None] [required]                    │
+│ *  --embedding-type                                 [openai|azure_openai|ollama]  [default: None] [required]                    │
+│ *  --embedding-model                                TEXT                          [default: None] [required]                    │
+│    --chunk-size                                     INTEGER                       Chunk size for text splitting [default: 1200] │
+│    --chunk-overlap                                  INTEGER                       Chunk overlap for text splitting              │
+│                                                                                   [default: 100]                                │
+│    --ollama-num-context                             INTEGER                       Context window size for ollama model          │
+│                                                                                   [default: None]                               │
+│    --enable-langsmith      --no-enable-langsmith                                  Enable Langsmith                              │
+│                                                                                   [default: no-enable-langsmith]                │
+│    --help                                                                         Show this message and exit.                   │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 #### Global Search
 
 
 ```bash
-# To do global search/query
-# defaults are azure_openai/gpt4-o/text-embedding-3-small
-# you can change the model and other parameters from command line
-rye run simple-app-global-search --query "What are the top themes in this story?"
+rye run simple-app-global-search \
+        --llm-type azure_openai \ # other options are openai or ollama
+        --llm-model gpt-4o \
+        --query "What are the top themes in this story?"
+```
+
+```bash
+$ rye run simple-app-global-search --help
+                                                                                                                       
+ Usage: main.py query global-search [OPTIONS]                                                                                                
+                                                                                                                                             
+╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *  --output-dir                                     DIRECTORY                     [default: None] [required]                              │
+│ *  --cache-dir                                      DIRECTORY                     [default: None] [required]                              │
+│ *  --llm-type                                       [openai|azure_openai|ollama]  [default: None] [required]                              │
+│ *  --llm-model                                      TEXT                          [default: None] [required]                              │
+│ *  --query                                          TEXT                          [default: None] [required]                              │
+│    --level                                          INTEGER                       Community level to search [default: 2]                  │
+│    --ollama-num-context                             INTEGER                       Context window size for ollama model [default: None]    │
+│    --enable-langsmith      --no-enable-langsmith                                  Enable Langsmith [default: no-enable-langsmith]         │
+│    --help                                                                         Show this message and exit.                             │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 #### Local Search
 
+```bash
+rye run simple-app-local-search \
+         --llm-type azure_openai \ # other options are openai or ollama
+         --llm-model gpt-4o \
+         --query "Who is Scrooge, and what are his main relationships?"
+```
 
 ```bash
-# To do local search/query
-# defaults are azure_openai/gpt4-o/text-embedding-3-small
-# you can change the model and other parameters from command line
-rye run simple-app-local-search --query "Who is Scrooge, and what are his main relationships?"
+$ rye run simple-app-local-search --help
+                                                                                                                                             
+ Usage: main.py query local-search [OPTIONS]                                                                                                 
+                                                                                                                                             
+╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *  --output-dir                                     DIRECTORY                     [default: None] [required]                              │
+│ *  --cache-dir                                      DIRECTORY                     [default: None] [required]                              │
+│ *  --llm-type                                       [openai|azure_openai|ollama]  [default: None] [required]                              │
+│ *  --llm-model                                      TEXT                          [default: None] [required]                              │
+│ *  --query                                          TEXT                          [default: None] [required]                              │
+│    --level                                          INTEGER                       Community level to search [default: 2]                  │
+│ *  --embedding-type                                 [openai|azure_openai|ollama]  [default: None] [required]                              │
+│ *  --embedding-model                                TEXT                          [default: None] [required]                              │
+│    --ollama-num-context                             INTEGER                       Context window size for ollama model [default: None]    │
+│    --enable-langsmith      --no-enable-langsmith                                  Enable Langsmith [default: no-enable-langsmith]         │
+│    --help                                                                         Show this message and exit.                             │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 See `examples/simple-app/README.md` for more details.

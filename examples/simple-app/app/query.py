@@ -64,8 +64,8 @@ app = Typer()
 def global_search(
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
-    llm_type: LLMType = typer.Option(LLMType.azure_openai, case_sensitive=False),
-    llm_model: str = typer.Option("gpt-4o", case_sensitive=False),
+    llm_type: LLMType = typer.Option(..., case_sensitive=False),
+    llm_model: str = typer.Option(..., case_sensitive=False),
     query: str = typer.Option(...),
     level: int = typer.Option(2, help="Community level to search"),
     ollama_num_context: int = typer.Option(
@@ -143,14 +143,12 @@ def global_search(
 def local_search(
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
-    llm_type: LLMType = typer.Option(LLMType.azure_openai, case_sensitive=False),
-    llm_model: str = typer.Option("gpt-4o", case_sensitive=False),
+    llm_type: LLMType = typer.Option(..., case_sensitive=False),
+    llm_model: str = typer.Option(..., case_sensitive=False),
     query: str = typer.Option(...),
     level: int = typer.Option(2, help="Community level to search"),
-    embedding_type: EmbeddingModelType = typer.Option(
-        EmbeddingModelType.azure_openai, case_sensitive=False
-    ),
-    embedding_model: str = typer.Option("text-embedding-3-small", case_sensitive=False),
+    embedding_type: EmbeddingModelType = typer.Option(..., case_sensitive=False),
+    embedding_model: str = typer.Option(..., case_sensitive=False),
     ollama_num_context: int = typer.Option(
         None, help="Context window size for ollama model"
     ),

@@ -17,12 +17,12 @@ and fill in the necessary environment variables.
 
 ```bash
 # assuming you are at the root of the repo
-python examples/simple-app/app/main.py --help
+rye run python examples/simple-app/app/main.py --help
 ```
 
 ```bash
 # assuming you are at the root of the repo
-python examples/simple-app/app/main.py indexer --input-file examples/input-data/book.txt --output-dir temp --prompts-dir examples/prompts --cache-dir temp/cache
+rye run python examples/simple-app/app/main.py indexer --input-file examples/input-data/book.txt --output-dir temp --cache-dir temp/cache
 ```
 Or, you can run it via `rye`. The below command can take additional args of simple-app
 
