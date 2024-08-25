@@ -25,6 +25,7 @@ from common import (
     load_artifacts,
     make_embedding_instance,
     make_llm_instance,
+    trace_via_langsmith,
 )
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 
@@ -70,11 +71,16 @@ def global_search(
     ollama_num_context: int = typer.Option(
         None, help="Context window size for ollama model"
     ),
+    enable_langsmith: bool = typer.Option(False, help="Enable Langsmith"),  # noqa: FBT001, FBT003
 ):
+    if enable_langsmith:
+        trace_via_langsmith()
+
     artifacts_dir = output_dir / get_artifacts_dir_name(llm_model)
 
     tableprint.table(
         [
+            ["LangSmith", str(enable_langsmith)],
             ["cache_dir", str(cache_dir)],
             ["artifacts_dir", str(artifacts_dir)],
             ["llm_type", llm_type],
@@ -146,12 +152,17 @@ def local_search(
     ollama_num_context: int = typer.Option(
         None, help="Context window size for ollama model"
     ),
+    enable_langsmith: bool = typer.Option(False, help="Enable Langsmith"),  # noqa: FBT001, FBT003
 ):
+    if enable_langsmith:
+        trace_via_langsmith()
+
     vector_store_dir = output_dir / "vector_stores"
     artifacts_dir = output_dir / get_artifacts_dir_name(llm_model)
 
     tableprint.table(
         [
+            ["LangSmith", str(enable_langsmith)],
             ["cache_dir", str(cache_dir)],
             ["vector_store_dir", str(vector_store_dir)],
             ["artifacts_dir", str(artifacts_dir)],

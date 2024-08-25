@@ -27,6 +27,7 @@ from common import (
     make_embedding_instance,
     make_llm_instance,
     save_artifacts,
+    trace_via_langsmith,
 )
 from langchain_chroma.vectorstores import Chroma as ChromaVectorStore
 from langchain_community.document_loaders import TextLoader
@@ -73,7 +74,11 @@ def index(
     ollama_num_context: int = typer.Option(
         None, help="Context window size for ollama model"
     ),
+    enable_langsmith: bool = typer.Option(False, help="Enable Langsmith"),  # noqa: FBT001, FBT003
 ):
+    if enable_langsmith:
+        trace_via_langsmith()
+
     output_dir.mkdir(parents=True, exist_ok=True)
     cache_dir.mkdir(parents=True, exist_ok=True)
     vector_store_dir = output_dir / "vector_stores"
@@ -82,6 +87,7 @@ def index(
 
     tableprint.table(
         [
+            ["LangSmith", str(enable_langsmith)],
             ["Input file", str(input_file)],
             ["Cache directory", str(cache_dir)],
             ["Vector store directory", str(vector_store_dir)],

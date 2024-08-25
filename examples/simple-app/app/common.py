@@ -24,7 +24,11 @@ from langchain_graphrag.indexing import IndexerArtifacts
 
 _LOGGER = logging.getLogger("main:common")
 
-_OLLAMA_NUM_CTX_DEFAULT_CHOICES: dict[str, int] = {"gemma2": 8192}
+_OLLAMA_NUM_CTX_DEFAULT_CHOICES: dict[str, int] = {
+    "gemma2": 8192,
+    "llama3.1": 8192,
+    "phi3.5": 8192,
+}
 
 
 class LLMType(str, Enum):
@@ -73,6 +77,16 @@ def check_if_necessary_openai_env_set():
     ]
 
     check_required_envs(openai_envs)
+
+
+def trace_via_langsmith():
+    check_required_envs(["LANGCHAIN_API_KEY"])
+
+    assert os.getenv("LANGCHAIN_API_KEY") is not None, "Required LANGCHAIN_API_KEY"
+
+    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
+    os.environ["LANGCHAIN_PROJECT"] = "langchain-graphrag"
 
 
 def make_llm_instance(
