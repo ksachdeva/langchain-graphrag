@@ -163,17 +163,13 @@ and fill in the necessary environment variables.
 #### Indexing 
 
 ```bash
-rye run simple-app-indexer \ 
-     --llm-type azure_openai \ # other options are - openai or ollama
-     --llm-model gpt-4o \
-     --embedding-type azure_openai \ # other options are - openai or ollama
-     --embedding-model text-embedding-3-small
+rye run simple-app-indexer --llm-type azure_openai --llm-model gpt-4o --embedding-type azure_openai --embedding-model text-embedding-3-small
 ```
 
 ```bash
 # To see more options
 $ rye run simple-app-indexer --help                  
-                                                                                                                                Usage: main.py indexer index [OPTIONS]                                                                                            
+Usage: main.py indexer index [OPTIONS]                                                                                            
                                                                                                                                    
 ╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ *  --input-file                                     FILE                          [default: None] [required]                    │
@@ -196,19 +192,14 @@ $ rye run simple-app-indexer --help
 
 #### Global Search
 
-
 ```bash
-rye run simple-app-global-search \
-        --llm-type azure_openai \ # other options are openai or ollama
-        --llm-model gpt-4o \
-        --query "What are the top themes in this story?"
+rye run simple-app-global-search --llm-type azure_openai --llm-model gpt-4o --query "What are the top themes in this story?"
 ```
 
 ```bash
 $ rye run simple-app-global-search --help
-                                                                                                                       
- Usage: main.py query global-search [OPTIONS]                                                                                                
-                                                                                                                                             
+Usage: main.py query global-search [OPTIONS]
+                                                                                                                                            
 ╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ *  --output-dir                                     DIRECTORY                     [default: None] [required]                              │
 │ *  --cache-dir                                      DIRECTORY                     [default: None] [required]                              │
@@ -225,16 +216,12 @@ $ rye run simple-app-global-search --help
 #### Local Search
 
 ```bash
-rye run simple-app-local-search \
-         --llm-type azure_openai \ # other options are openai or ollama
-         --llm-model gpt-4o \
-         --query "Who is Scrooge, and what are his main relationships?"
+rye run simple-app-local-search --llm-type azure_openai --llm-model gpt-4o --query "Who is Scrooge, and what are his main relationships?" --embedding-type azure_openai --embedding-model text-embedding-3-small
 ```
 
 ```bash
 $ rye run simple-app-local-search --help
-                                                                                                                                             
- Usage: main.py query local-search [OPTIONS]                                                                                                 
+Usage: main.py query local-search [OPTIONS]                                                                                                 
                                                                                                                                              
 ╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ *  --output-dir                                     DIRECTORY                     [default: None] [required]                              │
