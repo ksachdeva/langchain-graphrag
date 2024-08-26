@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "simple-app-indexing",
+            "name": "simple-app-indexing-azure",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/examples/simple-app/app/main.py",
@@ -17,16 +17,24 @@
             "args": [
                 "indexer",
                 "index",
-                "--input-dir",
-                "${workspaceFolder}/examples/input-data",
+                "--input-file",
+                "${workspaceFolder}/examples/input-data/book.txt",
                 "--output-dir",
                 "${workspaceFolder}/tmp",
                 "--cache-dir",
-                "${workspaceFolder}/tmp/cache"
+                "${workspaceFolder}/tmp/cache",
+                "--llm-type",
+                "azure_openai",
+                "--llm-model",
+                "gpt-4o",
+                "--embedding-type",
+                "azure_openai",
+                "--embedding-model",
+                "text-embedding-3-small",
             ]
         },
         {
-            "name": "simple-app-global-query",
+            "name": "simple-app-global-query-azure",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/examples/simple-app/app/main.py",
@@ -43,11 +51,15 @@
                 "--cache-dir",
                 "${workspaceFolder}/tmp/cache",
                 "--query",
-                "What are the top themes in this story?"
+                "What are the top themes in this story?",
+                "--llm-type",
+                "azure_openai",
+                "--llm-model",
+                "gpt-4o"
             ]
         },
         {
-            "name": "simple-app-local-query",
+            "name": "simple-app-local-query-azure",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/examples/simple-app/app/main.py",
@@ -64,7 +76,15 @@
                 "--cache-dir",
                 "${workspaceFolder}/tmp/cache",
                 "--query",
-                "Who is Scrooge, and what are his main relationships?"
+                "Who is Scrooge, and what are his main relationships?",
+                "--llm-type",
+                "azure_openai",
+                "--llm-model",
+                "gpt-4o",
+                "--embedding-type",
+                "azure_openai",
+                "--embedding-model",
+                "text-embedding-3-small",
             ]
         }
     ]
