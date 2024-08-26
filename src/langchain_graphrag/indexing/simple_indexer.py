@@ -78,4 +78,6 @@ class SimpleIndexer:
             relationships=df_relationships,
             text_units=df_text_units,
             communities_reports=df_communities_reports,
+            graph=graph,
+            communities=community_detection_result,
         )

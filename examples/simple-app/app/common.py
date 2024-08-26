@@ -2,6 +2,7 @@
 
 import logging
 import os
+import pickle
 import sys
 from enum import Enum
 from pathlib import Path
@@ -192,6 +193,14 @@ def save_artifacts(artifacts: IndexerArtifacts, path: Path):
     artifacts.text_units.to_parquet(f"{path}/text_units.parquet")
     artifacts.communities_reports.to_parquet(f"{path}/communities_reports.parquet")
 
+    if artifacts.graph is not None:
+        with path.joinpath("graph.pickle").open("wb") as fp:
+            pickle.dump(artifacts.graph, fp)
+
+    if artifacts.communities is not None:
+        with path.joinpath("community_info.pickle").open("wb") as fp:
+            pickle.dump(artifacts.communities, fp)
+
 
 def load_artifacts(path: Path) -> IndexerArtifacts:
     entities = pd.read_parquet(f"{path}/entities.parquet")
@@ -199,11 +208,26 @@ def load_artifacts(path: Path) -> IndexerArtifacts:
     text_units = pd.read_parquet(f"{path}/text_units.parquet")
     communities_reports = pd.read_parquet(f"{path}/communities_reports.parquet")
 
+    graph = None
+    communities = None
+
+    graph_pickled = path.joinpath("graph.pickle")
+    if graph_pickled.exists():
+        with graph_pickled.open("rb") as fp:
+            graph = pickle.load(fp)  # noqa: S301
+
+    community_info_pickled = path.joinpath("community_info.pickle")
+    if community_info_pickled.exists():
+        with community_info_pickled.open("rb") as fp:
+            communities = pickle.load(fp)  # noqa: S301
+
     return IndexerArtifacts(
         entities,
         relationships,
         text_units,
         communities_reports,
+        graph=graph,
+        communities=communities,
     )
 
 

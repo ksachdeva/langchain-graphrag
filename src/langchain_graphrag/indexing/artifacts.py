@@ -1,7 +1,10 @@
 from typing import NamedTuple
 
+import networkx as nx
 import pandas as pd
 import tableprint
+
+from langchain_graphrag.types.graphs.community import CommunityDetectionResult
 
 
 class IndexerArtifacts(NamedTuple):
@@ -9,6 +12,8 @@ class IndexerArtifacts(NamedTuple):
     relationships: pd.DataFrame
     text_units: pd.DataFrame
     communities_reports: pd.DataFrame
+    graph: nx.Graph | None = None
+    communities: CommunityDetectionResult | None = None
 
     def _entity_info(self, top_k: int) -> None:
         tableprint.banner("Entities")
