@@ -45,26 +45,26 @@ class SimpleIndexer:
         # Step 1 - Text Unit extraction
         df_base_text_units = self._text_unit_extractor.run(documents)
 
-        # Step 2 - Generate graph
-        graph = self._graph_generator.run(df_base_text_units)
+        # Step 2 - Generate graphs
+        merged_graph, summarized_graph = self._graph_generator.run(df_base_text_units)
 
         # Step 3 - Detect communities in Graph
-        community_detection_result = self._community_detector.run(graph)
+        community_detection_result = self._community_detector.run(summarized_graph)
 
         # Step 4 - Reports for detected Communities (depends on Step 2 & Step 3)
         df_communities_reports = self._communities_report_artifacts_generator.run(
             community_detection_result,
-            graph,
+            summarized_graph,
         )
 
         # Step 5 - Entities generation (depends on Step 2 & Step 3)
         df_entities = self._entities_artifacts_generator.run(
             community_detection_result,
-            graph,
+            summarized_graph,
         )
 
         # Step 6 - Relationships generation (depends on Step 2)
-        df_relationships = self._relationships_artifacts_generator.run(graph)
+        df_relationships = self._relationships_artifacts_generator.run(summarized_graph)
 
         # Step 7 - Text Units generation (depends on Steps 1, 5, 6)
         df_text_units = self._text_units_artifacts_generator.run(
@@ -78,6 +78,7 @@ class SimpleIndexer:
             relationships=df_relationships,
             text_units=df_text_units,
             communities_reports=df_communities_reports,
-            graph=graph,
+            summarized_graph=summarized_graph,
+            merged_graph=merged_graph,
             communities=community_detection_result,
         )
