@@ -60,7 +60,7 @@ app = Typer()
 
 @app.command()
 def index(
-    input_file: Path = typer.Option(..., dir_okay=False, file_okay=True),
+    input_file: Path = typer.Option(..., dir_okay=False, file_okay=True, exists=True),
     output_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     cache_dir: Path = typer.Option(..., dir_okay=True, file_okay=False),
     llm_type: LLMType = typer.Option(..., case_sensitive=False),
@@ -201,6 +201,7 @@ def index(
 def report(
     artifacts_dir: Path = typer.Option(
         ...,
+        exists=True,
         dir_okay=True,
         file_okay=False,
     ),
