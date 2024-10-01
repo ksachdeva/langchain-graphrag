@@ -41,8 +41,9 @@ class IndexerArtifacts(NamedTuple):
 
         # are there entities with degree 0
         zero_degree_entities = self.entities[self.entities["degree"] == 0]
-        tableprint.banner("Disconnected Entities")
-        tableprint.dataframe(zero_degree_entities[["title", "degree"]])
+        if not zero_degree_entities.empty:
+            tableprint.banner("Disconnected Entities")
+            tableprint.dataframe(zero_degree_entities[["title", "degree"]])
 
     def _relationships_info(self, top_k: int) -> None:
         tableprint.banner("Relationships")
