@@ -32,6 +32,12 @@ class IndexerArtifacts(NamedTuple):
             rows.append([entity_type, count])
         tableprint.table(rows, ["Type", "Count"])
 
+        # entities for which the generated type is empty string
+        empty_type_entities = self.entities[self.entities["type"] == ""]
+        if not empty_type_entities.empty:
+            tableprint.banner("Entities with Empty Type")
+            tableprint.dataframe(empty_type_entities[["title", "degree"]])
+
         # k most connected entities
         by_degree = self.entities.sort_values("degree", ascending=False)[:top_k]
 
