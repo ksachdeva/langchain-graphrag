@@ -2,7 +2,7 @@ import itertools
 from typing import Sequence, TypedDict
 
 import networkx as nx
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 from langchain_graphrag.types.graphs.community import Community
 

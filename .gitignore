@@ -169,3 +169,4 @@ outputs
 test-data
 scratch
 .DS_Store
+tmp-*
