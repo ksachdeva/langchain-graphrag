@@ -76,6 +76,7 @@ def global_search(
         True,  # noqa: FBT003
         help="Repeat instructions in the prompt",
     ),
+    output_raw: bool = typer.Option(False, help="Output raw response"),  # noqa: FBT001, FBT003
     enable_langsmith: bool = typer.Option(False, help="Enable Langsmith"),  # noqa: FBT001, FBT003
 ):
     if enable_langsmith:
@@ -99,6 +100,7 @@ def global_search(
             ],
             ["Show References", str(show_references)],
             ["Repeat Instructions In Prompt", str(repeat_instructions)],
+            ["Output Raw", str(output_raw)],
         ]
     )
 
@@ -133,6 +135,7 @@ def global_search(
         context_builder=KeyPointsContextBuilder(
             token_counter=TiktokenCounter(),
         ),
+        output_raw=output_raw,
     )
 
     global_search = GlobalSearch(
@@ -169,6 +172,7 @@ def local_search(
         True,  # noqa: FBT003
         help="Repeat instructions in the prompt",
     ),
+    output_raw: bool = typer.Option(False, help="Output raw response"),  # noqa: FBT001, FBT003
     enable_langsmith: bool = typer.Option(False, help="Enable Langsmith"),  # noqa: FBT001, FBT003
 ):
     if enable_langsmith:
@@ -196,6 +200,7 @@ def local_search(
             ],
             ["Show References", str(show_references)],
             ["Repeat Instructions In Prompt", str(repeat_instructions)],
+            ["Output Raw", str(output_raw)],
         ]
     )
 
@@ -255,6 +260,7 @@ def local_search(
             ollama_num_context=ollama_num_context,
         ),
         retriever=retriever,
+        output_raw=output_raw,
     )
 
     # get the chain

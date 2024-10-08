@@ -32,10 +32,13 @@ class KeyPointsAggregator:
         llm: BaseLLM,
         prompt_builder: PromptBuilder,
         context_builder: KeyPointsContextBuilder,
+        *,
+        output_raw: bool = False,
     ):
         self._llm = llm
         self._prompt_builder = prompt_builder
         self._context_builder = context_builder
+        self._output_raw = output_raw
 
     def __call__(self) -> Runnable:
         kp_lambda = partial(
@@ -44,7 +47,10 @@ class KeyPointsAggregator:
         )
 
         prompt, output_parser = self._prompt_builder.build()
-        base_chain = prompt | self._llm | output_parser
+        base_chain = prompt | self._llm
+
+        if not self._output_raw:
+            base_chain = base_chain | output_parser
 
         search_chain: Runnable = {
             "report_data": operator.itemgetter("report_data")
