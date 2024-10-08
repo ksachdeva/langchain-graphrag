@@ -71,6 +71,7 @@ def global_search(
     ollama_num_context: int = typer.Option(
         None, help="Context window size for ollama model"
     ),
+    show_references: bool = typer.Option(True, help="Show references in the output"),  # noqa: FBT001, FBT003
     enable_langsmith: bool = typer.Option(False, help="Enable Langsmith"),  # noqa: FBT001, FBT003
 ):
     if enable_langsmith:
@@ -92,6 +93,7 @@ def global_search(
                 "Ollama Num Context",
                 "Not Provided" if ollama_num_context is None else ollama_num_context,
             ],
+            ["Show References", str(show_references)],
         ]
     )
 
@@ -111,13 +113,15 @@ def global_search(
             cache_dir,
             ollama_num_context=ollama_num_context,
         ),
-        prompt_builder=KeyPointsGeneratorPromptBuilder(),
+        prompt_builder=KeyPointsGeneratorPromptBuilder(show_references=show_references),
         context_builder=report_context_builder,
     )
 
     kp_aggregator = KeyPointsAggregator(
         llm=make_llm_instance(llm_type, llm_model, cache_dir),
-        prompt_builder=KeyPointsAggregatorPromptBuilder(),
+        prompt_builder=KeyPointsAggregatorPromptBuilder(
+            show_references=show_references
+        ),
         context_builder=KeyPointsContextBuilder(
             token_counter=TiktokenCounter(),
         ),
@@ -152,6 +156,7 @@ def local_search(
     ollama_num_context: int = typer.Option(
         None, help="Context window size for ollama model"
     ),
+    show_references: bool = typer.Option(True, help="Show references in the output"),  # noqa: FBT001, FBT003
     enable_langsmith: bool = typer.Option(False, help="Enable Langsmith"),  # noqa: FBT001, FBT003
 ):
     if enable_langsmith:
@@ -177,6 +182,7 @@ def local_search(
                 "Ollama Num Context",
                 "Not Provided" if ollama_num_context is None else ollama_num_context,
             ],
+            ["Show References", str(show_references)],
         ]
     )
 
@@ -225,7 +231,7 @@ def local_search(
     )
 
     local_search = LocalSearch(
-        prompt_builder=LocalSearchPromptBuilder(),
+        prompt_builder=LocalSearchPromptBuilder(show_references=show_references),
         llm=make_llm_instance(
             llm_type,
             llm_model,

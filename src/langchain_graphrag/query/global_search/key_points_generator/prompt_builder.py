@@ -19,6 +19,7 @@ class KeyPointsGeneratorPromptBuilder(PromptBuilder):
         *,
         system_prompt: str | None = None,
         system_prompt_path: Path | None = None,
+        show_references: bool = True,
     ):
         self._system_prompt: str | None
         if system_prompt is None and system_prompt_path is None:
@@ -27,6 +28,7 @@ class KeyPointsGeneratorPromptBuilder(PromptBuilder):
             self._system_prompt = system_prompt
 
         self._system_prompt_path = system_prompt_path
+        self._show_references = show_references
 
     def build(self) -> tuple[BasePromptTemplate, BaseOutputParser]:
         if self._system_prompt_path:
@@ -35,7 +37,14 @@ class KeyPointsGeneratorPromptBuilder(PromptBuilder):
             assert self._system_prompt is not None
             prompt = self._system_prompt
 
-        system_template = SystemMessagePromptTemplate.from_template(prompt)
+        system_template = SystemMessagePromptTemplate.from_template(
+            prompt,
+            template_format="mustache",
+            partial_variables=dict(show_references=self._show_references),
+        )
 
-        template = ChatPromptTemplate([system_template, ("user", "{global_query}")])
+        template = ChatPromptTemplate(
+            [system_template, ("user", "{{global_query}}")],
+            template_format="mustache",
+        )
         return template, KeyPointsOutputParser()
