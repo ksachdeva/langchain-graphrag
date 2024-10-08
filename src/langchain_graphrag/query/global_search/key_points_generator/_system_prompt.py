@@ -47,6 +47,8 @@ Do not include information where the supporting evidence for it is not provided.
 
 {{context_data}}
 
+{{#repeat_instructions}}
+
 ---Goal---
 
 Generate a response consisting of a list of key points that responds to the user's question, summarizing all relevant information in the input data tables.
@@ -83,4 +85,5 @@ The response should be JSON formatted as follows:
         {"description": "Description of point 2 {{#show_references}}[Data: Reports (report ids)]{{/show_references}}", "score": score_value}
     ]
 }
+{{/repeat_instructions}}
 """

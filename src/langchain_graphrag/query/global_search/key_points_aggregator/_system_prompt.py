@@ -39,9 +39,13 @@ Do not include information where the supporting evidence for it is not provided.
 
 {{response_type}}
 
+Add sections and commentary to the response as appropriate for the length and format. Style the response in markdown.
+
 ---Analyst Reports---
 
 {{report_data}}
+
+{{#repeat_instructions}}
 
 ---Goal---
 
@@ -76,4 +80,5 @@ Do not include information where the supporting evidence for it is not provided.
 {{response_type}}
 
 Add sections and commentary to the response as appropriate for the length and format. Style the response in markdown.
+{{/repeat_instructions}}
 """

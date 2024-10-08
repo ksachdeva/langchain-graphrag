@@ -72,6 +72,10 @@ def global_search(
         None, help="Context window size for ollama model"
     ),
     show_references: bool = typer.Option(True, help="Show references in the output"),  # noqa: FBT001, FBT003
+    repeat_instructions: bool = typer.Option(  # noqa: FBT001
+        True,  # noqa: FBT003
+        help="Repeat instructions in the prompt",
+    ),
     enable_langsmith: bool = typer.Option(False, help="Enable Langsmith"),  # noqa: FBT001, FBT003
 ):
     if enable_langsmith:
@@ -94,6 +98,7 @@ def global_search(
                 "Not Provided" if ollama_num_context is None else ollama_num_context,
             ],
             ["Show References", str(show_references)],
+            ["Repeat Instructions In Prompt", str(repeat_instructions)],
         ]
     )
 
@@ -113,14 +118,17 @@ def global_search(
             cache_dir,
             ollama_num_context=ollama_num_context,
         ),
-        prompt_builder=KeyPointsGeneratorPromptBuilder(show_references=show_references),
+        prompt_builder=KeyPointsGeneratorPromptBuilder(
+            show_references=show_references, repeat_instructions=repeat_instructions
+        ),
         context_builder=report_context_builder,
     )
 
     kp_aggregator = KeyPointsAggregator(
         llm=make_llm_instance(llm_type, llm_model, cache_dir),
         prompt_builder=KeyPointsAggregatorPromptBuilder(
-            show_references=show_references
+            show_references=show_references,
+            repeat_instructions=repeat_instructions,
         ),
         context_builder=KeyPointsContextBuilder(
             token_counter=TiktokenCounter(),
@@ -157,6 +165,10 @@ def local_search(
         None, help="Context window size for ollama model"
     ),
     show_references: bool = typer.Option(True, help="Show references in the output"),  # noqa: FBT001, FBT003
+    repeat_instructions: bool = typer.Option(  # noqa: FBT001
+        True,  # noqa: FBT003
+        help="Repeat instructions in the prompt",
+    ),
     enable_langsmith: bool = typer.Option(False, help="Enable Langsmith"),  # noqa: FBT001, FBT003
 ):
     if enable_langsmith:
@@ -183,6 +195,7 @@ def local_search(
                 "Not Provided" if ollama_num_context is None else ollama_num_context,
             ],
             ["Show References", str(show_references)],
+            ["Repeat Instructions In Prompt", str(repeat_instructions)],
         ]
     )
 
@@ -231,7 +244,10 @@ def local_search(
     )
 
     local_search = LocalSearch(
-        prompt_builder=LocalSearchPromptBuilder(show_references=show_references),
+        prompt_builder=LocalSearchPromptBuilder(
+            show_references=show_references,
+            repeat_instructions=repeat_instructions,
+        ),
         llm=make_llm_instance(
             llm_type,
             llm_model,

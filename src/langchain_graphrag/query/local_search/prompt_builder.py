@@ -20,6 +20,7 @@ class LocalSearchPromptBuilder(PromptBuilder):
         system_prompt: str | None = None,
         system_prompt_path: Path | None = None,
         show_references: bool = True,
+        repeat_instructions: bool = True,
     ):
         self._system_prompt: str | None
         if system_prompt is None and system_prompt_path is None:
@@ -29,6 +30,7 @@ class LocalSearchPromptBuilder(PromptBuilder):
 
         self._system_prompt_path = system_prompt_path
         self._show_references = show_references
+        self._repeat_instructions = repeat_instructions
 
     def build(self) -> tuple[BasePromptTemplate, BaseOutputParser]:
         if self._system_prompt_path:
@@ -42,6 +44,7 @@ class LocalSearchPromptBuilder(PromptBuilder):
             partial_variables=dict(
                 response_type="Multiple Paragraphs",
                 show_references=self._show_references,
+                repeat_instructions=self._repeat_instructions,
             ),
             template_format="mustache",
         )
