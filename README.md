@@ -31,7 +31,7 @@ While I generally prefer utilizing and refining existing implementations, as re-
 - Lacks integration with popular frameworks like LangChain, LlamaIndex, etc.
 - Limited to OpenAI and AzureOpenAI models, with no support for other providers.
 
-### Why reling on established frameworks like LangChain?
+### Why relying on established frameworks like LangChain?
 
 Using an established foundation like LangChain offers numerous benefits. It abstracts various providers, whether related to LLMs, embeddings, vector stores, etc., allowing for easy component swapping without altering core logic or adding complex support. More importantly, a solid foundation like this lets you focus on the problem's core logic rather than reinventing the wheel.
 
