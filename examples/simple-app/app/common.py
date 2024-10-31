@@ -12,7 +12,7 @@ from langchain.embeddings.cache import CacheBackedEmbeddings
 from langchain_community.cache import SQLiteCache
 from langchain_community.storage import SQLStore
 from langchain_core.embeddings import Embeddings
-from langchain_core.language_models import BaseLLM
+from langchain_core.language_models import LanguageModelLike
 from langchain_ollama import OllamaEmbeddings, OllamaLLM
 from langchain_openai import (
     AzureChatOpenAI,
@@ -97,7 +97,7 @@ def make_llm_instance(
     ollama_num_context: int | None = None,
     temperature: float = 0.0,
     top_p: float = 1.0,
-) -> BaseLLM:
+) -> LanguageModelLike:
     if llm_type == LLMType.openai:
         check_if_necessary_openai_env_set()
         return ChatOpenAI(
