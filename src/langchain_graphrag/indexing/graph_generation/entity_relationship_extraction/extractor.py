@@ -6,7 +6,7 @@ import logging
 
 import networkx as nx
 import pandas as pd
-from langchain_core.language_models import BaseLLM
+from langchain_core.language_models import LanguageModelLike
 from langchain_core.runnables.config import RunnableConfig
 from tqdm import tqdm
 
@@ -21,7 +21,7 @@ class EntityRelationshipExtractor:
     def __init__(
         self,
         prompt_builder: IndexingPromptBuilder,
-        llm: BaseLLM,
+        llm: LanguageModelLike,
         *,
         chain_config: RunnableConfig | None = None,
     ):
@@ -29,7 +29,7 @@ class EntityRelationshipExtractor:
 
         Args:
             prompt_builder (PromptBuilder): The prompt builder object used to construct the prompt for the language model.
-            llm (BaseLLM): The language model used for entity and relationship extraction.
+            llm (LanguageModelLike): The language model used for entity and relationship extraction.
             chain_config (RunnableConfig, optional): The configuration object for the extraction chain. Defaults to None.
 
         """
@@ -40,14 +40,14 @@ class EntityRelationshipExtractor:
 
     @staticmethod
     def build_default(
-        llm: BaseLLM,
+        llm: LanguageModelLike,
         *,
         chain_config: RunnableConfig | None = None,
     ) -> EntityRelationshipExtractor:
         """Builds and returns an instance of EntityRelationshipExtractor with default parameters.
 
         Parameters:
-            llm (BaseLLM): The BaseLLM object used for entity relationship extraction.
+            llm (LanguageModelLike): The language model used for entity relationship extraction.
             chain_config (RunnableConfig, optional): The configuration object for the extraction chain. Defaults to None.
 
         Returns:

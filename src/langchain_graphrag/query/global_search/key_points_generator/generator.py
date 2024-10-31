@@ -1,5 +1,5 @@
 from langchain_core.documents import Document
-from langchain_core.language_models import BaseLLM
+from langchain_core.language_models import LanguageModelLike
 from langchain_core.runnables import Runnable, RunnableParallel
 
 from langchain_graphrag.types.prompts import PromptBuilder
@@ -16,7 +16,7 @@ def _format_docs(documents: list[Document]) -> str:
 class KeyPointsGenerator:
     def __init__(
         self,
-        llm: BaseLLM,
+        llm: LanguageModelLike,
         prompt_builder: PromptBuilder,
         context_builder: CommunityReportContextBuilder,
     ):

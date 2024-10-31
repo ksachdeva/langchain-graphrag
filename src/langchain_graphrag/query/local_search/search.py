@@ -1,5 +1,5 @@
 from langchain_core.documents import Document
-from langchain_core.language_models import BaseLLM
+from langchain_core.language_models import LanguageModelLike
 from langchain_core.retrievers import BaseRetriever
 from langchain_core.runnables import Runnable, RunnablePassthrough
 
@@ -15,7 +15,7 @@ def _format_docs(documents: list[Document]) -> str:
 class LocalSearch:
     def __init__(
         self,
-        llm: BaseLLM,
+        llm: LanguageModelLike,
         prompt_builder: PromptBuilder,
         retriever: BaseRetriever,
         *,

@@ -2,7 +2,7 @@ import operator
 from functools import partial
 
 from langchain_core.documents import Document
-from langchain_core.language_models import BaseLLM
+from langchain_core.language_models import LanguageModelLike
 from langchain_core.runnables import Runnable, RunnableLambda
 
 from langchain_graphrag.query.global_search.key_points_generator.utils import (
@@ -29,7 +29,7 @@ def _kp_result_to_docs(
 class KeyPointsAggregator:
     def __init__(
         self,
-        llm: BaseLLM,
+        llm: LanguageModelLike,
         prompt_builder: PromptBuilder,
         context_builder: KeyPointsContextBuilder,
         *,

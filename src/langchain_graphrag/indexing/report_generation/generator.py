@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import networkx as nx
-from langchain_core.language_models import BaseLLM
+from langchain_core.language_models import LanguageModelLike
 from langchain_core.runnables.config import RunnableConfig
 
 from langchain_graphrag.types.graphs.community import Community
@@ -15,7 +15,7 @@ class CommunityReportGenerator:
     def __init__(
         self,
         prompt_builder: IndexingPromptBuilder,
-        llm: BaseLLM,
+        llm: LanguageModelLike,
         *,
         chain_config: RunnableConfig | None = None,
     ):
@@ -26,7 +26,7 @@ class CommunityReportGenerator:
 
     @staticmethod
     def build_default(
-        llm: BaseLLM,
+        llm: LanguageModelLike,
         *,
         chain_config: RunnableConfig | None = None,
     ) -> CommunityReportGenerator:
