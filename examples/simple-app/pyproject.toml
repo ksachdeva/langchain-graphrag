@@ -16,7 +16,4 @@ authors = [{ name = "Kapil Sachdeva", email = "notan@email.com" }]
 readme = "README.md"
 requires-python = ">= 3.10"
 
-[tool.rye]
-virtual = true
-managed = true
-dev-dependencies = []
+

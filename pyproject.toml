@@ -1,5 +1,5 @@
 [project]
-name = "langchain-graphrag"
+name = "langchain-graphrag-migration-rye-to-uv"
 version = "0.0.9"
 description = "Implementation of GraphRAG (https://arxiv.org/pdf/2404.16130)"
 authors = [{ name = "Kapil Sachdeva", email = "notan@email.com" }]
@@ -10,6 +10,8 @@ dependencies = [
     "langchain-text-splitters>=0.3.0",
     "graspologic>=3.4.1",
     "tableprint>=0.9.1",
+    "poethepoet>=0.35.0",
+    "typer>=0.16.0",
 ]
 readme = "README.md"
 requires-python = ">= 3.10"
@@ -18,13 +20,63 @@ requires-python = ">= 3.10"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.rye]
-managed = true
+[project.urls]
+repository = "https://github.com/dineshkrishna9999/langchain-graphrag.git"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/langchain_graphrag"]
+
+[tool.uv.workspace]
+members = ["examples/simple-app"]
+
+
+[tool.poe.tasks]
+#  Environment & installation
+install-main = "uv pip install -e ."
+install-example = "uv pip install -e ./examples/simple-app"
+install-dev ="uv pip install --group dev"
+
+simple-app-help = "python examples/simple-app/app/main.py --help"
+simple-app-indexer = "python examples/simple-app/app/main.py indexer index"
+simple-app-query-help = "python examples/simple-app/app/main.py query --help"
+
+simple-app-indexer-ollama = "python examples/simple-app/app/main.py indexer index --input-file examples/input-data/book.txt --output-dir tmp --cache-dir tmp/cache --llm-type ollama --llm-model llama2 --embedding-type ollama --embedding-model llama2"
+simple-app-indexer-azure = "python examples/simple-app/app/main.py indexer index --input-file examples/input-data/book.txt --output-dir tmp --cache-dir tmp/cache --llm-type azure_openai --llm-model gpt-4o --embedding-type azure_openai --embedding-model text-embedding-3-large"
+simple-app-indexer-openai = "python examples/simple-app/app/main.py indexer index --input-file examples/input-data/book.txt --output-dir tmp --cache-dir tmp/cache --llm-type openai --llm-model gpt-4o --embedding-type openai --embedding-model text-embedding-3-small"
+
+simple-app-report = "python examples/simple-app/app/main.py indexer report --artifacts-dir tmp/artifacts_gpt-4o"
+simple-app-local-search = "python examples/simple-app/app/main.py query local-search --output-dir tmp --cache-dir tmp/cache"
+simple-app-global-search = "python examples/simple-app/app/main.py query global-search --output-dir tmp --cache-dir tmp/cache"
+simple-app-local-search-azure = "python examples/simple-app/app/main.py query local-search --output-dir tmp --cache-dir tmp/cache --llm-type azure_openai --llm-model gpt-4o --embedding-type azure_openai --embedding-model text-embedding-3-large"
+simple-app-global-search-azure = "python examples/simple-app/app/main.py query global-search --output-dir tmp --cache-dir tmp/cache --llm-type azure_openai --llm-model gpt-4o"
+
+
+# Development tasks
+test = "pytest"
+test-verbose = "pytest -v"
+lint = "ruff check"
+lint-fix = "ruff check --fix"
+format = "ruff format"
+format-check = "ruff format --check"
+typecheck = "mypy src"
+clean = "python -c \"import shutil, os; [shutil.rmtree(d, ignore_errors=True) for d in ['tmp', '__pycache__', '.pytest_cache', '.mypy_cache', '.ruff_cache'] if os.path.exists(d)]\""
+
+# Documentation tasks
+docs-serve = "mkdocs serve"
+docs-build = "mkdocs build"
+
+# Combined tasks
+check = ["lint", "format-check", "typecheck"]
+fix = ["lint-fix", "format"]
+check-all = ["lint", "format-check", "typecheck"]
+
+[tool.uv]
 dev-dependencies = [
     "pytest>=8.3.2",
     "ipykernel>=6.29.5",
-    "types-networkx>=3.2.1.20240811",
-    "types-tqdm>=4.66.0.20240417",
     "mkdocs>=1.6.0",
     "mkdocstrings[python]>=0.25.2",
     "markdown-include>=0.8.1",
@@ -34,22 +86,18 @@ dev-dependencies = [
     "mkdocs-section-index>=0.3.9",
     "mkdocs-material>=9.5.31",
     "mkdocs-jupyter>=0.24.8",
+    "fastparquet>=2024.11.0",
+    "langchain-chroma>=0.2.2",
+    "langchain-community>=0.3.21",
+    "langchain-ollama>=0.3.3",
+    "langchain-openai>=0.3.24",
+    "mypy>=1.16.1",
+    "poethepoet>=0.35.0",
+    "pyarrow>=20.0.0",
+    "python-dotenv>=1.1.0",
+    "ruff>=0.12.0",
+    "typer>=0.16.0"
 ]
-
-[tool.hatch.metadata]
-allow-direct-references = true
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/langchain_graphrag"]
-
-[tool.rye.workspace]
-members = ["langchain_graphrag", "examples/simple-app"]
-
-[tool.rye.scripts]
-simple-app-indexer = "python examples/simple-app/app/main.py indexer index --input-file examples/input-data/book.txt --output-dir tmp --cache-dir tmp/cache"
-simple-app-report = "python examples/simple-app/app/main.py indexer report"
-simple-app-local-search = "python examples/simple-app/app/main.py query local-search --output-dir tmp --cache-dir tmp/cache"
-simple-app-global-search = "python examples/simple-app/app/main.py query global-search --output-dir tmp --cache-dir tmp/cache"
 
 [tool.isort]
 profile = "black"

@@ -72,8 +72,8 @@
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         // Modern shell utils
         "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:1": {},
-        // rye
-        "./rye": {}
+        // uv (Python package manager)
+        "ghcr.io/jsburckhardt/devcontainer-features/uv:1": {}
     },
     "mounts": [
         "source=devcontainer-zshhistory,target=/commandhistory,type=volume"

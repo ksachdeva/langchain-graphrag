@@ -4,6 +4,7 @@
 )](https://langchain-graphrag.readthedocs.io/en/latest/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
+---
 
 This is an implementation of GraphRAG as described in
 
@@ -14,6 +15,30 @@ From Local to Global: A Graph RAG Approach to Query-Focused Summarization
 Official implementation by the authors of the paper is available at:
 
 https://github.com/microsoft/graphrag/
+
+## ⚠️ Important Notes
+
+### Troubleshooting Common Issues
+
+#### **Warning: Failed to hardlink files; falling back to full copy**
+
+If you encounter this warning, you can fix it by setting the UV link mode:
+
+```powershell
+# For PowerShell (Windows)
+$env:UV_LINK_MODE = "copy"
+```
+
+```bash
+# For bash/zsh (Linux/macOS)
+export UV_LINK_MODE=copy
+```
+
+#### **OneDrive Sync Issues**
+
+Make sure your project is located **outside of OneDrive** (or any other cloud sync folder) as it can cause various errors due to file synchronization conflicts during the build and execution process.
+
+> **Note**: This project has been migrated from `rye` to `uv` for dependency management. All commands now use `uv` and task management is handled via `poethepoet` (poe). See `pyproject.toml` for the updated configuration.
 
 ## Guides
 
@@ -31,13 +56,13 @@ While I generally prefer utilizing and refining existing implementations, as re-
 - Lacks integration with popular frameworks like LangChain, LlamaIndex, etc.
 - Limited to OpenAI and AzureOpenAI models, with no support for other providers.
 
-### Why relying on established frameworks like LangChain?
+### Why rely on established frameworks like LangChain?
 
 Using an established foundation like LangChain offers numerous benefits. It abstracts various providers, whether related to LLMs, embeddings, vector stores, etc., allowing for easy component swapping without altering core logic or adding complex support. More importantly, a solid foundation like this lets you focus on the problem's core logic rather than reinventing the wheel.
 
 LangChain also supports advanced features like batching and streaming, provided your components align with the framework’s guidelines. For instance, using chains (LCEL) allows you to take full advantage of these capabilities.
 
-### Modularity & Extensibility focused design
+### Modularity & Extensibility-focused design
 
 The APIs are designed to be modular and extensible. You can replace any component with your own implementation as long as it implements the required interface. 
 
@@ -59,7 +84,7 @@ This is the core library that implements the GraphRAG paper. It is built on top 
 
 #### An example code for local search using the API
 
-Below is a snippet taken from the `example-app` to show the style of API
+Below is a snippet taken from the `simple-app` to show the style of API
 and extensibility offered by the library.
 
 Almost all the components (classes/functions) can be replaced by your own
@@ -138,11 +163,50 @@ Devcontainer will install all the dependencies
 
 #### If not using devcontainer
 
-Make sure you have `rye` installed. See https://rye.astral.sh/
+
+1. **Clone the repository**
 
 ```bash
-# sync all the dependencies
-rye sync
+git clone https://github.com/ksachdeva/langchain-graphrag.git
+cd langchain-graphrag
+```
+
+2. **Install dependencies (requires Python 3.10+ and [uv](https://github.com/astral-sh/uv))**
+
+### Installation
+
+You can install `uv` using the standalone installers or from PyPI:
+
+#### Standalone installers
+
+```bash
+# On macOS and Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+#### From PyPI
+
+```bash
+# With pip
+pip install uv
+
+# Or pipx
+pipx install uv
+```
+
+If installed via the standalone installer, you can update `uv` to the latest version:
+
+```bash
+uv self update
+```
+
+### Setting up the environment and dependencies installation
+
+```bash
+uv sync
 ```
 
 ### `examples/simple-app`
@@ -157,18 +221,21 @@ the classes as long as they implement the required interface.
 
 **Note**:
 
-Make sure to rename `.env.example` with `.env` if you are using OpenAI or AzureOpenAI
+Make sure to rename `.env.example` to `.env` if you are using OpenAI or AzureOpenAI
 and fill in the necessary environment variables.
 
 #### Indexing 
 
 ```bash
-rye run simple-app-indexer --llm-type azure_openai --llm-model gpt-4o --embedding-type azure_openai --embedding-model text-embedding-3-small
+# Step 1 - Index (run from the root of the repository)
+uv run python examples/simple-app/app/main.py indexer index --input-file examples/input-data/book.txt --output-dir tmp --cache-dir tmp/cache --llm-type azure_openai --llm-model gpt-4o --embedding-type azure_openai --embedding-model text-embedding-3-large
+(or)
+uv run poe simple-app-indexer-azure 
 ```
 
 ```bash
 # To see more options
-$ rye run simple-app-indexer --help                  
+$ uv run poe simple-app-indexer --help                  
 Usage: main.py indexer index [OPTIONS]                                                                                            
                                                                                                                                    
 ╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
@@ -193,11 +260,13 @@ Usage: main.py indexer index [OPTIONS]
 #### Global Search
 
 ```bash
-rye run simple-app-global-search --llm-type azure_openai --llm-model gpt-4o --query "What are the top themes in this story?"
+uv run poe simple-app-global-search --output-dir tmp --cache-dir tmp/cache --llm-type azure_openai --llm-model gpt-4o --query "What are the top themes in this story?"
+(or) 
+uv run poe simple-app-global-search-azure --query "What are the top themes in this story?"
 ```
 
 ```bash
-$ rye run simple-app-global-search --help
+$ uv run poe simple-app-global-search --help
 Usage: main.py query global-search [OPTIONS]
                                                                                                                                             
 ╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
@@ -216,11 +285,13 @@ Usage: main.py query global-search [OPTIONS]
 #### Local Search
 
 ```bash
-rye run simple-app-local-search --llm-type azure_openai --llm-model gpt-4o --query "Who is Scrooge, and what are his main relationships?" --embedding-type azure_openai --embedding-model text-embedding-3-small
+uv run poe simple-app-local-search --output-dir tmp --cache-dir tmp/cache --llm-type azure_openai --llm-model gpt-4o --embedding-type azure_openai --embedding-model text-embedding-3-large  --query "Who is Scrooge, and what are his main relationships?"
+(or) 
+uv run poe simple-app-local-search-azure --query "Who is Scrooge, and what are his main relationships?"
 ```
 
 ```bash
-$ rye run simple-app-local-search --help
+$ uv run poe simple-app-local-search --help
 Usage: main.py query local-search [OPTIONS]                                                                                                 
                                                                                                                                              
 ╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
@@ -239,6 +310,50 @@ Usage: main.py query local-search [OPTIONS]
 ```
 
 See `examples/simple-app/README.md` for more details.
+
+
+### Available poe tasks
+
+The project includes several convenient poe tasks (see `pyproject.toml` for complete list):
+
+```bash
+# Installation
+uv run poe install-main             # Install main package only
+uv run poe install-example          # Install example app only
+
+# Development
+uv run poe test                     # Run tests
+uv run poe lint                     # Check code quality
+uv run poe format                   # Format code
+uv run poe typecheck                # Type checking
+uv run poe docs-serve               # Serve documentation locally
+
+# Simple app shortcuts
+uv run poe simple-app-indexer-azure       # Index with Azure OpenAI
+uv run poe simple-app-indexer-openai      # Index with OpenAI
+uv run poe simple-app-indexer-ollama      # Index with Ollama
+uv run poe simple-app-report              # Generate reports (requires prior indexing)
+uv run poe simple-app-global-search --query "your question"    # Basic global search
+uv run poe simple-app-local-search --query "your question"     # Basic local search (needs --query)
+uv run poe simple-app-global-search-azure --query "your question"  # Azure OpenAI global search
+uv run poe simple-app-local-search-azure --query "your question"   # Azure OpenAI local search
+```
+
+### Development workflow
+
+```bash
+# 1. Setup
+uv sync
+
+# 2. Create a .env file (if not already present) and fill in your API keys and other configuration values.
+
+# 3. Index and search
+uv run poe simple-app-indexer-azure
+uv run poe simple-app-global-search-azure --query "What are the themes?"
+
+# 4. Development (optional)
+uv run poe test && uv run poe lint     # Test and check code
+```
 
 ## Roadmap / Things to do
 
