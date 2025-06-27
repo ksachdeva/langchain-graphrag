@@ -35,7 +35,7 @@ jobs:
         with:
           imageName: ghcr.io/ksachdeva/langchain-graphrag-devcontainer
           cacheFrom: ghcr.io/ksachdeva/langchain-graphrag-devcontainer
-          runCmd: rye build
+          runCmd: uv build
 
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
