@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-#echo "Configuring Rye"
-#rye config --set-bool behavior.use-uv=true
-#rye config --set-bool behavior.global-python=false
-
 USERNAME=vscode
 
 echo "changing zshrc theme to ys ..."
@@ -17,5 +13,8 @@ chown -R $USERNAME /commandhistory
 SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.zsh_history"
 echo "$SNIPPET" >> "/home/$USERNAME/.zshrc"
 
-echo "rye sync .."
-rye sync
+echo "Setting up uv project..."
+# Create virtual environment and install dependencies
+uv sync
+
+echo "Setup complete!"
