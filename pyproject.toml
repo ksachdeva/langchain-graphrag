@@ -9,9 +9,7 @@ dependencies = [
     "langchain-core>=0.3.0",
     "langchain-text-splitters>=0.3.0",
     "graspologic>=3.4.1",
-    "tableprint>=0.9.1",
-    "poethepoet>=0.35.0",
-    "typer>=0.16.0",
+    "tableprint>=0.9.1"
 ]
 readme = "README.md"
 requires-python = ">= 3.10"

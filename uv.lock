@@ -2086,9 +2086,7 @@ dependencies = [
     { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "networkx", version = "3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pandas" },
-    { name = "poethepoet" },
     { name = "tableprint" },
-    { name = "typer" },
 ]
 
 [package.dev-dependencies]
@@ -2125,9 +2123,7 @@ requires-dist = [
     { name = "langchain-text-splitters", specifier = ">=0.3.0" },
     { name = "networkx", specifier = ">=3.3" },
     { name = "pandas", specifier = ">=2.2.2" },
-    { name = "poethepoet", specifier = ">=0.35.0" },
     { name = "tableprint", specifier = ">=0.9.1" },
-    { name = "typer", specifier = ">=0.16.0" },
 ]
 
 [package.metadata.requires-dev]
