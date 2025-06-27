@@ -27,9 +27,6 @@ allow-direct-references = true
 [tool.hatch.build.targets.wheel]
 packages = ["src/langchain_graphrag"]
 
-[tool.uv.workspace]
-members = ["examples/simple-app"]
-
 
 [tool.poe.tasks]
 simple-app-help = "python examples/simple-app/app/main.py --help"
