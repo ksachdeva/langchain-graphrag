@@ -16,29 +16,6 @@ Official implementation by the authors of the paper is available at:
 
 https://github.com/microsoft/graphrag/
 
-## ⚠️ Important Notes
-
-### Troubleshooting Common Issues
-
-#### **Warning: Failed to hardlink files; falling back to full copy**
-
-If you encounter this warning, you can fix it by setting the UV link mode:
-
-```powershell
-# For PowerShell (Windows)
-$env:UV_LINK_MODE = "copy"
-```
-
-```bash
-# For bash/zsh (Linux/macOS)
-export UV_LINK_MODE=copy
-```
-
-#### **OneDrive Sync Issues**
-
-Make sure your project is located **outside of OneDrive** (or any other cloud sync folder) as it can cause various errors due to file synchronization conflicts during the build and execution process.
-
-> **Note**: This project has been migrated from `rye` to `uv` for dependency management. All commands now use `uv` and task management is handled via `poethepoet` (poe). See `pyproject.toml` for the updated configuration.
 
 ## Guides
 
@@ -317,9 +294,6 @@ See `examples/simple-app/README.md` for more details.
 The project includes several convenient poe tasks (see `pyproject.toml` for complete list):
 
 ```bash
-# Installation
-uv run poe install-main             # Install main package only
-uv run poe install-example          # Install example app only
 
 # Development
 uv run poe test                     # Run tests
