@@ -11,7 +11,7 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "langchain-graphrag-migration-rye-to-uv",
+    "langchain-graphrag",
     "simple-app",
 ]
 
@@ -2076,7 +2076,7 @@ wheels = [
 ]
 
 [[package]]
-name = "langchain-graphrag-migration-rye-to-uv"
+name = "langchain-graphrag"
 version = "0.0.9"
 source = { editable = "." }
 dependencies = [
