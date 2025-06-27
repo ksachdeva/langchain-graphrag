@@ -32,11 +32,6 @@ members = ["examples/simple-app"]
 
 
 [tool.poe.tasks]
-#  Environment & installation
-install-main = "uv pip install -e ."
-install-example = "uv pip install -e ./examples/simple-app"
-install-dev ="uv pip install --group dev"
-
 simple-app-help = "python examples/simple-app/app/main.py --help"
 simple-app-indexer = "python examples/simple-app/app/main.py indexer index"
 simple-app-query-help = "python examples/simple-app/app/main.py query --help"
