@@ -1,10 +1,6 @@
 # Welcome to GraphRAG using langchain
 
-## Installation
-
-```bash
-pip install langchain-graphrag
-```
+**Transform your documents into searchable knowledge graphs**
 
 ## Overview
 
@@ -48,3 +44,28 @@ The main differenecs are:
 - Support for LLMs and Embedding models other than the ones provided by Azure OpenAI
 - Focus on modularity, readability, and extensibility
 - Does not assume any workflow engine and leave it to the application
+
+---
+
+## Installation
+
+```bash
+pip install langchain-graphrag
+```
+
+## Documentation
+
+### 1. **[Architecture Overview](architecture/overview.md)**
+Understand how GraphRAG works and when to use Local vs Global search
+
+### 2. **[Indexing Pipeline](guides/indexing_pipeline.md)**
+How to build knowledge graphs from your documents with technical implementation details
+
+### 3. **[Query System](guides/query_system.md)**
+Local Search vs Global Search with practical examples
+
+### 4. **[Data Flow & Examples](guides/data_flow_examples.md)**  
+Real data transformations through each pipeline step with actual JSON examples
+
+### 5. **[Advanced Examples](guides/graph_extraction/index.md)**
+Jupyter notebooks for component-level customization and development
