@@ -28,20 +28,77 @@ allow-direct-references = true
 packages = ["src/langchain_graphrag"]
 
 
+# ===== TEMPLATE VARIABLES (environment-based) =====
+[tool.poe.env]
+APP_CMD = "python examples/simple-app/app/main.py"
+DIRS = "--output-dir tmp --cache-dir tmp/cache"
+INPUT = "--input-file examples/input-data/book.txt"
+ARTIFACTS = "--artifacts-dir tmp/artifacts_gpt-4o"
+AZURE_LLM = "--llm-type azure_openai --llm-model gpt-4o"
+AZURE_EMBED = "--embedding-type azure_openai --embedding-model text-embedding-3-large"
+OPENAI_LLM = "--llm-type openai --llm-model gpt-4o"
+OPENAI_EMBED = "--embedding-type openai --embedding-model text-embedding-3-small"
+OLLAMA_LLM = "--llm-type ollama --llm-model llama2"
+OLLAMA_EMBED = "--embedding-type ollama --embedding-model llama2"
+
 [tool.poe.tasks]
-simple-app-help = "python examples/simple-app/app/main.py --help"
-simple-app-indexer = "python examples/simple-app/app/main.py indexer index"
-simple-app-query-help = "python examples/simple-app/app/main.py query --help"
 
-simple-app-indexer-ollama = "python examples/simple-app/app/main.py indexer index --input-file examples/input-data/book.txt --output-dir tmp --cache-dir tmp/cache --llm-type ollama --llm-model llama2 --embedding-type ollama --embedding-model llama2"
-simple-app-indexer-azure = "python examples/simple-app/app/main.py indexer index --input-file examples/input-data/book.txt --output-dir tmp --cache-dir tmp/cache --llm-type azure_openai --llm-model gpt-4o --embedding-type azure_openai --embedding-model text-embedding-3-large"
-simple-app-indexer-openai = "python examples/simple-app/app/main.py indexer index --input-file examples/input-data/book.txt --output-dir tmp --cache-dir tmp/cache --llm-type openai --llm-model gpt-4o --embedding-type openai --embedding-model text-embedding-3-small"
+# ===== INTERNAL TASKS (using template variables) =====
 
-simple-app-report = "python examples/simple-app/app/main.py indexer report --artifacts-dir tmp/artifacts_gpt-4o"
-simple-app-local-search = "python examples/simple-app/app/main.py query local-search --output-dir tmp --cache-dir tmp/cache"
-simple-app-global-search = "python examples/simple-app/app/main.py query global-search --output-dir tmp --cache-dir tmp/cache"
-simple-app-local-search-azure = "python examples/simple-app/app/main.py query local-search --output-dir tmp --cache-dir tmp/cache --llm-type azure_openai --llm-model gpt-4o --embedding-type azure_openai --embedding-model text-embedding-3-large"
-simple-app-global-search-azure = "python examples/simple-app/app/main.py query global-search --output-dir tmp --cache-dir tmp/cache --llm-type azure_openai --llm-model gpt-4o"
+# Basic commands
+_app-help = "${APP_CMD} --help"
+_indexer-help = "${APP_CMD} indexer --help"
+_query-help = "${APP_CMD} query --help"
+_indexer-base = "${APP_CMD} indexer index"
+_local-search-base = "${APP_CMD} query local-search ${DIRS}"
+_global-search-base = "${APP_CMD} query global-search ${DIRS}"
+_report = "${APP_CMD} indexer report ${ARTIFACTS}"
+
+# Full configured indexer commands (template composition)
+_index-azure = "${APP_CMD} indexer index ${INPUT} ${DIRS} ${AZURE_LLM} ${AZURE_EMBED}"
+_index-openai = "${APP_CMD} indexer index ${INPUT} ${DIRS} ${OPENAI_LLM} ${OPENAI_EMBED}"
+_index-ollama = "${APP_CMD} indexer index ${INPUT} ${DIRS} ${OLLAMA_LLM} ${OLLAMA_EMBED}"
+
+# Full configured search commands (template composition)
+_local-azure = "${APP_CMD} query local-search ${DIRS} ${AZURE_LLM} ${AZURE_EMBED}"
+_local-openai = "${APP_CMD} query local-search ${DIRS} ${OPENAI_LLM} ${OPENAI_EMBED}"
+_local-ollama = "${APP_CMD} query local-search ${DIRS} ${OLLAMA_LLM} ${OLLAMA_EMBED}"
+_global-azure = "${APP_CMD} query global-search ${DIRS} ${AZURE_LLM}"
+_global-openai = "${APP_CMD} query global-search ${DIRS} ${OPENAI_LLM}"
+_global-ollama = "${APP_CMD} query global-search ${DIRS} ${OLLAMA_LLM}"
+
+
+
+# Base app command
+simple-app = "${APP_CMD}"
+
+# Help commands  
+simple-app-help = { ref = "_app-help" }
+simple-app-indexer-help = { ref = "_indexer-help" }
+simple-app-query-help = { ref = "_query-help" }
+
+# Basic indexer commands
+simple-app-indexer = { ref = "_indexer-base" }
+
+# Indexer with different providers
+simple-app-indexer-azure = { ref = "_index-azure" }
+simple-app-indexer-openai = { ref = "_index-openai" }
+simple-app-indexer-ollama = { ref = "_index-ollama" }
+
+# Report generation
+simple-app-report = { ref = "_report" }
+
+# Search commands - basic
+simple-app-local-search = { ref = "_local-search-base" }
+simple-app-global-search = { ref = "_global-search-base" }
+
+# Search commands with provider configurations
+simple-app-local-search-azure = { ref = "_local-azure" }
+simple-app-local-search-openai = { ref = "_local-openai" }
+simple-app-local-search-ollama = { ref = "_local-ollama" }
+simple-app-global-search-azure = { ref = "_global-azure" }
+simple-app-global-search-openai = { ref = "_global-openai" }
+simple-app-global-search-ollama = { ref = "_global-ollama" }
 
 
 # Development tasks
