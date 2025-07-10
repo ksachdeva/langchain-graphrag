@@ -11,7 +11,7 @@ This library is an implementation of concepts from the paper:
 Below excerpts are taken from the companion website of the paper:
 [https://microsoft.github.io/graphrag/](https://microsoft.github.io/graphrag/)
 
-GraphRAG is a structured, hierarchical approach to Retrieval Augmented Generation (RAG), as opposed to naive semantic-search approaches using plain text snippets. The GraphRAG process involves extracting a knowledge graph out of raw text, building a community hierarchy, generating summaries for these communities, and then leveraging these structures when perform RAG-based tasks.
+GraphRAG is a structured, hierarchical approach to Retrieval Augmented Generation (RAG), as opposed to naive semantic-search approaches using plain text snippets. The GraphRAG process involves extracting a knowledge graph out of raw text, building a community hierarchy, generating summaries for these communities, and then leveraging these structures when performing RAG-based tasks.
 
 There are two main phases in the GraphRAG process:
 
@@ -38,7 +38,7 @@ At query time, these structures are used to provide materials for the LLM contex
 There is an official implementation of the paper available at
 [https://github.com/microsoft/graphrag](https://github.com/microsoft/graphrag)
 
-The main differenecs are:
+The main differeneces are:
 
 - Usage of [langchain](https://python.langchain.com/) as the foundation
 - Support for LLMs and Embedding models other than the ones provided by Azure OpenAI

@@ -1,25 +1,21 @@
 # Data Flow & Examples Guide
 
-This guide shows document transformations through each step of the GraphRAG pipeline with real data examples.
+This guide demonstrates how documents are transformed through each step of the GraphRAG pipeline, using real-world data examples.
 
 ---
 
 ## Pipeline Overview
 
-```mermaid
-flowchart TD
-    A["Raw Document"] --> B["Text Units"]
-    B --> C["Entities & Relationships"]
-    C --> D["Knowledge Graph"]
-    D --> E["Communities"]
-    E --> F["Community Reports"]
-    F --> G["Query-Ready Artifacts"]
-    
-    style A fill:#f8f9fa,stroke:#6c757d,stroke-width:2px
-    style G fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-```
+The GraphRAG pipeline transforms unstructured documents into a queryable knowledge graph through 8 systematic steps:
 
-This example traces a single document through the complete pipeline.
+1. **Raw Document Input** → Document ingestion and preparation
+2. **Text Unit Extraction** → Chunking into analyzable segments
+3. **Entity Extraction** → LLM identification of key concepts
+4. **Relationship Extraction** → LLM mapping of entity connections
+5. **Knowledge Graph Construction** → Building connected network
+6. **Community Detection** → Clustering related entities
+7. **Community Report Generation** → LLM summarization of themes
+8. **Final Artifacts Generation** → Query-optimized data structures
 
 ---
 
@@ -55,8 +51,8 @@ The document gets split into analyzable chunks with metadata.
 **Text Unit 1:**
 ```json
 {
-  "id": "text_unit_001",
-  "document_id": "business_leadership.txt",
+  "id": "uuid-text-unit-001",
+  "document_id": "uuid-doc-001",
   "text_unit": "Indian Business Leadership Patterns\n\nSuccessful Indian business leaders demonstrate unique characteristics that blend traditional values with modern business practices. Leaders like Ratan Tata, N.R. Narayana Murthy, and Azim Premji share common traits of long-term thinking and social responsibility."
 }
 ```
@@ -64,8 +60,8 @@ The document gets split into analyzable chunks with metadata.
 **Text Unit 2:**
 ```json
 {
-  "id": "text_unit_002", 
-  "document_id": "business_leadership.txt",
+  "id": "uuid-text-unit-002", 
+  "document_id": "uuid-doc-001",
   "text_unit": "These leaders prioritize stakeholder capitalism over shareholder primacy, investing heavily in employee development, community welfare, and sustainable business practices. Their approach to international expansion combines global ambitions with deep respect for local cultures and practices."
 }
 ```
@@ -73,8 +69,8 @@ The document gets split into analyzable chunks with metadata.
 **Text Unit 3:**
 ```json
 {
-  "id": "text_unit_003",
-  "document_id": "business_leadership.txt", 
+  "id": "uuid-text-unit-003",
+  "document_id": "uuid-doc-001", 
   "text_unit": "Innovation leadership in Indian companies often focuses on frugal innovation - creating high-quality solutions at affordable prices. This approach has enabled Indian companies to serve both domestic and international markets effectively."
 }
 ```
@@ -82,7 +78,7 @@ The document gets split into analyzable chunks with metadata.
 ### Key Transformations
 - **Single document** → **3 text units**
 - **Maintains source traceability** via document reference
-- **Preserves order** with chunk_order field
+- **Adds unique identifiers** for each text unit
 - **Adds metadata** for downstream processing
 
 ---
@@ -97,32 +93,32 @@ The LLM identifies people, organizations, and concepts from each text unit.
 ```json
 [
   {
-    "id": "entity_001",
+    "id": "uuid-entity-001",
     "title": "Ratan Tata",
     "type": "PERSON", 
     "description": "Prominent Indian business leader known for long-term thinking and social responsibility",
-    "text_unit_ids": ["text_unit_001"]
+    "text_unit_ids": ["uuid-text-unit-001"]
   },
   {
-    "id": "entity_002", 
+    "id": "uuid-entity-002", 
     "title": "N.R. Narayana Murthy",
     "type": "PERSON",
     "description": "Indian business leader demonstrating traditional values with modern practices",
-    "text_unit_ids": ["text_unit_001"]
+    "text_unit_ids": ["uuid-text-unit-001"]
   },
   {
-    "id": "entity_003",
+    "id": "uuid-entity-003",
     "title": "Azim Premji", 
     "type": "PERSON",
     "description": "Indian business leader sharing traits of long-term thinking and social responsibility",
-    "text_unit_ids": ["text_unit_001"]
+    "text_unit_ids": ["uuid-text-unit-001"]
   },
   {
-    "id": "entity_004",
+    "id": "uuid-entity-004",
     "title": "Indian Business Leadership",
     "type": "CONCEPT",
     "description": "Leadership approach blending traditional values with modern business practices",
-    "text_unit_ids": ["text_unit_001"]
+    "text_unit_ids": ["uuid-text-unit-001"]
   }
 ]
 ```
@@ -131,18 +127,18 @@ The LLM identifies people, organizations, and concepts from each text unit.
 ```json
 [
   {
-    "id": "entity_005",
+    "id": "uuid-entity-005",
     "title": "Stakeholder Capitalism",
     "type": "CONCEPT", 
     "description": "Business approach prioritizing multiple stakeholders over shareholders only",
-    "text_unit_ids": ["text_unit_002"]
+    "text_unit_ids": ["uuid-text-unit-002"]
   },
   {
-    "id": "entity_006",
+    "id": "uuid-entity-006",
     "title": "International Expansion",
     "type": "CONCEPT",
     "description": "Global business growth strategy combining ambitions with cultural respect",
-    "text_unit_ids": ["text_unit_002"]
+    "text_unit_ids": ["uuid-text-unit-002"]
   }
 ]
 ```
@@ -164,44 +160,44 @@ The LLM identifies how entities connect to each other.
 ```json
 [
   {
-    "id": "rel_001",
+    "id": "uuid-rel-001",
     "source": "Ratan Tata",
     "target": "Indian Business Leadership", 
     "description": "Ratan Tata exemplifies Indian business leadership patterns",
-    "rank": 24,
-    "text_unit_ids": ["text_unit_001"]
+    "rank": 6,
+    "text_unit_ids": ["uuid-text-unit-001"]
   },
   {
-    "id": "rel_002", 
+    "id": "uuid-rel-002", 
     "source": "N.R. Narayana Murthy",
     "target": "Indian Business Leadership",
     "description": "N.R. Narayana Murthy demonstrates Indian business leadership characteristics",
-    "rank": 22,
-    "text_unit_ids": ["text_unit_001"]
+    "rank": 6,
+    "text_unit_ids": ["uuid-text-unit-001"]
   },
   {
-    "id": "rel_003",
+    "id": "uuid-rel-003",
     "source": "Azim Premji", 
     "target": "Indian Business Leadership",
     "description": "Azim Premji shares common Indian business leadership traits", 
-    "rank": 20,
-    "text_unit_ids": ["text_unit_001"]
+    "rank": 6,
+    "text_unit_ids": ["uuid-text-unit-001"]
   },
   {
-    "id": "rel_004",
+    "id": "uuid-rel-004",
     "source": "Indian Business Leadership",
     "target": "Stakeholder Capitalism",
     "description": "Indian business leaders prioritize stakeholder capitalism approach",
-    "rank": 18, 
-    "text_unit_ids": ["text_unit_002"]
+    "rank": 5, 
+    "text_unit_ids": ["uuid-text-unit-002"]
   },
   {
-    "id": "rel_005",
+    "id": "uuid-rel-005",
     "source": "Indian Business Leadership", 
     "target": "International Expansion",
     "description": "Indian leaders approach international expansion with cultural respect",
-    "rank": 16,
-    "text_unit_ids": ["text_unit_002"]
+    "rank": 5,
+    "text_unit_ids": ["uuid-text-unit-002"]
   }
 ]
 ```
@@ -239,10 +235,10 @@ graph TD
 ```
 
 ### Graph Statistics
-- **Nodes**: 7 entities
-- **Edges**: 6 relationships  
+- **Nodes**: 6 entities
+- **Edges**: 5 relationships  
 - **Connected Components**: 1 (fully connected)
-- **Hub Nodes**: "Indian Business Leadership" (degree: 5)
+- **Hub Nodes**: "Indian Business Leadership" (degree: 3)
 
 ---
 
@@ -255,17 +251,28 @@ The system groups related entities into communities using graph clustering.
 **Community 1: Business Leadership**
 ```json
 {
-  "community_id": "community_001",
-  "level": 0,
-  "title": "Indian Business Leadership Community",
-  "entities": [
-    "Ratan Tata",
-    "N.R. Narayana Murthy", 
-    "Azim Premji",
-    "Indian Business Leadership"
-  ],
-  "relationships": [
-    "rel_001", "rel_002", "rel_003"
+  "id": 1,
+  "nodes": [
+    {
+      "name": "Ratan Tata",
+      "parent_cluster": null,
+      "is_final_cluster": true
+    },
+    {
+      "name": "N.R. Narayana Murthy",
+      "parent_cluster": null,
+      "is_final_cluster": true
+    },
+    {
+      "name": "Azim Premji",
+      "parent_cluster": null,
+      "is_final_cluster": true
+    },
+    {
+      "name": "Indian Business Leadership",
+      "parent_cluster": null,
+      "is_final_cluster": true
+    }
   ]
 }
 ```
@@ -273,24 +280,31 @@ The system groups related entities into communities using graph clustering.
 **Community 2: Business Practices** 
 ```json
 {
-  "community_id": "community_002",
-  "level": 0, 
-  "title": "Business Strategy and Practices",
-  "entities": [
-    "Stakeholder Capitalism",
-    "International Expansion", 
-    "Frugal Innovation"
-  ],
-  "relationships": [
-    "rel_004", "rel_005", "rel_006"
+  "id": 2,
+  "nodes": [
+    {
+      "name": "Stakeholder Capitalism",
+      "parent_cluster": null,
+      "is_final_cluster": true
+    },
+    {
+      "name": "International Expansion",
+      "parent_cluster": null,
+      "is_final_cluster": true
+    },
+    {
+      "name": "Frugal Innovation",
+      "parent_cluster": null,
+      "is_final_cluster": true
+    }
   ]
 }
 ```
 
 ### Community Analysis
 - **2 communities** detected at level 0
-- **Entity-based grouping**: Entities naturally cluster around thematic relationships
-- **Logical grouping**: People vs Concepts naturally separated
+- **Node-based grouping**: Community nodes represent entities with clustering metadata
+- **Logical grouping**: People vs Concepts naturally separated through graph structure
 
 ---
 
@@ -351,13 +365,14 @@ The system creates query-optimized data structures for both Local and Global sea
 **Entity Record Example:**
 ```json
 {
-  "id": "entity_001",
-  "title": "Ratan Tata", 
+  "title": "Ratan Tata",
+  "id": "uuid-entity-001",
   "type": "PERSON",
   "description": "Prominent Indian business leader known for long-term thinking and social responsibility",
-  "degree": 12,
-  "communities": ["community_001"],
-  "text_unit_ids": ["text_unit_001"]
+  "degree": 3,
+  "text_unit_ids": ["text_unit_001"],
+  "communities": [1],
+  "graph_embedding": null
 }
 ```
 
@@ -366,12 +381,16 @@ The system creates query-optimized data structures for both Local and Global sea
 **Relationship Record Example:**
 ```json
 {
-  "id": "rel_001",
   "source": "Ratan Tata",
-  "target": "Indian Business Leadership", 
+  "target": "Indian Business Leadership",
+  "source_id": "uuid-entity-001",
+  "target_id": "uuid-entity-004",
+  "id": "uuid-rel-001",
   "description": "Ratan Tata exemplifies Indian business leadership patterns",
-  "rank": 24,
-  "text_unit_ids": ["text_unit_001"]
+  "rank": 6,
+  "text_unit_ids": ["text_unit_001"],
+  "source_degree": 3,
+  "target_degree": 3
 }
 ```
 
@@ -380,11 +399,11 @@ The system creates query-optimized data structures for both Local and Global sea
 **Enriched Text Unit:**
 ```json
 {
-  "id": "text_unit_001",
-  "document_id": "business_leadership.txt",
-  "text_unit": "Successful Indian business leaders demonstrate unique characteristics...",
-  "entity_ids": ["entity_001", "entity_002", "entity_004"],
-  "relationship_ids": ["rel_001", "rel_002"]
+  "id": "uuid-text-unit-001",
+  "document_id": "uuid-doc-001",
+  "text_unit": "Indian Business Leadership Patterns\n\nSuccessful Indian business leaders demonstrate unique characteristics that blend traditional values with modern business practices. Leaders like Ratan Tata, N.R. Narayana Murthy, and Azim Premji share common traits of long-term thinking and social responsibility.",
+  "entity_ids": ["uuid-entity-001", "uuid-entity-002", "uuid-entity-004"],
+  "relationship_ids": ["uuid-rel-001", "uuid-rel-002"]
 }
 ```
 
@@ -393,14 +412,14 @@ The system creates query-optimized data structures for both Local and Global sea
 **Query-Ready Community Report:**
 ```json
 {
-  "community_id": "community_001",
   "level": 0,
+  "community_id": 1,
+  "entities": ["uuid-entity-001", "uuid-entity-002", "uuid-entity-003", "uuid-entity-004"],
   "title": "Indian Business Leadership Community",
-  "summary": "This community centers around prominent Indian business leaders...",
+  "summary": "This community centers around prominent Indian business leaders who have shaped modern business practices in India.",
   "rating": 7.5,
   "rating_explanation": "High impact due to significant influence on business practices and economic development",
-  "entities": ["entity_001", "entity_002", "entity_003", "entity_004"],
-  "content": "# Indian Business Leadership Community\n\nThis community centers around prominent Indian business leaders..."
+  "content": "# Indian Business Leadership Community\n\n## Summary\nThis community centers around prominent Indian business leaders who have shaped modern business practices in India...\n\n## Findings\n\n### Long-term Vision Focus\nThe leaders consistently demonstrate long-term thinking over short-term gains [Data: Entities (1, 2, 3); Relationships (1, 2, 3)].\n\n### Social Responsibility Integration\nAll leaders integrate social responsibility into core business strategy [Data: Entities (1, 2, 3); Relationships (4, 5)]."
 }
 ```
 
@@ -419,7 +438,8 @@ The system creates query-optimized data structures for both Local and Global sea
 4. **Connected Entities**: Indian Business Leadership, Stakeholder Capitalism
 
 **Generated Response**: 
-*"Ratan Tata demonstrates several key leadership characteristics including long-term thinking and social responsibility [Data: Entities (1), Relationships (1,4), Text Units (1)]. His leadership exemplifies Indian business leadership patterns that blend traditional values with modern business practices..."*
+
+*"Ratan Tata demonstrates several key leadership characteristics including long-term thinking and social responsibility [Data: Entities (1); Relationships (1); Sources (1)]. His leadership exemplifies Indian business leadership patterns that blend traditional values with modern business practices, as evidenced by his approach to stakeholder capitalism and international expansion [Data: Entities (1, 4); Relationships (1, 4)]."*
 
 ### Global Search Query
 
@@ -431,7 +451,8 @@ The system creates query-optimized data structures for both Local and Global sea
 3. **Cross-Community Analysis**: Connections to Business Practices community
 
 **Generated Response**:
-*"Indian business leadership demonstrates several distinctive patterns [Data: Community Reports (1,2)]. Leaders consistently emphasize long-term value creation over short-term gains, integrate social responsibility into core business strategy, and blend traditional values with modern practices..."*
+
+*"Indian business leadership demonstrates several distinctive patterns [Data: Reports (1, 2)]. Leaders consistently emphasize long-term value creation over short-term gains, integrate social responsibility into core business strategy, and blend traditional values with modern practices. This approach manifests through stakeholder capitalism initiatives and culturally-sensitive international expansion strategies [Data: Reports (1, 2, +more)]."*
 
 ---
 
@@ -470,10 +491,10 @@ For a **typical business document collection**:
 
 **Common Issues & Solutions**:
 
-**Low Entity Count**: Increase chunk size or use more detailed documents
-**Weak Relationships**: Ensure documents contain explicit connections between concepts
-**Poor Communities**: Check if entities are well-connected; isolated entities won't cluster well
-**Generic Descriptions**: Use domain-specific documents with detailed explanations
+- **Low Entity Count**: Increase chunk size or use more detailed documents
+- **Weak Relationships**: Ensure documents contain explicit connections between concepts
+- **Poor Communities**: Check if entities are well-connected; isolated entities won't cluster well
+- **Generic Descriptions**: Use domain-specific documents with detailed explanations
 
 ---
 

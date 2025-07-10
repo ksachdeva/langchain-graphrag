@@ -1,6 +1,6 @@
 # Query System Guide
 
-GraphRAG provides two search approaches for querying indexed knowledge graphs. Each approach handles different types of questions.
+GraphRAG provides two search approaches for querying indexed knowledge graphs. Each approach is designed to handle a different category of question.
 
 ---
 
@@ -187,11 +187,11 @@ response = global_search.invoke("What are the leadership patterns in Indian busi
 - Factual details and historical information
 - "Who," "what," "when," and "where" questions
 
-**Global Search Characteristics:**  
-- Questions around themes, patterns, and trends
-- Comparative analysis across multiple entities
-- Thematic analysis and domain-wide perspectives
-- "Why," "how," and "what patterns" questions
+**Global Search Characteristics:**
+- Questions without specific entity names mentioned
+- Asking about "trends," "patterns," "themes," or "strategies" 
+- Comparing multiple companies/sectors without naming them
+- "What are the trends in...", "How do companies approach...", "What patterns emerge..." questions
 
 ### Query Quality Guidelines
 
@@ -202,33 +202,11 @@ response = global_search.invoke("What are the leadership patterns in Indian busi
 | **Timeframe** | Specific periods | Trend analysis |
 | **Response** | Factual details | Thematic analysis |
 
----
-
-## Advanced Capabilities
-
-### Source Verification
-Both search types provide references back to original documents:
-- **Data Traceability**: Every claim includes source references
-- **Trust Building**: Verify AI-generated insights against original material
-- **Deep Exploration**: Navigate from answers back to source documents
-
-### Response Formats
-- **Local Search**: Detailed paragraphs with specific facts and relationships
-- **Global Search**: Structured analysis with themes, patterns, and strategic insights
-- **Streaming**: Real-time response generation for both search types
-
-### Analysis Depth Control
-Global search offers configurable community levels:
-- **Level 0**: Broadest organizational themes
-- **Level 1**: Departmental or functional patterns  
-- **Level 2**: Specific operational insights
-
----
 
 ## Related Documentation
 
 **[Data Flow Examples](data_flow_examples.md)**  
-Ready to see real data transformations? Follow a document through each pipeline step with actual JSON examples and debugging tips.
+Ready to see real data transformations? 
 
 **[Documentation Index](../index.md)**  
 Return to documentation overview
@@ -241,6 +219,5 @@ Return to documentation overview
 - **[Indexing Pipeline](indexing_pipeline.md)** - Technical implementation
 - **[Advanced Examples](graph_extraction/index.md)** - Component customization
 
-You now understand the core GraphRAG concepts and implementation. The next steps will show you real examples and hands-on practice.
-
+You now understand the core GraphRAG concepts and implementation.
 The query system transforms your indexed knowledge into actionable insights through both precise fact-finding and strategic analysis capabilities. 

@@ -1,6 +1,7 @@
 # GraphRAG Architecture Overview
 
-GraphRAG processes document collections into structured knowledge graphs. The system supports both entity-specific queries and thematic analysis queries.
+GraphRAG transforms document collections into structured knowledge graphs, supporting both entity-specific and thematic analysis queries.
+
 
 ---
 

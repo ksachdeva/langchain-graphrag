@@ -65,7 +65,7 @@ flowchart TD
 
 ### What Happens
 - Documents are loaded and their content extracted
-- Text is split into overlapping chunks (typically 1000-1500 words)
+- Text is split into overlapping chunks (typically 1000-1500 tokens)
 - Each chunk gets a unique identifier and document reference
 
 ### Key Configuration
@@ -103,7 +103,7 @@ This step has **three sub-processes**:
 
 ### 2c. Description Summarization
 - **Process**: LLM summarizes multiple descriptions into clean, unified descriptions
-- **Result**: Each entity and relationship has one clear, comprehensive description
+- **Result**: Generates a single, clear, and comprehensive description for each entity and relationship
 
 ### Input → Output
 ```
@@ -179,13 +179,14 @@ Each community report contains:
 ### Entity Record Structure
 | Field | Description | Example |
 |-------|-------------|---------|
-| `id` | Unique identifier | `ratan_tata_001` |
 | `title` | Display name | `"Ratan Tata"` |
+| `id` | Unique identifier | `"uuid-entity-001"` |
 | `type` | Entity category | `"PERSON"` |
 | `description` | Summarized description | `"Former Chairman of Tata Group..."` |
-| `communities` | Community membership | `["community_001"]` |
-| `degree` | Connection count | `15` (connected to 15 other entities) |
-| `text_unit_ids` | Source references | `["uuid-001", "uuid-045", ...]` |
+| `degree` | Connection count | `3` (connected to 3 other entities) |
+| `text_unit_ids` | Source references | `["uuid-text-001", "uuid-text-045", ...]` |
+| `communities` | Community membership | `[1, 2]` (community IDs) |
+| `graph_embedding` | Graph embedding vector | `null` (if not generated) |
 
 ---
 
@@ -204,9 +205,14 @@ Each community report contains:
 |-------|-------------|---------|
 | `source` | Starting entity | `"Ratan Tata"` |
 | `target` | Ending entity | `"Tata Group"` |
+| `source_id` | Source entity ID | `"uuid-entity-001"` |
+| `target_id` | Target entity ID | `"uuid-entity-004"` |
+| `id` | Relationship ID | `"uuid-rel-001"` |
 | `description` | Relationship summary | `"Served as Chairman from 1991-2012"` |
-| `rank` | Importance score | `24` (sum of source and target degrees) |
-| `text_unit_ids` | Source references | `["uuid-001", "uuid-003", ...]` |
+| `rank` | Importance score | `6` (sum of source and target degrees) |
+| `text_unit_ids` | Source references | `["uuid-text-001", "uuid-text-003", ...]` |
+| `source_degree` | Source entity degree | `3` |
+| `target_degree` | Target entity degree | `3` |
 
 ---
 
@@ -223,11 +229,11 @@ Each community report contains:
 ### Enhanced Text Unit Structure
 | Field | Description | Example |
 |-------|-------------|---------|
-| `id` | Original unit ID | `"uuid-001"` |
-| `document_id` | Source document | `"annual_report_2012"` |
+| `id` | Original unit ID | `"uuid-text-unit-001"` |
+| `document_id` | Source document | `"uuid-doc-001"` |
 | `text_unit` | Original text content | `"Ratan Tata served as Chairman..."` |
-| `entity_ids` | Referenced entities | `["ratan_tata", "tata_group"]` |
-| `relationship_ids` | Referenced relationships | `["served_as_chairman"]` |
+| `entity_ids` | Referenced entities | `["uuid-entity-001", "uuid-entity-004"]` |
+| `relationship_ids` | Referenced relationships | `["uuid-rel-001"]` |
 
 ### Why This Matters
 - **Source Verification**: Trace any insight back to original text
