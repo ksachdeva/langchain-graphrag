@@ -30,16 +30,22 @@ markdown_extensions:
   - markdown_include.include:
       base_path: .
   - admonition
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
 nav:
   - Home: index.md
-  - Guides:
-    - Text Unit Extraction: guides/text_units_extraction.ipynb
-    - Graph Generation:
-        - Overview: guides/graph_extraction/index.md
-        - Entity Relationship Extraction: guides/graph_extraction/er_extraction.ipynb
-        - Graph Generator: guides/graph_extraction/graph_generator.ipynb
-    
-  - API Reference: reference/
+  - Architecture Overview: architecture/overview.md
+  - Indexing Pipeline: guides/indexing_pipeline.md
+  - Query System: guides/query_system.md
+  - Data Flow & Examples: guides/data_flow_examples.md
+  - Advanced Examples:
+    - Graph Extraction Overview: guides/graph_extraction/index.md
+    - Entity Relationship Extraction: guides/graph_extraction/er_extraction.ipynb
+    - Graph Generator: guides/graph_extraction/graph_generator.ipynb
 
 repo_name: ksachdeva/langchain-graphrag
 repo_url: https://github.com/ksachdeva/langchain-graphrag

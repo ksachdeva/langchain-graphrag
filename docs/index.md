@@ -1,10 +1,6 @@
 # Welcome to GraphRAG using langchain
 
-## Installation
-
-```bash
-pip install langchain-graphrag
-```
+**Transform your documents into searchable knowledge graphs**
 
 ## Overview
 
@@ -15,7 +11,7 @@ This library is an implementation of concepts from the paper:
 Below excerpts are taken from the companion website of the paper:
 [https://microsoft.github.io/graphrag/](https://microsoft.github.io/graphrag/)
 
-GraphRAG is a structured, hierarchical approach to Retrieval Augmented Generation (RAG), as opposed to naive semantic-search approaches using plain text snippets. The GraphRAG process involves extracting a knowledge graph out of raw text, building a community hierarchy, generating summaries for these communities, and then leveraging these structures when perform RAG-based tasks.
+GraphRAG is a structured, hierarchical approach to Retrieval Augmented Generation (RAG), as opposed to naive semantic-search approaches using plain text snippets. The GraphRAG process involves extracting a knowledge graph out of raw text, building a community hierarchy, generating summaries for these communities, and then leveraging these structures when performing RAG-based tasks.
 
 There are two main phases in the GraphRAG process:
 
@@ -42,9 +38,34 @@ At query time, these structures are used to provide materials for the LLM contex
 There is an official implementation of the paper available at
 [https://github.com/microsoft/graphrag](https://github.com/microsoft/graphrag)
 
-The main differenecs are:
+The main differeneces are:
 
 - Usage of [langchain](https://python.langchain.com/) as the foundation
 - Support for LLMs and Embedding models other than the ones provided by Azure OpenAI
 - Focus on modularity, readability, and extensibility
 - Does not assume any workflow engine and leave it to the application
+
+---
+
+## Installation
+
+```bash
+pip install langchain-graphrag
+```
+
+## Documentation
+
+### 1. **[Architecture Overview](architecture/overview.md)**
+Understand how GraphRAG works and when to use Local vs Global search
+
+### 2. **[Indexing Pipeline](guides/indexing_pipeline.md)**
+How to build knowledge graphs from your documents with technical implementation details
+
+### 3. **[Query System](guides/query_system.md)**
+Local Search vs Global Search with practical examples
+
+### 4. **[Data Flow & Examples](guides/data_flow_examples.md)**  
+Real data transformations through each pipeline step with actual JSON examples
+
+### 5. **[Advanced Examples](guides/graph_extraction/index.md)**
+Jupyter notebooks for component-level customization and development
