@@ -1,6 +1,10 @@
 from typing import Any
 
-from langchain.output_parsers import PydanticOutputParser
+try:
+    from langchain.output_parsers import PydanticOutputParser
+except ImportError:
+    # Langchain >= 1.0.0
+    from langchain_core.output_parsers import PydanticOutputParser
 
 from .utils import KeyPointsResult
 
