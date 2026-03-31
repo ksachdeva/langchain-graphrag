@@ -69,9 +69,11 @@
         // Rust (required by few python libraries)
         "ghcr.io/devcontainers/features/rust:1": {},
         // Enable Docker (via Docker-in-Docker)
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "moby": false
+        },
         // Modern shell utils
-        "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:1": {},
+        "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:2": {},
         // uv (Python package manager)
         "ghcr.io/jsburckhardt/devcontainer-features/uv:1": {}
     },
