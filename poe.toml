@@ -1,0 +1,94 @@
+[tool.poe]
+envfile = "${POE_GIT_DIR}/examples/simple-app/.env"
+
+# =============================================================================
+# App Tasks
+# =============================================================================
+
+[tool.poe.tasks.app-help]
+help = "Show app help"
+cmd  = "${APP_CMD} --help"
+
+[tool.poe.tasks.indexer-help]
+help = "Show indexer sub-command help"
+cmd  = "${APP_CMD} indexer --help"
+
+[tool.poe.tasks.query-help]
+help = "Show query sub-command help"
+cmd  = "${APP_CMD} query --help"
+
+[tool.poe.tasks.index]
+help = "Run the indexer with provider from .env"
+cmd  = "${APP_CMD} indexer index --input-file ${INPUT_FILE} --output-dir ${OUTPUT_DIR} --cache-dir ${CACHE_DIR} --llm-type ${LLM_TYPE} --llm-model ${LLM_MODEL} --embedding-type ${EMBEDDING_TYPE} --embedding-model ${EMBEDDING_MODEL}"
+
+[tool.poe.tasks.report]
+help = "Generate indexer report"
+cmd  = "${APP_CMD} indexer report --artifacts-dir ${ARTIFACTS_DIR}"
+
+[tool.poe.tasks.local-search]
+help = "Run local search with provider from .env"
+cmd  = "${APP_CMD} query local-search --output-dir ${OUTPUT_DIR} --cache-dir ${CACHE_DIR} --llm-type ${LLM_TYPE} --llm-model ${LLM_MODEL} --embedding-type ${EMBEDDING_TYPE} --embedding-model ${EMBEDDING_MODEL}"
+
+[tool.poe.tasks.global-search]
+help = "Run global search with provider from .env"
+cmd  = "${APP_CMD} query global-search --output-dir ${OUTPUT_DIR} --cache-dir ${CACHE_DIR} --llm-type ${LLM_TYPE} --llm-model ${LLM_MODEL}"
+
+# =============================================================================
+# Development Tasks
+# =============================================================================
+
+[tool.poe.tasks.test]
+help = "Run tests"
+cmd  = "pytest"
+
+[tool.poe.tasks.test-verbose]
+help = "Run tests with verbose output"
+cmd  = "pytest -v"
+
+[tool.poe.tasks.lint]
+help = "Run linter (ruff check)"
+cmd  = "ruff check"
+
+[tool.poe.tasks.lint-fix]
+help = "Run linter with auto-fix"
+cmd  = "ruff check --fix"
+
+[tool.poe.tasks.format]
+help = "Format code (ruff format)"
+cmd  = "ruff format"
+
+[tool.poe.tasks.format-check]
+help = "Check code formatting without changes"
+cmd  = "ruff format --check"
+
+[tool.poe.tasks.typecheck]
+help = "Run type checker (mypy)"
+cmd  = "mypy src"
+
+[tool.poe.tasks.clean]
+help = "Remove build artifacts and caches"
+cmd  = "python -c \"import shutil, os; [shutil.rmtree(d, ignore_errors=True) for d in ['tmp', '__pycache__', '.pytest_cache', '.mypy_cache', '.ruff_cache'] if os.path.exists(d)]\""
+
+# =============================================================================
+# Documentation Tasks
+# =============================================================================
+
+[tool.poe.tasks.docs-serve]
+help = "Serve docs locally"
+cmd  = "mkdocs serve"
+
+[tool.poe.tasks.docs-build]
+help = "Build static documentation"
+cmd  = "mkdocs build"
+
+# =============================================================================
+# Combined Tasks
+# =============================================================================
+
+[tool.poe.tasks.check]
+help     = "Run all checks (lint + format-check + typecheck)"
+sequence = ["lint", "format-check", "typecheck"]
+
+[tool.poe.tasks.fix]
+help     = "Auto-fix lint and formatting"
+sequence = ["lint-fix", "format"]

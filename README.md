@@ -198,104 +198,45 @@ the classes as long as they implement the required interface.
 
 **Note**:
 
-Make sure to rename `.env.example` to `.env` if you are using OpenAI or AzureOpenAI
-and fill in the necessary environment variables.
+Copy `examples/simple-app/.env.example` to `examples/simple-app/.env` and fill in your API keys and provider settings.
+
+```bash
+cp examples/simple-app/.env.example examples/simple-app/.env
+```
+
+Edit `examples/simple-app/.env` to choose your provider and set API keys:
+
+```bash
+# Provider — pick one: openai | azure_openai | ollama
+LLM_TYPE=openai
+LLM_MODEL=gpt-4o
+EMBEDDING_TYPE=openai
+EMBEDDING_MODEL=text-embedding-3-small
+```
 
 #### Indexing 
 
 ```bash
-# Step 1 - Index using convenient aliases
-uv run poe simple-app-indexer-azure     # Uses Azure OpenAI
-uv run poe simple-app-indexer-openai    # Uses OpenAI  
-uv run poe simple-app-indexer-ollama    # Uses Ollama
+# Index using the provider configured in .env
+uv run poe index
 
-# Or run the base command with custom parameters
-uv run poe simple-app indexer index --input-file examples/input-data/book.txt --output-dir tmp --cache-dir tmp/cache --llm-type azure_openai --llm-model gpt-4o --embedding-type azure_openai --embedding-model text-embedding-3-large
-```
-
-```bash
-# To see more options
-$ uv run poe simple-app-indexer-help                 
-Usage: main.py indexer index [OPTIONS]                                                                                            
-                                                                                                                                   
-╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ *  --input-file                                     FILE                          [default: None] [required]                    │
-│ *  --output-dir                                     DIRECTORY                     [default: None] [required]                    │
-│ *  --cache-dir                                      DIRECTORY                     [default: None] [required]                    │
-│ *  --llm-type                                       [openai|azure_openai|ollama]  [default: None] [required]                    │
-│ *  --llm-model                                      TEXT                          [default: None] [required]                    │
-│ *  --embedding-type                                 [openai|azure_openai|ollama]  [default: None] [required]                    │
-│ *  --embedding-model                                TEXT                          [default: None] [required]                    │
-│    --chunk-size                                     INTEGER                       Chunk size for text splitting [default: 1200] │
-│    --chunk-overlap                                  INTEGER                       Chunk overlap for text splitting              │
-│                                                                                   [default: 100]                                │
-│    --ollama-num-context                             INTEGER                       Context window size for ollama model          │
-│                                                                                   [default: None]                               │
-│    --enable-langsmith      --no-enable-langsmith                                  Enable Langsmith                              │
-│                                                                                   [default: no-enable-langsmith]                │
-│    --help                                                                         Show this message and exit.                   │
-╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+# To see all indexer options
+uv run poe indexer-help
 ```
 
 #### Global Search
 
 ```bash
-# Global search using provider-specific aliases (add --query "your question")
-uv run poe simple-app-global-search-azure --query "What are the top themes in this story?"
-uv run poe simple-app-global-search-openai --query "What are the top themes in this story?"
-uv run poe simple-app-global-search-ollama --query "What are the top themes in this story?"
+uv run poe global-search --query "What are the top themes in this story?"
 
-# Or use the base command for custom configurations
-uv run poe simple-app-global-search --llm-type azure_openai --llm-model gpt-4o --query "What are the top themes in this story?"
-```
-
-```bash
-$ uv run poe simple-app-query-help
-$ uv run poe simple-app query global-search --help
-Usage: main.py query global-search [OPTIONS]
-                                                                                                                                            
-╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ *  --output-dir                                     DIRECTORY                     [default: None] [required]                              │
-│ *  --cache-dir                                      DIRECTORY                     [default: None] [required]                              │
-│ *  --llm-type                                       [openai|azure_openai|ollama]  [default: None] [required]                              │
-│ *  --llm-model                                      TEXT                          [default: None] [required]                              │
-│ *  --query                                          TEXT                          [default: None] [required]                              │
-│    --level                                          INTEGER                       Community level to search [default: 2]                  │
-│    --ollama-num-context                             INTEGER                       Context window size for ollama model [default: None]    │
-│    --enable-langsmith      --no-enable-langsmith                                  Enable Langsmith [default: no-enable-langsmith]         │
-│    --help                                                                         Show this message and exit.                             │
-╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+# To see all options
+uv run poe query-help
 ```
 
 #### Local Search
 
 ```bash
-# Local search using provider-specific aliases (add --query "your question")
-uv run poe simple-app-local-search-azure --query "Who is Scrooge, and what are his main relationships?"
-uv run poe simple-app-local-search-openai --query "Who is Scrooge, and what are his main relationships?"
-uv run poe simple-app-local-search-ollama --query "Who is Scrooge, and what are his main relationships?"
-
-# Or use the base command for custom configurations
-uv run poe simple-app-local-search --llm-type azure_openai --llm-model gpt-4o --embedding-type azure_openai --embedding-model text-embedding-3-large --query "Who is Scrooge, and what are his main relationships?"
-```
-
-```bash
-$ uv run poe simple-app query local-search --help
-Usage: main.py query local-search [OPTIONS]                                                                                                 
-                                                                                                                                             
-╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ *  --output-dir                                     DIRECTORY                     [default: None] [required]                              │
-│ *  --cache-dir                                      DIRECTORY                     [default: None] [required]                              │
-│ *  --llm-type                                       [openai|azure_openai|ollama]  [default: None] [required]                              │
-│ *  --llm-model                                      TEXT                          [default: None] [required]                              │
-│ *  --query                                          TEXT                          [default: None] [required]                              │
-│    --level                                          INTEGER                       Community level to search [default: 2]                  │
-│ *  --embedding-type                                 [openai|azure_openai|ollama]  [default: None] [required]                              │
-│ *  --embedding-model                                TEXT                          [default: None] [required]                              │
-│    --ollama-num-context                             INTEGER                       Context window size for ollama model [default: None]    │
-│    --enable-langsmith      --no-enable-langsmith                                  Enable Langsmith [default: no-enable-langsmith]         │
-│    --help                                                                         Show this message and exit.                             │
-╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+uv run poe local-search --query "Who is Scrooge, and what are his main relationships?"
 ```
 
 See `examples/simple-app/README.md` for more details.
@@ -303,44 +244,26 @@ See `examples/simple-app/README.md` for more details.
 
 ### Available poe tasks
 
-The project includes several convenient poe tasks (see `pyproject.toml` for complete list):
+The project includes several convenient poe tasks (see `poe.toml` for complete list):
 
 ```bash
-# Base command (for custom usage)
-uv run poe simple-app               # Base: python examples/simple-app/app/main.py
+# App commands
+uv run poe app-help           # General help
+uv run poe indexer-help       # Indexer help
+uv run poe query-help         # Query help
 
-# Help commands
-uv run poe simple-app-help          # General help
-uv run poe simple-app-indexer-help  # Indexer help  
-uv run poe simple-app-query-help    # Query help
+# Run (provider configured via examples/simple-app/.env)
+uv run poe index              # Index input data
+uv run poe report             # Generate reports (requires prior indexing)
+uv run poe global-search --query "your question"
+uv run poe local-search --query "your question"
 
 # Development
-uv run poe test                     # Run tests
-uv run poe lint                     # Check code quality
-uv run poe format                   # Format code
-uv run poe typecheck                # Type checking
-uv run poe docs-serve               # Serve documentation locally
-
-# Indexing (with preconfigured provider settings)
-uv run poe simple-app-indexer-azure       # Index with Azure OpenAI
-uv run poe simple-app-indexer-openai      # Index with OpenAI
-uv run poe simple-app-indexer-ollama      # Index with Ollama
-uv run poe simple-app-indexer             # Basic indexer (requires additional parameters)
-
-# Reports
-uv run poe simple-app-report              # Generate reports (requires prior indexing)
-
-# Global search (add --query "your question")
-uv run poe simple-app-global-search-azure --query "your question"   # Azure OpenAI
-uv run poe simple-app-global-search-openai --query "your question"  # OpenAI
-uv run poe simple-app-global-search-ollama --query "your question"  # Ollama
-uv run poe simple-app-global-search --query "your question"         # Basic (needs provider params)
-
-# Local search (add --query "your question") 
-uv run poe simple-app-local-search-azure --query "your question"    # Azure OpenAI
-uv run poe simple-app-local-search-openai --query "your question"   # OpenAI
-uv run poe simple-app-local-search-ollama --query "your question"   # Ollama
-uv run poe simple-app-local-search --query "your question"          # Basic (needs provider params)
+uv run poe test               # Run tests
+uv run poe lint               # Check code quality
+uv run poe format             # Format code
+uv run poe typecheck          # Type checking
+uv run poe docs-serve         # Serve documentation locally
 ```
 
 ### Development workflow
@@ -349,20 +272,16 @@ uv run poe simple-app-local-search --query "your question"          # Basic (nee
 # 1. Setup
 uv sync
 
-# 2. Create a .env file (if not already present) and fill in your API keys and other configuration values.
+# 2. Configure provider and API keys
+cp examples/simple-app/.env.example examples/simple-app/.env
+# Edit examples/simple-app/.env — fill in API keys, set LLM_TYPE
 
-# 3. Quick start with aliases
-uv run poe simple-app-indexer-azure                                     # Index with Azure OpenAI
-uv run poe simple-app-global-search-azure --query "What are the themes?" # Search with Azure OpenAI
+# 3. Index and search
+uv run poe index
+uv run poe global-search --query "What are the themes?"
+uv run poe local-search --query "Who is the main character?"
 
-# 4. Or try different providers
-uv run poe simple-app-indexer-openai                                    # Index with OpenAI
-uv run poe simple-app-local-search-openai --query "Who is the main character?" # Search with OpenAI
-
-# 5. For custom configurations, use the base command
-uv run poe simple-app indexer index --input-file your-file.txt --output-dir custom-output --llm-type azure_openai --llm-model gpt-4o
-
-# 6. Development (optional)
+# 4. Development (optional)
 uv run poe test && uv run poe lint     # Test and check code
 ```
 
